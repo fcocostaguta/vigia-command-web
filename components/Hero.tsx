@@ -143,7 +143,7 @@ export default function Hero({ onConversemos }: { onConversemos: () => void }) {
           <WatchOrbit />
           <img
             ref={watchRef}
-            src="/images/watch-vigia-v2.webp"
+            src="/images/watch-vigia-clean.webp"
             alt="VIGÍA — dispositivo de monitoreo táctico"
             className="watch-img floating"
           />
