@@ -4,8 +4,8 @@ import './globals.css'
 
 const barlowCondensed = Barlow_Condensed({
   subsets: ['latin'],
-  weight: ['400', '500', '600', '700', '800'],
-  variable: '--font-heading',
+  weight: ['400', '500', '600', '700', '800', '900'],
+  variable: '--font-h',
   display: 'swap',
 })
 
@@ -13,26 +13,26 @@ const barlow = Barlow({
   subsets: ['latin'],
   weight: ['300', '400', '500', '600'],
   style: ['normal', 'italic'],
-  variable: '--font-body',
+  variable: '--font-b',
   display: 'swap',
 })
 
 const jetbrainsMono = JetBrains_Mono({
   subsets: ['latin'],
   weight: ['400', '500'],
-  variable: '--font-mono',
+  variable: '--font-m',
   display: 'swap',
 })
 
 export const metadata: Metadata = {
-  title: 'VIGÍA Command | Monitoreo operacional para bomberos',
+  title: 'VIGÍA | Información crítica para decisiones más seguras',
   description:
-    'Plataforma de monitoreo operacional para bomberos, alertas fisiológicas y trazabilidad de incidentes en tiempo real.',
+    'Plataforma de monitoreo táctico para bomberos y brigadas industriales. Visibilidad en tiempo real del estado operativo y fisiológico del personal.',
   metadataBase: new URL('https://vigiacommand.cl'),
   openGraph: {
-    title: 'VIGÍA Command | Monitoreo operacional para bomberos',
+    title: 'VIGÍA | Información crítica para decisiones más seguras',
     description:
-      'Plataforma de monitoreo operacional para bomberos, alertas fisiológicas y trazabilidad de incidentes en tiempo real.',
+      'Plataforma de monitoreo táctico para bomberos y brigadas industriales. Visibilidad en tiempo real del estado operativo y fisiológico del personal.',
     url: 'https://vigiacommand.cl',
     siteName: 'VIGÍA Command',
     locale: 'es_CL',
@@ -40,9 +40,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'VIGÍA Command | Monitoreo operacional para bomberos',
+    title: 'VIGÍA | Información crítica para decisiones más seguras',
     description:
-      'Plataforma de monitoreo operacional para bomberos, alertas fisiológicas y trazabilidad de incidentes en tiempo real.',
+      'Plataforma de monitoreo táctico para bomberos y brigadas industriales. Visibilidad en tiempo real del estado operativo y fisiológico del personal.',
   },
 }
 

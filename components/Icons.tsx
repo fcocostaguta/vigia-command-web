@@ -1,164 +1,73 @@
 import { JSX } from 'react'
 
-// ─── Small inline SVGs ───────────────────────────────
-
-export function IconAlert(): JSX.Element {
-  return (
-    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-      <path d="M10 3L18 17H2L10 3Z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" />
-      <path d="M10 9v4M10 14.5v.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+const Icon: Record<string, JSX.Element> = {
+  eye: (
+    <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
+      <ellipse cx="10" cy="10" rx="8" ry="5" stroke="currentColor" strokeWidth="1.4"/>
+      <circle cx="10" cy="10" r="2" stroke="currentColor" strokeWidth="1.4"/>
     </svg>
-  )
-}
-
-export function IconEye(): JSX.Element {
-  return (
-    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-      <ellipse cx="10" cy="10" rx="8" ry="5" stroke="currentColor" strokeWidth="1.5" />
-      <circle cx="10" cy="10" r="2" stroke="currentColor" strokeWidth="1.5" />
+  ),
+  bell: (
+    <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
+      <path d="M10 3a5 5 0 015 5v3l2 2H3l2-2V8a5 5 0 015-5z" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round"/>
+      <path d="M8 14a2 2 0 004 0" stroke="currentColor" strokeWidth="1.4"/>
     </svg>
-  )
-}
-
-export function IconHeart(): JSX.Element {
-  return (
-    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-      <path d="M10 16S3 11 3 6.5a4 4 0 017-2.6A4 4 0 0117 6.5C17 11 10 16 10 16Z"
-        stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" />
+  ),
+  doc: (
+    <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
+      <rect x="4" y="2" width="12" height="16" rx="1" stroke="currentColor" strokeWidth="1.4"/>
+      <path d="M7 7h6M7 10h6M7 13h4" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
     </svg>
-  )
-}
-
-export function IconMap(): JSX.Element {
-  return (
-    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-      <path d="M10 2a5 5 0 015 5c0 3-5 11-5 11S5 10 5 7a5 5 0 015-5Z" stroke="currentColor" strokeWidth="1.5" />
-      <circle cx="10" cy="7" r="1.5" stroke="currentColor" strokeWidth="1.5" />
+  ),
+  pulse: (
+    <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
+      <path d="M2 10h3l2-6 3 12 2-7 2 4h4" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
     </svg>
-  )
-}
-
-export function IconDoc(): JSX.Element {
-  return (
-    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-      <rect x="4" y="2" width="12" height="16" rx="1" stroke="currentColor" strokeWidth="1.5" />
-      <path d="M7 7h6M7 10h6M7 13h4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+  ),
+  gateway: (
+    <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
+      <rect x="3" y="7" width="14" height="9" rx="1" stroke="currentColor" strokeWidth="1.4"/>
+      <path d="M7 7V5a3 3 0 016 0v2" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
+      <circle cx="10" cy="12" r="1.5" fill="currentColor"/>
     </svg>
-  )
-}
-
-export function IconWifi(): JSX.Element {
-  return (
-    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-      <path d="M2 8a11 11 0 0116 0M5 11.5A7 7 0 0115 11.5M8 15a3 3 0 014 0"
-        stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-      <circle cx="10" cy="17.5" r="1" fill="currentColor" />
+  ),
+  screen: (
+    <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
+      <rect x="2" y="4" width="16" height="11" rx="1" stroke="currentColor" strokeWidth="1.4"/>
+      <path d="M7 18h6M10 15v3" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
     </svg>
-  )
-}
-
-export function IconRehab(): JSX.Element {
-  return (
-    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-      <path d="M10 4v6l3 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-      <circle cx="10" cy="10" r="7" stroke="currentColor" strokeWidth="1.5" />
+  ),
+  fire: (
+    <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
+      <path d="M12 3c0 3-4 4-3 8-2-1-3-3-2-6C5 7 4 10 4 12a6 6 0 0012 0c0-4-2-6-4-9z" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round"/>
     </svg>
-  )
-}
-
-export function IconHist(): JSX.Element {
-  return (
-    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-      <circle cx="10" cy="10" r="8" stroke="currentColor" strokeWidth="1.5" />
-      <path d="M10 6v4l3 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+  ),
+  forest: (
+    <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
+      <path d="M10 2L6 9h3l-4 5h4v4h2v-4h4l-4-5h3L10 2z" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round"/>
     </svg>
-  )
-}
-
-export function IconLock(): JSX.Element {
-  return (
-    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-      <rect x="4" y="9" width="12" height="9" rx="1.5" stroke="currentColor" strokeWidth="1.5" />
-      <path d="M7 9V6a3 3 0 016 0v3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+  ),
+  factory: (
+    <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
+      <path d="M2 17V9l5-3v3l5-3v3l4-2v10H2z" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round"/>
     </svg>
-  )
-}
-
-// ─── Flow step icons (larger) ────────────────────────
-
-export function IconSensor(): JSX.Element {
-  return (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-      <rect x="7" y="7" width="10" height="10" rx="1" stroke="currentColor" strokeWidth="1.5" />
-      <path d="M4 4a1 1 0 011-1M19 4a1 1 0 011 1M4 20a1 1 0 001 1M19 19a1 1 0 001 1"
-        stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-      <circle cx="12" cy="12" r="2" fill="currentColor" />
+  ),
+  rescue: (
+    <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
+      <path d="M10 2l7 3v5c0 4-3 7-7 8C7 17 4 14 3 10V5l7-3z" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round"/>
     </svg>
-  )
-}
-
-export function IconNode(): JSX.Element {
-  return (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-      <rect x="4" y="8" width="16" height="8" rx="1" stroke="currentColor" strokeWidth="1.5" />
-      <path d="M7 11h2M7 13h3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-      <circle cx="17" cy="12" r="1.5" stroke="currentColor" strokeWidth="1.5" />
+  ),
+  arrow: (
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+      <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
     </svg>
-  )
-}
-
-export function IconGateway(): JSX.Element {
-  return (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-      <path d="M3 12h18M3 12l4-4M3 12l4 4"
-        stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-      <circle cx="19" cy="12" r="3" stroke="currentColor" strokeWidth="1.5" />
+  ),
+  lock: (
+    <svg width="13" height="13" viewBox="0 0 16 16" fill="none">
+      <rect x="3" y="7" width="10" height="8" rx="1" stroke="currentColor" strokeWidth="1.4"/>
+      <path d="M5 7V5a3 3 0 016 0v2" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
     </svg>
-  )
+  ),
 }
 
-export function IconCloud(): JSX.Element {
-  return (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-      <path d="M6 19a4 4 0 01-.8-7.9A6 6 0 0118 13h1a3 3 0 010 6H6Z"
-        stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" />
-    </svg>
-  )
-}
-
-export function IconTablet(): JSX.Element {
-  return (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-      <rect x="4" y="2" width="16" height="20" rx="2" stroke="currentColor" strokeWidth="1.5" />
-      <path d="M10 18h4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-    </svg>
-  )
-}
-
-// ─── Map icon name → component ───────────────────────
-
-type IconName =
-  | 'alert' | 'eye' | 'heart' | 'map' | 'doc'
-  | 'wifi'  | 'rehab' | 'hist' | 'lock'
-  | 'sensor' | 'node' | 'gateway' | 'cloud' | 'tablet'
-
-const iconMap: Record<IconName, JSX.Element> = {
-  alert:   <IconAlert />,
-  eye:     <IconEye />,
-  heart:   <IconHeart />,
-  map:     <IconMap />,
-  doc:     <IconDoc />,
-  wifi:    <IconWifi />,
-  rehab:   <IconRehab />,
-  hist:    <IconHist />,
-  lock:    <IconLock />,
-  sensor:  <IconSensor />,
-  node:    <IconNode />,
-  gateway: <IconGateway />,
-  cloud:   <IconCloud />,
-  tablet:  <IconTablet />,
-}
-
-export function Icon({ name }: { name: string }): JSX.Element {
-  return iconMap[name as IconName] ?? <span />
-}
+export default Icon

@@ -1,55 +1,59 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useRef, useCallback, useEffect, MutableRefObject } from 'react'
 import Header from '@/components/Header'
-import HeroSection from '@/components/HeroSection'
-import ProblemSection from '@/components/ProblemSection'
-import SolutionSection from '@/components/SolutionSection'
-import HowItWorksSection from '@/components/HowItWorksSection'
-import TacticalModeSection from '@/components/TacticalModeSection'
-import BlackBoxSection from '@/components/BlackBoxSection'
-import BenefitsSection from '@/components/BenefitsSection'
-import DevelopmentStatusSection from '@/components/DevelopmentStatusSection'
-import ContactSection from '@/components/ContactSection'
+import Hero from '@/components/Hero'
+import PanelSection from '@/components/PanelSection'
+import Problem from '@/components/Problem'
+import HowItWorks from '@/components/HowItWorks'
+import Value from '@/components/Value'
+import Cases from '@/components/Cases'
+import Trust from '@/components/Trust'
+import Contact from '@/components/Contact'
 import Footer from '@/components/Footer'
-import DemoModal from '@/components/DemoModal'
+import Icon from '@/components/Icons'
+
+function useReveal() {
+  useEffect(() => {
+    const obs = new IntersectionObserver(
+      es => es.forEach(e => { if (e.isIntersecting) e.target.classList.add('in') }),
+      { threshold: 0.06 }
+    )
+    document.querySelectorAll('.reveal').forEach(el => obs.observe(el))
+    return () => obs.disconnect()
+  }, [])
+}
 
 export default function HomePage() {
-  const [showModal, setShowModal] = useState(false)
+  const formRef = useRef<HTMLElement | null>(null)
+  useReveal()
 
-  // Reveal on scroll
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((e) => {
-          if (e.isIntersecting) e.target.classList.add('visible')
-        })
-      },
-      { threshold: 0.1 }
-    )
-    document.querySelectorAll('.reveal').forEach((el) => observer.observe(el))
-    return () => observer.disconnect()
+  const scrollToForm = useCallback(() => {
+    if (formRef.current) {
+      const top = formRef.current.getBoundingClientRect().top + window.scrollY - 80
+      window.scrollTo({ top, behavior: 'smooth' })
+    }
   }, [])
-
-  const openModal = () => setShowModal(true)
-  const closeModal = () => setShowModal(false)
 
   return (
     <>
-      {showModal && <DemoModal onClose={closeModal} />}
-      <Header onDemo={openModal} />
+      <Header onConversemos={scrollToForm} />
       <main>
-        <HeroSection onDemo={openModal} />
-        <ProblemSection />
-        <SolutionSection />
-        <HowItWorksSection />
-        <TacticalModeSection />
-        <BlackBoxSection />
-        <BenefitsSection />
-        <DevelopmentStatusSection />
-        <ContactSection onDemo={openModal} />
+        <Hero onConversemos={scrollToForm} />
+        <PanelSection />
+        <Problem />
+        <HowItWorks />
+        <Value />
+        <Cases />
+        <Trust />
+        <Contact formRef={formRef as MutableRefObject<HTMLElement | null>} />
       </main>
-      <Footer onDemo={openModal} />
+      <Footer onConversemos={scrollToForm} />
+      <div className="mobile-sticky-cta">
+        <button className="btn btn-red" onClick={scrollToForm}>
+          Conversemos {Icon.arrow}
+        </button>
+      </div>
     </>
   )
 }
