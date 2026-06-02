@@ -5,8 +5,8 @@ import { Fragment } from 'react'
 const STEPS = [
   {
     n: '01',
-    label: 'Sensor',
-    desc: 'Biometría en el operador',
+    label: 'El reloj',
+    desc: 'Toma datos críticos del personal.',
     icon: (
       <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
         <path d="M2 10 L5 10 L6.5 7 L8.5 13 L10 7.5 L11.5 11 L13 10 L18 10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
@@ -15,8 +15,8 @@ const STEPS = [
   },
   {
     n: '02',
-    label: 'Mando',
-    desc: 'Red local en el carro bomba',
+    label: 'Punto de mando',
+    desc: 'Centraliza la información.',
     icon: (
       <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
         <circle cx="10" cy="15.5" r="1.5" fill="currentColor"/>
@@ -28,8 +28,8 @@ const STEPS = [
   },
   {
     n: '03',
-    label: 'Panel',
-    desc: 'Tablet táctica del oficial',
+    label: 'Visualiza y decide',
+    desc: 'El oficial opera con datos en vivo.',
     icon: (
       <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
         <rect x="3" y="3" width="14" height="10" rx="1.5" stroke="currentColor" strokeWidth="1.5" fill="none"/>
@@ -40,8 +40,8 @@ const STEPS = [
   },
   {
     n: '04',
-    label: 'Historial',
-    desc: 'Registro inmutable al cierre',
+    label: 'Se registra',
+    desc: 'La operación queda respaldada.',
     icon: (
       <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
         <rect x="5" y="10" width="10" height="8" rx="1" stroke="currentColor" strokeWidth="1.5" fill="none"/>
@@ -56,8 +56,7 @@ export default function ProblemBand() {
     <section className="flow-section">
       <div className="container">
         <div className="flow-header reveal">
-          <div className="tag">Cómo funciona en terreno</div>
-          <h2 className="flow-title">Del personal al mando.</h2>
+          <h2 className="flow-title">Así funciona en terreno.</h2>
         </div>
         <div className="flow-steps reveal d1">
           {STEPS.map((s, i) => (

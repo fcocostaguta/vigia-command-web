@@ -38,7 +38,7 @@ export default function Footer({ onConversemos }: { onConversemos: () => void })
             </div>
             <div className="footer-col">
               <h4>Contacto</h4>
-              <a href="#contacto" onClick={onConversemos}>Solicitar demo</a>
+              <a href="#contacto" onClick={onConversemos}>CONVERSEMOS</a>
               <a href="mailto:contacto@vigiacommand.cl">contacto@vigiacommand.cl</a>
             </div>
             <div className="footer-col">

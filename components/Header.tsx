@@ -36,7 +36,7 @@ export default function Header({ onConversemos }: { onConversemos: () => void })
             ))}
           </nav>
           <div className="header-ctas">
-            <button className="btn btn-ghost btn-sm" onClick={onConversemos}>Solicitar demo</button>
+            <button className="btn btn-ghost btn-sm" onClick={onConversemos}>CONVERSEMOS</button>
             <a
               href="https://mando.vigiacommand.cl"
               target="_blank"
@@ -61,7 +61,7 @@ export default function Header({ onConversemos }: { onConversemos: () => void })
         ))}
         <div className="mobile-nav-ctas">
           <button className="btn btn-red" onClick={() => { close(); onConversemos() }}>
-            Solicitar demo {Icon.arrow}
+            ME INTERESA {Icon.arrow}
           </button>
           <a
             href="https://mando.vigiacommand.cl"

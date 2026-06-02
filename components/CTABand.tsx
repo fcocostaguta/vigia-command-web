@@ -6,11 +6,11 @@ export default function CTABand({ onConversemos }: { onConversemos: () => void }
       <div className="container">
         <div className="cta-band-inner">
           <div className="cta-band-copy">
-            <div className="cta-band-kicker">Sistema disponible · Demo para organizaciones</div>
-            <h3 className="cta-band-heading">Coordinemos una demostración.</h3>
+            <div className="cta-band-kicker">Sistema disponible · Implementación para organizaciones</div>
+            <h3 className="cta-band-heading">¿Le interesa a tu organización?</h3>
           </div>
           <button className="btn btn-red btn-lg" onClick={onConversemos}>
-            Solicitar demo {Icon.arrow}
+            ME INTERESA {Icon.arrow}
           </button>
         </div>
       </div>

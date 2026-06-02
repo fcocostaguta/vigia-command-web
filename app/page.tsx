@@ -57,7 +57,7 @@ export default function HomePage() {
       <Footer onConversemos={scrollToForm} />
       <div className="mobile-sticky-cta">
         <button className="btn btn-red" onClick={scrollToForm}>
-          Solicitar demo {Icon.arrow}
+          ME INTERESA {Icon.arrow}
         </button>
       </div>
     </>

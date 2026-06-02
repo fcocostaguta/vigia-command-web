@@ -112,7 +112,7 @@ export default function Hero({ onConversemos }: { onConversemos: () => void }) {
         </p>
         <div className="hero-actions reveal in d2">
           <button className="btn btn-red btn-lg" onClick={onConversemos}>
-            Solicitar demo {Icon.arrow}
+            ME INTERESA {Icon.arrow}
           </button>
           <a
             href="https://mando.vigiacommand.cl"
