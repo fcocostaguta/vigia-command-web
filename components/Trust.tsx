@@ -30,11 +30,6 @@ export default function Trust() {
           <div className="trust-quote">
             Menos ruido.<br/>Más <em>información útil</em> para decidir.
           </div>
-          <p className="trust-body">
-            VIGÍA nace de una necesidad concreta: que el mando tenga información clara cuando debe
-            decidir bajo presión. La plataforma prioriza claridad, velocidad y usabilidad sobre el
-            exceso de datos.
-          </p>
         </div>
 
         <div className="trust-status-band reveal d1">
@@ -54,7 +49,6 @@ export default function Trust() {
             <div key={p.label} className="trust-pillar">
               <div className="trust-pillar-tag">{p.tag}</div>
               <h3 className="trust-pillar-title">{p.label}</h3>
-              <p className="trust-pillar-body">{p.body}</p>
             </div>
           ))}
         </div>

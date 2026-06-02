@@ -106,17 +106,17 @@ const OperadoresMock = () => (
 const SCREENS = [
   {
     label: 'Historial de incidentes',
-    desc: 'Registro completo de cada emergencia con estado, duración y acceso a la Caja Negra sincronizada.',
+    desc: 'Estado, duración y acceso a Caja Negra por incidente.',
     Mock: HistorialMock,
   },
   {
     label: 'Caja Negra',
-    desc: 'Snapshot inmutable al cierre del incidente: vitales por operador, timeline de eventos y metadatos.',
+    desc: 'Vitales, alertas y timeline inmutables al cierre.',
     Mock: CajaNegraMock,
   },
   {
     label: 'Operadores en vivo',
-    desc: 'Estado biométrico y operativo del personal desplegado, visible desde el mando durante el incidente.',
+    desc: 'Estado biométrico del personal en escena, en tiempo real.',
     Mock: OperadoresMock,
   },
 ]
@@ -128,10 +128,6 @@ export default function ProductShowcase() {
         <div className="showcase-header reveal">
           <div className="tag">Plataforma de mando</div>
           <h2>Lo que el mando ve en pantalla.</h2>
-          <p className="showcase-sub">
-            Panel web accesible desde cualquier dispositivo. Sincroniza con el equipo de campo
-            en tiempo real y recibe la Caja Negra automáticamente al cierre de cada incidente.
-          </p>
         </div>
 
         <div className="showcase-grid">

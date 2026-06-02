@@ -49,7 +49,6 @@ export default function HowItWorks() {
               <div className="how-node-num">{n.num}</div>
               <div className={`how-node-icon${n.active ? ' active' : ''}`}>{n.icon}</div>
               <h4>{n.title}</h4>
-              <p>{n.body}</p>
               <div className="how-node-tag">{n.tag}</div>
             </div>
           ))}

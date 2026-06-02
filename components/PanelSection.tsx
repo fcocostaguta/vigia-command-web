@@ -113,30 +113,23 @@ export default function PanelSection() {
           <div className="panel-lead reveal">
             <div className="tag">VIGÍA Command · Software</div>
             <h2>Del sensor al mando, en segundos.</h2>
-            <p>
-              El dispositivo captura señales del operador. VIGÍA Command las convierte en estados,
-              alertas y prioridades que el mando puede leer de inmediato.
-            </p>
             <div className="panel-flow">
               <div className="flow-step">
                 <div className="flow-n">01</div>
                 <div className="flow-step-body">
                   <h4>Sensor en el operador</h4>
-                  <p>Captura señales fisiológicas del personal durante la emergencia.</p>
                 </div>
               </div>
               <div className="flow-step">
                 <div className="flow-n">02</div>
                 <div className="flow-step-body">
                   <h4>Gateway táctico</h4>
-                  <p>Recibe los datos en terreno y los transmite al panel de mando.</p>
                 </div>
               </div>
               <div className="flow-step">
                 <div className="flow-n">03</div>
                 <div className="flow-step-body">
                   <h4>Panel VIGÍA Command</h4>
-                  <p>El mando ve estados, alertas y eventos en una interfaz clara y priorizada.</p>
                 </div>
               </div>
             </div>

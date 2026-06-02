@@ -1,5 +1,8 @@
 'use client'
 
+// TODO: confirmar URL exacta del perfil Vigía Command en LinkedIn antes de mergear a main
+const LINKEDIN_URL = 'https://www.linkedin.com/company/vigia-command'
+
 import Icon from './Icons'
 
 export default function Footer({ onConversemos }: { onConversemos: () => void }) {
@@ -14,6 +17,17 @@ export default function Footer({ onConversemos }: { onConversemos: () => void })
             </div>
             <p>Plataforma de monitoreo táctico para bomberos, brigadas industriales y equipos de emergencia.</p>
             <div className="footer-domain mono">vigiacommand.cl</div>
+            <div className="footer-social">
+              <a
+                href={LINKEDIN_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="footer-social-btn"
+              >
+                {Icon.linkedin}
+                <span>LinkedIn</span>
+              </a>
+            </div>
           </div>
           <div className="footer-links">
             <div className="footer-col">
@@ -24,8 +38,7 @@ export default function Footer({ onConversemos }: { onConversemos: () => void })
             </div>
             <div className="footer-col">
               <h4>Contacto</h4>
-              <a href="#contacto" onClick={onConversemos}>Conversemos</a>
-              <a href="#contacto">Solicitar piloto</a>
+              <a href="#contacto" onClick={onConversemos}>Solicitar demo</a>
               <a href="mailto:contacto@vigiacommand.cl">contacto@vigiacommand.cl</a>
             </div>
             <div className="footer-col">

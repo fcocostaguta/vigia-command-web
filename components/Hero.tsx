@@ -108,8 +108,7 @@ export default function Hero({ onConversemos }: { onConversemos: () => void }) {
           <em>Emergencias.</em>
         </h1>
         <p className="hero-sub reveal in d1">
-          Monitorea, registra y sincroniza lo que ocurre en terreno,
-          incluso cuando no hay internet.
+          Monitoreo offline. Registro inmutable. Sincronización automática.
         </p>
         <div className="hero-actions reveal in d2">
           <button className="btn btn-red btn-lg" onClick={onConversemos}>
@@ -126,6 +125,28 @@ export default function Hero({ onConversemos }: { onConversemos: () => void }) {
         </div>
         <div className="hero-micro reveal in d3">
           Bomberos · Brigadas industriales · Equipos de respuesta
+        </div>
+
+        <div className="hero-mobile-mock reveal in d3">
+          <div className="hmm-topbar">
+            <div className="tt-live">VIGÍA Command · En vivo</div>
+            <span className="tt-incident">Incendio estructural</span>
+          </div>
+          <div className="hmm-row">
+            <span className="hmm-name">Muñoz <span className="hmm-id">B-02</span></span>
+            <span className={`tt-bpm ${bpm >= 152 ? 'bpm-crit' : 'bpm-warn'}`}>{bpm}</span>
+            <span className={`status-badge ${bpm >= 152 ? 's-crit' : 's-warn'}`}>{bpm >= 152 ? 'Alerta' : 'Exigido'}</span>
+          </div>
+          <div className="hmm-row">
+            <span className="hmm-name">Rojas <span className="hmm-id">B-01</span></span>
+            <span className="tt-bpm bpm-ok">142</span>
+            <span className="status-badge s-ok">Operativo</span>
+          </div>
+          <div className="hmm-row">
+            <span className="hmm-name">Soto <span className="hmm-id">B-04</span></span>
+            <span className="tt-bpm bpm-warn">176</span>
+            <span className="status-badge s-rehab">Rehab.</span>
+          </div>
         </div>
       </div>
 

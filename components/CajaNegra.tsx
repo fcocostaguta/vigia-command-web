@@ -7,30 +7,10 @@ export default function CajaNegra() {
           <div className="cbn-lead reveal">
             <div className="tag">Diferenciador central</div>
             <h2>La emergencia deja<br/><em style={{ fontStyle: 'normal', color: 'var(--red-b)' }}>registro automático.</em></h2>
-            <p>
-              Al cerrar cada incidente, VIGÍA genera un snapshot inmutable con todo lo que ocurrió:
-              vitales del personal, alertas, asignaciones y timeline completo de eventos.
-              Queda sincronizado al cloud y es auditable en cualquier momento.
-            </p>
             <div className="cbn-bullets">
-              <div className="cbn-bullet">
-                <div>
-                  <strong>Snapshot por incidente</strong>
-                  Cada emergencia genera un registro cerrado con todos los datos del personal desplegado.
-                </div>
-              </div>
-              <div className="cbn-bullet">
-                <div>
-                  <strong>Historial auditeable</strong>
-                  Accede al detalle de cualquier incidente pasado desde el panel de mando cloud.
-                </div>
-              </div>
-              <div className="cbn-bullet">
-                <div>
-                  <strong>Base para mejora continua</strong>
-                  Revisa qué alertas se activaron, quién requirió rehabilitación y qué decisiones se tomaron.
-                </div>
-              </div>
+              <div className="cbn-bullet"><strong>Snapshot inmutable por incidente</strong></div>
+              <div className="cbn-bullet"><strong>Historial auditable desde el cloud</strong></div>
+              <div className="cbn-bullet"><strong>Base para mejora y aprendizaje operacional</strong></div>
             </div>
           </div>
 

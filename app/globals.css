@@ -1076,3 +1076,158 @@ p  { text-wrap: pretty; }
 .sm-snap-evt { display: flex; gap: 8px; padding: 3px 0; font-size: 9px; }
 .sm-snap-evt-t { color: var(--amber); white-space: nowrap; flex-shrink: 0; }
 .sm-snap-evt-body { color: var(--muted); }
+
+/* ─── PROBLEM BAND ─── */
+.pb-section {
+  background: var(--bg);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 0;
+}
+.pb-items {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  background: var(--border);
+}
+.pb-item {
+  background: var(--bg);
+  padding: 48px 36px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  position: relative;
+  overflow: hidden;
+}
+.pb-item::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--red-dim);
+}
+.pb-num {
+  font-family: var(--font-m);
+  font-size: 9px;
+  color: var(--faint);
+  letter-spacing: 0.14em;
+}
+.pb-main {
+  font-family: var(--font-h);
+  font-size: clamp(1.5rem, 2.5vw, 2.1rem);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  color: var(--text);
+}
+.pb-tag {
+  font-family: var(--font-m);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  color: var(--faint);
+  line-height: 1.4;
+}
+@media (max-width: 700px) {
+  .pb-items { grid-template-columns: 1fr; }
+}
+
+/* ─── CTA BAND ─── */
+.cta-band {
+  background: var(--surf);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 56px 0;
+}
+.cta-band-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+.cta-band-kicker {
+  font-family: var(--font-m);
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+.cta-band-heading {
+  font-family: var(--font-h);
+  font-size: clamp(1.5rem, 2.5vw, 2.1rem);
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  line-height: 1.1;
+}
+@media (max-width: 640px) {
+  .cta-band-inner { flex-direction: column; align-items: flex-start; }
+  .cta-band-inner .btn { width: 100%; justify-content: center; }
+}
+
+/* ─── HERO MOBILE MOCK ─── */
+.hero-mobile-mock {
+  display: none;
+  margin-top: 32px;
+  background: var(--surf);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  overflow: hidden;
+  font-family: var(--font-m);
+  max-width: 420px;
+  box-shadow: 0 16px 48px oklch(0% 0 0 / 0.55);
+}
+.hmm-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 7px 12px;
+  background: var(--surf2);
+  border-bottom: 1px solid var(--border);
+  font-size: 9px;
+}
+.hmm-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  border-bottom: 1px solid oklch(20% 0.010 240 / 0.45);
+  font-size: 11px;
+}
+.hmm-row:last-child { border-bottom: none; }
+.hmm-name { flex: 1; color: var(--text); font-weight: 500; }
+.hmm-id { color: var(--faint); font-size: 9px; margin-left: 4px; font-weight: 400; }
+@media (max-width: 1040px) {
+  .hero-mobile-mock { display: block; }
+}
+
+/* ─── FOOTER SOCIAL ─── */
+.footer-social { margin-top: 18px; }
+.footer-social-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--font-m);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  padding: 7px 14px;
+  transition: all 0.15s;
+  text-decoration: none;
+}
+.footer-social-btn:hover {
+  color: var(--text);
+  border-color: var(--border2);
+  background: var(--surf);
+}
+
+/* ─── CBN BULLET (title-only variant) ─── */
+.cbn-bullet strong {
+  color: var(--text);
+  font-weight: 600;
+  font-size: 0.92rem;
+  font-family: var(--font-h);
+  letter-spacing: -0.005em;
+}
