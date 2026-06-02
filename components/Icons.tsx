@@ -68,6 +68,14 @@ const Icon: Record<string, JSX.Element> = {
       <path d="M5 7V5a3 3 0 016 0v2" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
     </svg>
   ),
+  linkedin: (
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+      <rect x="2" y="2" width="20" height="20" rx="3" stroke="currentColor" strokeWidth="1.5"/>
+      <path d="M7 10v7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+      <circle cx="7" cy="7" r="0.5" fill="currentColor" stroke="currentColor" strokeWidth="1"/>
+      <path d="M12 17v-3.5a2.5 2.5 0 015 0V17M12 10v7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+    </svg>
+  ),
 }
 
 export default Icon

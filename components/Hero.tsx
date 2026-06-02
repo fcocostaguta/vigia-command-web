@@ -83,6 +83,71 @@ function useWatchScroll(ref: React.RefObject<HTMLImageElement | null>) {
   }, [ref])
 }
 
+function HeroTablet({ bpm }: { bpm: number }) {
+  const munozBCls = bpm >= 152 ? 'bpm-crit' : 'bpm-warn'
+  const munozSCls = bpm >= 152 ? 's-crit'   : 's-warn'
+  const munozLbl  = bpm >= 152 ? 'Alerta'   : 'Exigido'
+
+  const ops = [
+    { n: 'Rojas',  id: 'B-01', v: 142, bCls: 'bpm-ok',   sCls: 's-ok',    lbl: 'Normal', al: false },
+    { n: 'Muñoz', id: 'B-02', v: bpm,  bCls: munozBCls,  sCls: munozSCls, lbl: munozLbl, al: bpm >= 152 },
+    { n: 'Pérez', id: 'B-03', v: 118,  bCls: 'bpm-ok',   sCls: 's-ok',    lbl: 'Normal', al: false },
+    { n: 'Soto',  id: 'B-04', v: 176,  bCls: 'bpm-warn', sCls: 's-rehab', lbl: 'Rehab.', al: false },
+  ]
+
+  return (
+    <div className="hero-tablet">
+      <div className="ht-device">
+        <div className="ht-screen">
+
+          <div className="ht-topbar">
+            <div className="ht-topbar-l">
+              <span className="pulse-dot" style={{ width: 5, height: 5, flexShrink: 0 }} />
+              <span className="ht-brand">VIGÍA</span>
+            </div>
+            <span className="ht-incident">Incendio · 2ª alarma</span>
+          </div>
+
+          <div className="ht-sect">Personal en escena</div>
+          <div className="ht-ops">
+            {ops.map(op => (
+              <div key={op.id} className={`ht-op${op.al ? ' ht-op-al' : ''}`}>
+                <div className="ht-op-meta">
+                  <span className="ht-op-name">{op.n}</span>
+                  <span className="ht-op-id">{op.id}</span>
+                </div>
+                <span className={`tt-bpm ${op.bCls}`} style={{ fontSize: 10 }}>{op.v}</span>
+                <span className={`status-badge ${op.sCls}`} style={{ fontSize: 7, padding: '1px 4px' }}>{op.lbl}</span>
+              </div>
+            ))}
+          </div>
+
+          <div className="ht-strip">
+            <div className="ht-si"><span className="ht-dot ht-dot-ok" />Offline</div>
+            <div className="ht-si"><span className="ht-dot ht-dot-rec" />Grabando</div>
+            <div className="ht-si"><span className="ht-dot ht-dot-dim" />Sync pend.</div>
+          </div>
+
+          <div className="ht-sect" style={{ marginTop: 6 }}>Eventos recientes</div>
+          <div className="ht-evts">
+            {[
+              { t: '14:11', b: 'Alerta BPM — Muñoz' },
+              { t: '14:19', b: 'Soto → rehabilitación' },
+              { t: '14:23', b: '4 operadores activos' },
+            ].map(ev => (
+              <div key={ev.t} className="ht-evt">
+                <span className="ht-evt-t">{ev.t}</span>
+                <span className="ht-evt-b">{ev.b}</span>
+              </div>
+            ))}
+          </div>
+
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export default function Hero({ onConversemos }: { onConversemos: () => void }) {
   const watchRef = useRef<HTMLImageElement>(null)
   const [bpm, setBpm] = useState(142)
@@ -100,44 +165,59 @@ export default function Hero({ onConversemos }: { onConversemos: () => void }) {
       <div className="hero-content">
         <div className="hero-kicker reveal in">
           <span className="pulse-dot"></span>
-          Monitoreo táctico · Tiempo real
+          Sistema táctico · Offline-first
         </div>
         <h1 className="reveal in">
-          Información crítica<br/>
-          para decisiones<br/>
-          <em>más seguras.</em>
+          Caja Negra<br/>
+          Operacional para<br/>
+          <em>Emergencias.</em>
         </h1>
         <p className="hero-sub reveal in d1">
-          VIGÍA monitorea el estado fisiológico y operativo del personal en emergencias,
-          entregando al mando visibilidad clara para anticipar riesgos y coordinar recursos.
+          Monitoreo offline. Registro inmutable. Sincronización automática.
         </p>
         <div className="hero-actions reveal in d2">
           <button className="btn btn-red btn-lg" onClick={onConversemos}>
-            Conversemos {Icon.arrow}
+            ME INTERESA {Icon.arrow}
           </button>
+          <a
+            href="https://mando.vigiacommand.cl"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn btn-ghost btn-lg"
+          >
+            {Icon.lock} Ingresar a Mando
+          </a>
         </div>
         <div className="hero-micro reveal in d3">
-          Bomberos · Brigadas industriales · Equipos de emergencia
-          <span style={{ display: 'block', marginTop: 10 }}>
-            <a
-              href="#contacto"
-              style={{
-                color: 'var(--muted)',
-                textDecoration: 'underline',
-                textUnderlineOffset: '3px',
-                textDecorationColor: 'var(--border2)',
-                letterSpacing: '0.06em',
-                transition: 'color 0.15s',
-              }}
-            >
-              Solicitar piloto
-            </a>
-          </span>
+          Bomberos · Brigadas industriales · Equipos de respuesta
+        </div>
+
+        <div className="hero-mobile-mock reveal in d3">
+          <div className="hmm-topbar">
+            <div className="tt-live">VIGÍA Command · En vivo</div>
+            <span className="tt-incident">Incendio estructural</span>
+          </div>
+          <div className="hmm-row">
+            <span className="hmm-name">Muñoz <span className="hmm-id">B-02</span></span>
+            <span className={`tt-bpm ${bpm >= 152 ? 'bpm-crit' : 'bpm-warn'}`}>{bpm}</span>
+            <span className={`status-badge ${bpm >= 152 ? 's-crit' : 's-warn'}`}>{bpm >= 152 ? 'Alerta' : 'Exigido'}</span>
+          </div>
+          <div className="hmm-row">
+            <span className="hmm-name">Rojas <span className="hmm-id">B-01</span></span>
+            <span className="tt-bpm bpm-ok">142</span>
+            <span className="status-badge s-ok">Operativo</span>
+          </div>
+          <div className="hmm-row">
+            <span className="hmm-name">Soto <span className="hmm-id">B-04</span></span>
+            <span className="tt-bpm bpm-warn">176</span>
+            <span className="status-badge s-rehab">Rehab.</span>
+          </div>
         </div>
       </div>
 
       <div className="hero-visual">
         <div className="watch-stage">
+
           <div className="watch-glow"></div>
           <div className="watch-glow-inner"></div>
           <WatchOrbit />
@@ -206,6 +286,7 @@ export default function Hero({ onConversemos }: { onConversemos: () => void }) {
             </div>
           </div>
         </div>
+        <HeroTablet bpm={bpm} />
       </div>
     </section>
   )

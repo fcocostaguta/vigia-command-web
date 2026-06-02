@@ -65,7 +65,7 @@ export default function Contact({ formRef }: { formRef: MutableRefObject<HTMLEle
             <div className="contact-lead-ctas">
               <div className="contact-check"><span className="dot">●</span> Respuesta en menos de 48 horas</div>
               <div className="contact-check"><span className="dot">●</span> Demo a medida según tu institución</div>
-              <div className="contact-check"><span className="dot">●</span> Evaluación de escenario de piloto</div>
+              <div className="contact-check"><span className="dot">●</span> Evaluación de escenario operacional</div>
             </div>
           </div>
 
@@ -73,7 +73,7 @@ export default function Contact({ formRef }: { formRef: MutableRefObject<HTMLEle
             <div className="contact-form">
               {!sent ? (
                 <>
-                  <div className="tag form-tag">Solicitar información · Piloto</div>
+                  <div className="tag form-tag">Solicitar información · Demo</div>
                   <form onSubmit={handleSubmit}>
                     {/* Honeypot — hidden from users, bots fill it; server silently discards on _hp present */}
                     <input

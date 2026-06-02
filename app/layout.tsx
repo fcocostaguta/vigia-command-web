@@ -26,24 +26,24 @@ const jetbrainsMono = JetBrains_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'VIGÍA | Información crítica para decisiones más seguras',
+  title: 'VIGÍA — Caja Negra Operacional para Emergencias',
   description:
-    'Plataforma de monitoreo táctico para bomberos y brigadas industriales. Visibilidad en tiempo real del estado operativo y fisiológico del personal.',
+    'Monitoreo táctico offline-first para bomberos y brigadas. Registro inmutable por incidente, alertas en tiempo real y sincronización automática al cloud.',
   metadataBase: new URL('https://vigiacommand.cl'),
   openGraph: {
-    title: 'VIGÍA | Información crítica para decisiones más seguras',
+    title: 'VIGÍA — Caja Negra Operacional para Emergencias',
     description:
-      'Plataforma de monitoreo táctico para bomberos y brigadas industriales. Visibilidad en tiempo real del estado operativo y fisiológico del personal.',
+      'Monitoreo táctico offline-first para bomberos y brigadas. Registro inmutable por incidente, alertas en tiempo real y sincronización automática al cloud.',
     url: 'https://vigiacommand.cl',
-    siteName: 'VIGÍA Command',
+    siteName: 'VIGÍA',
     locale: 'es_CL',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'VIGÍA | Información crítica para decisiones más seguras',
+    title: 'VIGÍA — Caja Negra Operacional para Emergencias',
     description:
-      'Plataforma de monitoreo táctico para bomberos y brigadas industriales. Visibilidad en tiempo real del estado operativo y fisiológico del personal.',
+      'Monitoreo táctico offline-first para bomberos y brigadas. Registro inmutable por incidente, alertas en tiempo real y sincronización automática al cloud.',
   },
   icons: {
     icon: '/favicon.svg',

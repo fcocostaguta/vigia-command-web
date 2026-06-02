@@ -1,46 +1,53 @@
 import Icon from './Icons'
 
-const CASES = [
+const AUDIENCE = [
   {
-    tag: 'Urbano',
     icon: Icon.fire,
-    title: 'Incendios estructurales',
-    body: 'Monitoreo de equipos en interior, control de exposición y rotación de personal en zonas de riesgo.',
+    title: 'Cuerpos de Bomberos',
+    bullets: [
+      'Monitoreo en vivo de bomberos en emergencia',
+      'Historial completo de incidentes',
+      'Respaldo de decisiones y operaciones',
+    ],
   },
   {
-    tag: 'Forestal',
-    icon: Icon.forest,
-    title: 'Emergencias forestales',
-    body: 'Seguimiento de fatiga y esfuerzo prolongado en terreno abierto con personal distribuido.',
-  },
-  {
-    tag: 'Industrial',
     icon: Icon.factory,
     title: 'Brigadas industriales',
-    body: 'Seguridad operacional en entornos de alto riesgo con trazabilidad y auditoría de eventos.',
+    bullets: [
+      'Protección de personal en terreno',
+      'Alertas críticas en tiempo real',
+      'Reportes operacionales para mejora continua',
+    ],
   },
   {
-    tag: 'Operaciones',
     icon: Icon.rescue,
-    title: 'Rescate y operaciones especiales',
-    body: 'Apoyo al mando en escenarios complejos donde la visibilidad del personal es crítica.',
+    title: 'Equipos de respuesta',
+    bullets: [
+      'Coordinación más eficiente en terreno',
+      'Visibilidad del personal desplegado',
+      'Registro operativo para análisis posterior',
+    ],
   },
 ]
 
 export default function Cases() {
   return (
-    <section className="cases-section" id="casos">
+    <section className="pq-section" id="para-quien">
       <div className="container">
         <div className="reveal">
-          <div className="tag">Casos de uso</div>
-          <h2>Diseñado para operaciones<br/>donde cada segundo importa.</h2>
+          <div className="tag">Para quién es VIGÍA</div>
+          <h2>Construido para quienes<br/>operan bajo presión.</h2>
         </div>
-        <div className="cases-grid reveal d1">
-          {CASES.map(c => (
-            <div key={c.title} className="case-card">
-              <div className="case-tag">{c.tag}</div>
-              <h3>{c.title}</h3>
-              <p>{c.body}</p>
+        <div className="pq-grid reveal d1">
+          {AUDIENCE.map(a => (
+            <div key={a.title} className="pq-card">
+              <div className="pq-card-icon">{a.icon}</div>
+              <h3>{a.title}</h3>
+              <div className="pq-bullets">
+                {a.bullets.map(b => (
+                  <div key={b} className="pq-bullet">{b}</div>
+                ))}
+              </div>
             </div>
           ))}
         </div>

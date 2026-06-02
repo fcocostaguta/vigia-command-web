@@ -4,9 +4,10 @@ import { useRef, useCallback, useEffect, MutableRefObject } from 'react'
 import Header from '@/components/Header'
 import Hero from '@/components/Hero'
 import PanelSection from '@/components/PanelSection'
-import Problem from '@/components/Problem'
-import HowItWorks from '@/components/HowItWorks'
-import Value from '@/components/Value'
+import ProblemBand from '@/components/ProblemBand'
+import CajaNegra from '@/components/CajaNegra'
+import CTABand from '@/components/CTABand'
+import OfflineFirst from '@/components/OfflineFirst'
 import Cases from '@/components/Cases'
 import ProductShowcase from '@/components/ProductShowcase'
 import Trust from '@/components/Trust'
@@ -42,9 +43,10 @@ export default function HomePage() {
       <main>
         <Hero onConversemos={scrollToForm} />
         <PanelSection />
-        <Problem />
-        <HowItWorks />
-        <Value />
+        <ProblemBand />
+        <CajaNegra />
+        <CTABand onConversemos={scrollToForm} />
+        <OfflineFirst />
         <Cases />
         <ProductShowcase />
         <Trust />
@@ -53,7 +55,7 @@ export default function HomePage() {
       <Footer onConversemos={scrollToForm} />
       <div className="mobile-sticky-cta">
         <button className="btn btn-red" onClick={scrollToForm}>
-          Conversemos {Icon.arrow}
+          ME INTERESA {Icon.arrow}
         </button>
       </div>
     </>
