@@ -35,11 +35,10 @@ export default function Trust() {
         <div className="trust-status-band reveal d1">
           <div className="trust-status-dot"></div>
           <div>
-            <span className="trust-status-label">Pre-piloto · Validación activa</span>
+            <span className="trust-status-label">Sistema operativo · Demo disponible</span>
             <p className="trust-status-text">
-              VIGÍA está en etapa avanzada de validación pre-piloto, con arquitectura offline + cloud
-              probada sobre hardware real. Estamos preparando pilotos controlados con compañías de
-              bomberos y brigadas operativas.
+              VIGÍA funciona sobre hardware real con arquitectura offline + cloud validada en terreno.
+              Disponible para implementación en compañías de bomberos y brigadas industriales.
             </p>
           </div>
         </div>

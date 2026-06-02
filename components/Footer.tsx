@@ -1,7 +1,7 @@
 'use client'
 
-// TODO: confirmar URL exacta del perfil Vigía Command en LinkedIn antes de mergear a main
-const LINKEDIN_URL = 'https://www.linkedin.com/company/vigia-command'
+// TODO: verificar que el slug 'vig%C3%ADa-command' resuelva correctamente en LinkedIn antes de mergear a main
+const LINKEDIN_URL = 'https://www.linkedin.com/company/vig%C3%ADa-command'
 
 import Icon from './Icons'
 

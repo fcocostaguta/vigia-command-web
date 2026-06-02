@@ -1077,58 +1077,86 @@ p  { text-wrap: pretty; }
 .sm-snap-evt-t { color: var(--amber); white-space: nowrap; flex-shrink: 0; }
 .sm-snap-evt-body { color: var(--muted); }
 
-/* ─── PROBLEM BAND ─── */
-.pb-section {
+/* ─── FLOW — Del personal al mando ─── */
+.flow-section {
   background: var(--bg);
   border-top: 1px solid var(--border);
   border-bottom: 1px solid var(--border);
-  padding: 0;
+  padding: 72px 0;
 }
-.pb-items {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 0;
-  background: var(--border);
+.flow-header {
+  text-align: center;
+  margin-bottom: 48px;
 }
-.pb-item {
-  background: var(--bg);
-  padding: 48px 36px;
+.flow-title {
+  font-family: var(--font-h);
+  font-size: clamp(1.8rem, 3vw, 2.5rem);
+  font-weight: 800;
+  color: var(--text);
+  margin-top: 12px;
+  letter-spacing: -0.01em;
+}
+.flow-steps {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+.flow-step {
+  flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  position: relative;
-  overflow: hidden;
+  align-items: center;
+  text-align: center;
+  gap: 10px;
+  padding: 8px 16px;
+  max-width: 200px;
 }
-.pb-item::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 2px;
-  background: var(--red-dim);
+.flow-step-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background: var(--surf);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--red-b);
+  flex-shrink: 0;
 }
-.pb-num {
+.flow-step-num {
   font-family: var(--font-m);
   font-size: 9px;
   color: var(--faint);
   letter-spacing: 0.14em;
 }
-.pb-main {
+.flow-step-label {
   font-family: var(--font-h);
-  font-size: clamp(1.5rem, 2.5vw, 2.1rem);
-  font-weight: 800;
-  line-height: 1.1;
-  letter-spacing: -0.01em;
+  font-size: 1.15rem;
+  font-weight: 700;
   color: var(--text);
+  letter-spacing: 0.01em;
+  line-height: 1.1;
 }
-.pb-tag {
+.flow-step-desc {
   font-family: var(--font-m);
   font-size: 10px;
-  letter-spacing: 0.06em;
   color: var(--faint);
-  line-height: 1.4;
+  letter-spacing: 0.05em;
+  line-height: 1.5;
 }
-@media (max-width: 700px) {
-  .pb-items { grid-template-columns: 1fr; }
+.flow-arrow {
+  flex-shrink: 0;
+  color: var(--faint);
+  font-size: 1.1rem;
+  opacity: 0.35;
+  padding: 0 4px;
+  margin-top: 18px;
+  align-self: flex-start;
+}
+@media (max-width: 680px) {
+  .flow-steps { flex-wrap: wrap; justify-content: center; gap: 0; }
+  .flow-step { flex: 1 1 calc(50% - 32px); max-width: none; padding: 20px 12px; }
+  .flow-arrow { display: none; }
 }
 
 /* ─── CTA BAND ─── */

@@ -1,20 +1,77 @@
-const ITEMS = [
-  { n: '01', text: 'Sin visibilidad.',  tag: 'Personal en interior sin estado conocido' },
-  { n: '02', text: 'Sin alerta.',       tag: 'Exigencia cardíaca crítica sin detección' },
-  { n: '03', text: 'Sin registro.',     tag: 'Incidente terminado sin evidencia auditable' },
+'use client'
+
+import { Fragment } from 'react'
+
+const STEPS = [
+  {
+    n: '01',
+    label: 'Sensor',
+    desc: 'Biometría en el operador',
+    icon: (
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+        <path d="M2 10 L5 10 L6.5 7 L8.5 13 L10 7.5 L11.5 11 L13 10 L18 10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+      </svg>
+    ),
+  },
+  {
+    n: '02',
+    label: 'Mando',
+    desc: 'Red local en el carro bomba',
+    icon: (
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+        <circle cx="10" cy="15.5" r="1.5" fill="currentColor"/>
+        <path d="M7 12.5 C8.3 11.1 11.7 11.1 13 12.5" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round"/>
+        <path d="M4.5 9.5 C7 7 13 7 15.5 9.5" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round"/>
+        <path d="M2 6.5 C5.5 3 14.5 3 18 6.5" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round"/>
+      </svg>
+    ),
+  },
+  {
+    n: '03',
+    label: 'Panel',
+    desc: 'Tablet táctica del oficial',
+    icon: (
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+        <rect x="3" y="3" width="14" height="10" rx="1.5" stroke="currentColor" strokeWidth="1.5" fill="none"/>
+        <path d="M7 17 L13 17" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+        <path d="M10 13 L10 17" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+      </svg>
+    ),
+  },
+  {
+    n: '04',
+    label: 'Historial',
+    desc: 'Registro inmutable al cierre',
+    icon: (
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+        <rect x="5" y="10" width="10" height="8" rx="1" stroke="currentColor" strokeWidth="1.5" fill="none"/>
+        <path d="M8 10 L8 8 C8 6.3 12 6.3 12 8 L12 10" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round"/>
+      </svg>
+    ),
+  },
 ]
 
 export default function ProblemBand() {
   return (
-    <section className="pb-section">
+    <section className="flow-section">
       <div className="container">
-        <div className="pb-items reveal">
-          {ITEMS.map(i => (
-            <div key={i.n} className="pb-item">
-              <div className="pb-num">{i.n}</div>
-              <div className="pb-main">{i.text}</div>
-              <div className="pb-tag">{i.tag}</div>
-            </div>
+        <div className="flow-header reveal">
+          <div className="tag">Cómo funciona en terreno</div>
+          <h2 className="flow-title">Del personal al mando.</h2>
+        </div>
+        <div className="flow-steps reveal d1">
+          {STEPS.map((s, i) => (
+            <Fragment key={s.n}>
+              <div className="flow-step">
+                <div className="flow-step-icon">{s.icon}</div>
+                <div className="flow-step-num">{s.n}</div>
+                <div className="flow-step-label">{s.label}</div>
+                <div className="flow-step-desc">{s.desc}</div>
+              </div>
+              {i < STEPS.length - 1 && (
+                <div className="flow-arrow" aria-hidden="true">→</div>
+              )}
+            </Fragment>
           ))}
         </div>
       </div>

@@ -1,4 +1,12 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
-  <rect width="32" height="32" rx="7" fill="#0d1117"/>
-  <text x="16" y="23" font-family="Georgia, serif" font-size="22" font-weight="900" font-style="italic" text-anchor="middle" fill="#10b981">V</text>
+  <rect width="32" height="32" rx="5" fill="#0a0d10"/>
+  <!-- Shield left bracket -->
+  <path d="M5.5 9 L9.5 9 M5.5 9 L5.5 22 L16 27.5" stroke="white" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Shield right bracket -->
+  <path d="M26.5 9 L22.5 9 M26.5 9 L26.5 22 L16 27.5" stroke="white" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- ECG heartbeat line through shield -->
+  <path d="M5.5 17 L9 17 L10.5 14 L12.5 20 L14.5 13.5 L16 16.5 L17.5 17 L26.5 17" stroke="white" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Orange flame -->
+  <path d="M16 1 C17.5 3 20.5 5.5 20.5 8.5 C20.5 11.5 18.3 13 16 11.8 C13.7 13 11.5 11.5 11.5 8.5 C11.5 5.5 14.5 3 16 1Z" fill="#f97316"/>
+  <path d="M16 4.5 C16.8 6 18.5 7.5 18.5 8.5 C18.5 9.9 17.3 10.7 16 10 C14.7 10.7 13.5 9.9 13.5 8.5 C13.5 7.5 15.2 6 16 4.5Z" fill="#fbbf24" opacity="0.45"/>
 </svg>
