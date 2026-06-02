@@ -37,7 +37,19 @@ export default function Trust() {
           </p>
         </div>
 
-        <div className="trust-pillars reveal d1">
+        <div className="trust-status-band reveal d1">
+          <div className="trust-status-dot"></div>
+          <div>
+            <span className="trust-status-label">Pre-piloto · Validación activa</span>
+            <p className="trust-status-text">
+              VIGÍA está en etapa avanzada de validación pre-piloto, con arquitectura offline + cloud
+              probada sobre hardware real. Estamos preparando pilotos controlados con compañías de
+              bomberos y brigadas operativas.
+            </p>
+          </div>
+        </div>
+
+        <div className="trust-pillars reveal d2">
           {pillars.map((p) => (
             <div key={p.label} className="trust-pillar">
               <div className="trust-pillar-tag">{p.tag}</div>

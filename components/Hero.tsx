@@ -100,39 +100,32 @@ export default function Hero({ onConversemos }: { onConversemos: () => void }) {
       <div className="hero-content">
         <div className="hero-kicker reveal in">
           <span className="pulse-dot"></span>
-          Monitoreo táctico · Tiempo real
+          Sistema táctico · Offline-first
         </div>
         <h1 className="reveal in">
-          Información crítica<br/>
-          para decisiones<br/>
-          <em>más seguras.</em>
+          Caja Negra<br/>
+          Operacional para<br/>
+          <em>Emergencias.</em>
         </h1>
         <p className="hero-sub reveal in d1">
-          VIGÍA monitorea el estado fisiológico y operativo del personal en emergencias,
-          entregando al mando visibilidad clara para anticipar riesgos y coordinar recursos.
+          Monitorea, registra y sincroniza lo que ocurre en terreno,
+          incluso cuando no hay internet.
         </p>
         <div className="hero-actions reveal in d2">
           <button className="btn btn-red btn-lg" onClick={onConversemos}>
-            Conversemos {Icon.arrow}
+            Solicitar demo {Icon.arrow}
           </button>
+          <a
+            href="https://mando.vigiacommand.cl"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn btn-ghost btn-lg"
+          >
+            {Icon.lock} Ingresar a Mando
+          </a>
         </div>
         <div className="hero-micro reveal in d3">
-          Bomberos · Brigadas industriales · Equipos de emergencia
-          <span style={{ display: 'block', marginTop: 10 }}>
-            <a
-              href="#contacto"
-              style={{
-                color: 'var(--muted)',
-                textDecoration: 'underline',
-                textUnderlineOffset: '3px',
-                textDecorationColor: 'var(--border2)',
-                letterSpacing: '0.06em',
-                transition: 'color 0.15s',
-              }}
-            >
-              Solicitar piloto
-            </a>
-          </span>
+          Bomberos · Brigadas industriales · Equipos de respuesta
         </div>
       </div>
 

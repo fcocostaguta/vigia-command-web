@@ -6,8 +6,10 @@ import Hero from '@/components/Hero'
 import PanelSection from '@/components/PanelSection'
 import Problem from '@/components/Problem'
 import HowItWorks from '@/components/HowItWorks'
-import Value from '@/components/Value'
+import CajaNegra from '@/components/CajaNegra'
+import OfflineFirst from '@/components/OfflineFirst'
 import Cases from '@/components/Cases'
+import CasosDeUso from '@/components/CasosDeUso'
 import ProductShowcase from '@/components/ProductShowcase'
 import Trust from '@/components/Trust'
 import Contact from '@/components/Contact'
@@ -44,8 +46,10 @@ export default function HomePage() {
         <PanelSection />
         <Problem />
         <HowItWorks />
-        <Value />
+        <CajaNegra />
+        <OfflineFirst />
         <Cases />
+        <CasosDeUso />
         <ProductShowcase />
         <Trust />
         <Contact formRef={formRef as MutableRefObject<HTMLElement | null>} />
@@ -53,7 +57,7 @@ export default function HomePage() {
       <Footer onConversemos={scrollToForm} />
       <div className="mobile-sticky-cta">
         <button className="btn btn-red" onClick={scrollToForm}>
-          Conversemos {Icon.arrow}
+          Solicitar demo {Icon.arrow}
         </button>
       </div>
     </>

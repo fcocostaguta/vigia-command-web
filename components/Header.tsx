@@ -7,6 +7,7 @@ const LINKS: [string, string][] = [
   ['Solución',      '#solucion'],
   ['Cómo funciona', '#como-funciona'],
   ['Casos de uso',  '#casos'],
+  ['Contacto',      '#contacto'],
 ]
 
 export default function Header({ onConversemos }: { onConversemos: () => void }) {
@@ -35,7 +36,7 @@ export default function Header({ onConversemos }: { onConversemos: () => void })
             ))}
           </nav>
           <div className="header-ctas">
-            <button className="btn btn-ghost btn-sm" onClick={onConversemos}>Conversemos</button>
+            <button className="btn btn-ghost btn-sm" onClick={onConversemos}>Solicitar demo</button>
             <a
               href="https://mando.vigiacommand.cl"
               target="_blank"
@@ -60,7 +61,7 @@ export default function Header({ onConversemos }: { onConversemos: () => void })
         ))}
         <div className="mobile-nav-ctas">
           <button className="btn btn-red" onClick={() => { close(); onConversemos() }}>
-            Conversemos {Icon.arrow}
+            Solicitar demo {Icon.arrow}
           </button>
           <a
             href="https://mando.vigiacommand.cl"
