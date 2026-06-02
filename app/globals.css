@@ -443,43 +443,6 @@ p  { text-wrap: pretty; }
 .panel-flow .flow-step-body h4 { font-family: var(--font-h); font-size: 0.95rem; font-weight: 700; margin-bottom: 3px; }
 .panel-flow .flow-step-body p  { font-size: 0.83rem; color: var(--muted); line-height: 1.6; }
 
-/* ─── PROBLEM ─── */
-.problem-section { background: var(--surf); padding: 108px 0; }
-.problem-grid {
-  display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px;
-  background: var(--border); margin-top: 56px;
-}
-.problem-card {
-  background: var(--surf); padding: 40px 32px; position: relative; overflow: hidden;
-}
-.problem-card::after {
-  content: attr(data-n); position: absolute; bottom: -20px; right: 10px;
-  font-family: var(--font-h); font-size: 7.5rem; font-weight: 900;
-  color: oklch(15% 0.008 240); line-height: 1; pointer-events: none; user-select: none;
-}
-.problem-icon { width: 30px; height: 30px; margin-bottom: 22px; color: var(--faint); }
-.problem-card h3 { font-size: 1.1rem; margin-bottom: 10px; line-height: 1.2; }
-.problem-card p  { font-size: 0.87rem; color: var(--muted); line-height: 1.75; }
-
-/* ─── VALUE ─── */
-.value-section { background: var(--surf); padding: 108px 0; }
-.value-grid {
-  display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px;
-  background: var(--border); margin-top: 56px;
-}
-.value-card {
-  background: var(--surf); padding: 44px 38px; position: relative; overflow: hidden;
-  transition: background 0.2s;
-}
-.value-card:hover { background: var(--surf2); }
-.value-card::before {
-  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
-  background: linear-gradient(90deg, var(--red), transparent);
-  transform: scaleX(0); transform-origin: left; transition: transform 0.3s ease;
-}
-.value-card:hover::before { transform: scaleX(1); }
-.value-card h3 { font-size: 1.3rem; margin-bottom: 10px; }
-.value-card p  { font-size: 0.87rem; color: var(--muted); line-height: 1.75; }
 
 /* ─── USE CASES ─── */
 .cases-section { padding: 108px 0; background: var(--bg2); }
@@ -594,10 +557,7 @@ p  { text-wrap: pretty; }
   .hero-content { padding: 0 32px; max-width: 620px; }
   .hero-visual  { display: none; }
   .panel-wrap   { grid-template-columns: 1fr; gap: 48px; }
-  .problem-grid { grid-template-columns: 1fr; }
-  .how-steps    { grid-template-columns: 1fr; }
-  .value-grid   { grid-template-columns: 1fr; }
-  .cases-grid   { grid-template-columns: 1fr; }
+.cases-grid   { grid-template-columns: 1fr; }
   .contact-grid { grid-template-columns: 1fr; gap: 52px; }
   .nav { display: none; }
   .header-ctas .btn-ghost { display: none; }
