@@ -1,6 +1,6 @@
 'use client'
 
-const LINKEDIN_URL = 'https://www.linkedin.com/company/vigia-command'
+const LINKEDIN_URL = 'https://www.linkedin.com/company/vig%C3%ADa-command/'
 
 import Icon from './Icons'
 

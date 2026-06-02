@@ -32,18 +32,7 @@ export default function Trust() {
           </div>
         </div>
 
-        <div className="trust-status-band reveal d1">
-          <div className="trust-status-dot"></div>
-          <div>
-            <span className="trust-status-label">Sistema operativo · Demo disponible</span>
-            <p className="trust-status-text">
-              VIGÍA funciona sobre hardware real con arquitectura offline + cloud validada en terreno.
-              Disponible para implementación en compañías de bomberos y brigadas industriales.
-            </p>
-          </div>
-        </div>
-
-        <div className="trust-pillars reveal d2">
+        <div className="trust-pillars reveal d1">
           {pillars.map((p) => (
             <div key={p.label} className="trust-pillar">
               <div className="trust-pillar-tag">{p.tag}</div>

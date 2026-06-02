@@ -7,7 +7,6 @@ import PanelSection from '@/components/PanelSection'
 import ProblemBand from '@/components/ProblemBand'
 import CajaNegra from '@/components/CajaNegra'
 import CTABand from '@/components/CTABand'
-import HowItWorks from '@/components/HowItWorks'
 import OfflineFirst from '@/components/OfflineFirst'
 import Cases from '@/components/Cases'
 import ProductShowcase from '@/components/ProductShowcase'
@@ -47,7 +46,6 @@ export default function HomePage() {
         <ProblemBand />
         <CajaNegra />
         <CTABand onConversemos={scrollToForm} />
-        <HowItWorks />
         <OfflineFirst />
         <Cases />
         <ProductShowcase />

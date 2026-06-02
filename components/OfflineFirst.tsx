@@ -24,7 +24,7 @@ export default function OfflineFirst() {
           <div className="offline-stage">
             <div className="offline-stage-num">02 · MANDO LOCAL</div>
             <h4>Panel táctico en terreno</h4>
-            <div className="offline-stage-tag tag-active">BLE · LoRa · MQTT local</div>
+            <div className="offline-stage-tag tag-active">Red local · Tiempo real</div>
           </div>
 
           <div className="offline-arrow">
