@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { Barlow_Condensed, Barlow, JetBrains_Mono } from 'next/font/google'
+import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
 
 const barlowCondensed = Barlow_Condensed({
@@ -44,6 +45,11 @@ export const metadata: Metadata = {
     description:
       'Plataforma de monitoreo táctico para bomberos y brigadas industriales. Visibilidad en tiempo real del estado operativo y fisiológico del personal.',
   },
+  icons: {
+    icon: '/favicon.svg',
+    shortcut: '/favicon.svg',
+    apple: '/favicon.svg',
+  },
 }
 
 export default function RootLayout({
@@ -56,7 +62,10 @@ export default function RootLayout({
       lang="es"
       className={`${barlowCondensed.variable} ${barlow.variable} ${jetbrainsMono.variable}`}
     >
-      <body>{children}</body>
+      <body>
+        {children}
+        <Analytics />
+      </body>
     </html>
   )
 }
