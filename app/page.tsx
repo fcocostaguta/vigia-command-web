@@ -8,6 +8,7 @@ import Problem from '@/components/Problem'
 import HowItWorks from '@/components/HowItWorks'
 import Value from '@/components/Value'
 import Cases from '@/components/Cases'
+import ProductShowcase from '@/components/ProductShowcase'
 import Trust from '@/components/Trust'
 import Contact from '@/components/Contact'
 import Footer from '@/components/Footer'
@@ -45,6 +46,7 @@ export default function HomePage() {
         <HowItWorks />
         <Value />
         <Cases />
+        <ProductShowcase />
         <Trust />
         <Contact formRef={formRef as MutableRefObject<HTMLElement | null>} />
       </main>
