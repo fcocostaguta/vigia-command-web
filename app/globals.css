@@ -428,20 +428,26 @@ p  { text-wrap: pretty; }
 .panel-wrap {
   display: grid; grid-template-columns: 1fr 2.2fr; gap: 72px; align-items: start;
 }
-.panel-lead h2 { margin-bottom: 16px; }
+.panel-lead h2 { margin-bottom: 36px; }
 .panel-lead p  { font-size: 0.95rem; color: var(--muted); line-height: 1.85; margin-bottom: 28px; }
 .panel-flow {
   display: flex; flex-direction: column; gap: 0;
   border: 1px solid var(--border); border-radius: 2px; overflow: hidden;
 }
 .panel-flow .flow-step {
-  display: flex; gap: 16px; padding: 15px 18px;
-  border-bottom: 1px solid var(--border); align-items: flex-start;
+  display: flex; gap: 20px; padding: 22px 24px;
+  border-bottom: 1px solid var(--border); align-items: center;
+  background: transparent; transition: background 0.15s;
 }
+.panel-flow .flow-step:hover { background: var(--surf); }
 .panel-flow .flow-step:last-child { border-bottom: none; }
-.flow-n { font-family: var(--font-m); font-size: 10px; color: var(--red-b); letter-spacing: 0.1em; white-space: nowrap; padding-top: 2px; }
-.panel-flow .flow-step-body h4 { font-family: var(--font-h); font-size: 0.95rem; font-weight: 700; margin-bottom: 3px; }
-.panel-flow .flow-step-body p  { font-size: 0.83rem; color: var(--muted); line-height: 1.6; }
+.flow-n {
+  font-family: var(--font-m); font-size: 11px; color: var(--red-b);
+  letter-spacing: 0.1em; white-space: nowrap; flex-shrink: 0;
+  padding-top: 1px;
+}
+.panel-flow .flow-step-body h4 { font-family: var(--font-h); font-size: 1.06rem; font-weight: 700; margin-bottom: 0; }
+.panel-flow .flow-step-body p  { font-size: 0.83rem; color: var(--muted); line-height: 1.6; margin-top: 3px; }
 
 
 /* ─── USE CASES ─── */
