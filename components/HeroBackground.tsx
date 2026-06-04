@@ -1,134 +1,116 @@
 import styles from './hero-background.module.css'
 
 /*
-  Cinematic background for the hero section.
-  - position: absolute inset-0, pointer-events: none
-  - z-index: auto → paints between ::before and ::after in tree order
-  - Hero content (z-index:2) stays fully above this layer
-  - Remove this file + its import in Hero.tsx to revert
+  HeroBackground v2 — refined
+  Layers (back to front):
+   1. atmospheric fog (CSS)
+   2. operational map markers (CSS, --faint)
+   3. topographic contour lines (SVG)
+   4. distant smoke plume (SVG, blurred)
+   5. fire truck silhouette (SVG fill + blueprint strokes)
+   6. emergency beacon glow at cab (SVG blurred ellipse)
+   7. radar pulse ring from cab (SVG, CSS-animated r)
+  Stacking: z-index auto → between .hero::before and .hero::after.
 */
 export default function HeroBackground() {
   return (
     <div className={styles.root} aria-hidden="true">
 
-      {/* Atmospheric fog layers */}
-      <div className={`${styles.fog} ${styles.fog1}`} />
-      <div className={`${styles.fog} ${styles.fog2}`} />
+      <div className={styles.fog} />
 
-      {/* Emergency beacon glows */}
-      <div className={`${styles.beacon} ${styles.beaconL}`} />
-      <div className={`${styles.beacon} ${styles.beaconR}`} />
+      <span className={`${styles.marker} ${styles.m1}`} />
+      <span className={`${styles.marker} ${styles.m2}`} />
+      <span className={`${styles.marker} ${styles.m3}`} />
 
-      {/* Horizontal scan line */}
-      <div className={styles.scanline} />
-
-      {/* Scene SVG — silhouettes anchored to bottom of hero */}
       <svg
         className={styles.scene}
-        viewBox="0 0 1440 520"
+        viewBox="0 0 1440 540"
         xmlns="http://www.w3.org/2000/svg"
         preserveAspectRatio="xMidYMax meet"
         aria-hidden="true"
       >
         <defs>
           <filter id="hb-smoke">
-            <feGaussianBlur in="SourceGraphic" stdDeviation="16" />
+            <feGaussianBlur in="SourceGraphic" stdDeviation="14" />
+          </filter>
+          <filter id="hb-glow" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="22" />
           </filter>
         </defs>
 
-        {/* Smoke / atmospheric plumes */}
+        {/* Topographic contour lines (operational map layer) */}
+        <g className={styles.topo}>
+          <path d="M 0,420 Q 240,410 480,420 T 960,425 T 1440,415" />
+          <path d="M 0,452 Q 280,442 560,452 T 1120,448 T 1440,452" />
+        </g>
+
+        {/* Distant smoke plume */}
         <g className={styles.smoke} filter="url(#hb-smoke)">
-          <ellipse cx="845"  cy="152" rx="115" ry="72" />
-          <ellipse cx="924"  cy="112" rx="88"  ry="56" />
-          <ellipse cx="782"  cy="182" rx="72"  ry="48" />
-          <ellipse cx="975"  cy="142" rx="62"  ry="42" />
-          <ellipse cx="735"  cy="208" rx="55"  ry="38" />
+          <ellipse cx="820" cy="180" rx="115" ry="75" />
+          <ellipse cx="855" cy="130" rx="82"  ry="55" />
+          <ellipse cx="780" cy="220" rx="85"  ry="48" />
         </g>
 
-        {/* ── Fire truck (cab-forward, facing left) ── */}
-        <g className={styles.truck}>
-          {/* Main body */}
-          <rect x="518"  y="374" width="447" height="108" />
-          {/* Roof equipment box */}
-          <rect x="554"  y="352" width="308" height="22" />
-          {/* Cab (taller, right side) */}
-          <rect x="963"  y="280" width="112" height="202" rx="3" />
-          {/* Aerial ladder — two side rails as a thin polygon */}
-          <polygon points="814,352 790,116 808,112 832,348" />
-          {/* Emergency light bar on cab roof */}
-          <rect x="966"  y="274" width="106" height="8" rx="3" />
-          {/* Rear step/bumper */}
-          <rect x="513"  y="456" width="9"   height="26" rx="1" />
-          {/* Front bumper */}
-          <rect x="1073" y="432" width="16"  height="22" rx="2" />
-          {/* Wheels */}
-          <circle cx="614" cy="488" r="32" />
-          <circle cx="870" cy="488" r="30" />
-          <circle cx="934" cy="488" r="30" />
-          {/* Ground shadow under truck */}
-          <ellipse cx="758" cy="502" rx="285" ry="7" />
+        {/* Fire truck — filled silhouette with windshield cutout + wheel arches */}
+        <g className={styles.truckFill}>
+          <path
+            fillRule="evenodd"
+            d="M 982,278 L 1070,278 Q 1080,282 1080,295 L 1080,406 L 1093,418 L 1093,428 L 1083,432 L 1083,484 L 978,484 A 33 33 0 0 1 912 484 L 893,484 A 33 33 0 0 1 827 484 L 651,484 A 33 33 0 0 1 585 484 L 530,484 L 530,372 Q 530,360 542,360 L 970,360 L 970,294 Q 970,280 982,278 Z M 988,294 L 1066,294 L 1066,352 L 988,352 Z"
+          />
+          <rect x="556" y="338" width="306" height="22" />
+          <polygon points="814,338 792,116 808,114 832,336" />
+          <rect x="974" y="270" width="100" height="8" rx="2" />
+          <circle cx="618" cy="488" r="30" />
+          <circle cx="860" cy="488" r="30" />
+          <circle cx="945" cy="488" r="30" />
         </g>
 
-        {/* ── Firefighter 1 — left area ── */}
-        <g className={styles.person} transform="translate(158,375)">
-          {/* Helmet */}
-          <path d="M-16,7 Q-16,-13 0,-17 Q16,-13 16,7 L12,9 L-12,9 Z" />
-          {/* Head */}
-          <ellipse cx="0" cy="20" rx="10" ry="11" />
-          {/* Torso (bulky turnout gear) */}
-          <path d="M-18,31 L-21,95 L21,95 L18,31 Q10,27 0,27 Q-10,27 -18,31 Z" />
-          {/* SCBA pack (rectangle on back) */}
-          <rect x="4" y="38" width="19" height="33" rx="2" />
-          {/* Arms */}
-          <path d="M-18,31 L-31,68 L-24,71 L-14,36 Z" />
-          <path d="M18,31 L31,68 L24,71 L14,36 Z" />
-          {/* Legs */}
-          <rect x="-18" y="95" width="14" height="52" rx="2" />
-          <rect x="4"   y="95" width="14" height="52" rx="2" />
-          {/* Boots */}
-          <rect x="-20" y="144" width="17" height="9" rx="2" />
-          <rect x="3"   y="144" width="17" height="9" rx="2" />
+        {/* Fire truck — blueprint stroke detail */}
+        <g
+          className={styles.truckLines}
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1"
+          vectorEffect="non-scaling-stroke"
+        >
+          {/* Cab + body outline (continuous) */}
+          <path d="M 982,278 L 1070,278 Q 1080,282 1080,295 L 1080,406 L 1093,418 L 1093,428 L 1083,432 L 1083,484" />
+          <path d="M 530,484 L 530,372 Q 530,360 542,360 L 970,360" />
+          <path d="M 970,294 Q 970,280 982,278" />
+          {/* Body bottom segments (between wheel arches) */}
+          <path d="M 530,484 L 585,484" />
+          <path d="M 651,484 L 827,484" />
+          <path d="M 893,484 L 912,484" />
+          <path d="M 978,484 L 1083,484" />
+          {/* Cab-to-body transition */}
+          <line x1="970" y1="294" x2="970" y2="360" />
+          {/* Windshield */}
+          <rect x="988" y="294" width="78" height="58" />
+          {/* Compartment dividers */}
+          <line x1="575" y1="362" x2="575" y2="482" />
+          <line x1="680" y1="362" x2="680" y2="482" />
+          <line x1="750" y1="362" x2="750" y2="482" />
+          <line x1="820" y1="362" x2="820" y2="482" />
+          {/* Roof equipment box outline */}
+          <rect x="556" y="338" width="306" height="22" />
         </g>
 
-        {/* ── Firefighter 2 — left area, slightly right of first ── */}
-        <g className={styles.person} transform="translate(286,390)">
-          <path d="M-14,6 Q-14,-11 0,-15 Q14,-11 14,6 L11,8 L-11,8 Z" />
-          <ellipse cx="0" cy="18" rx="9" ry="10" />
-          <path d="M-16,29 L-18,88 L18,88 L16,29 Q9,25 0,25 Q-9,25 -16,29 Z" />
-          <rect x="3"  y="35" width="17" height="30" rx="2" />
-          {/* One arm reaching forward (hose or radio) */}
-          <path d="M-16,29 L-38,58 L-31,62 L-12,34 Z" />
-          <path d="M16,29 L25,62 L19,64 L12,34 Z" />
-          <rect x="-15" y="88" width="12" height="46" rx="2" />
-          <rect x="3"   y="88" width="12" height="46" rx="2" />
-          <rect x="-17" y="130" width="15" height="9" rx="2" />
-          <rect x="2"   y="130" width="15" height="9" rx="2" />
+        {/* Emergency light glow at cab (blurred ellipse) */}
+        <g className={styles.beaconFill} filter="url(#hb-glow)">
+          <ellipse cx="1024" cy="266" rx="80" ry="36" />
         </g>
 
-        {/* ── Firefighter 3 — far right, partially visible ── */}
-        <g className={styles.person} transform="translate(1256,383)">
-          <path d="M-14,6 Q-14,-11 0,-15 Q14,-11 14,6 L11,8 L-11,8 Z" />
-          <ellipse cx="0" cy="18" rx="9" ry="10" />
-          <path d="M-16,29 L-18,90 L18,90 L16,29 Q9,25 0,25 Q-9,25 -16,29 Z" />
-          <rect x="3"  y="35" width="17" height="31" rx="2" />
-          <path d="M-16,29 L-27,64 L-21,66 L-12,34 Z" />
-          <path d="M16,29 L27,64 L21,66 L12,34 Z" />
-          <rect x="-15" y="90" width="12" height="46" rx="2" />
-          <rect x="3"   y="90" width="12" height="46" rx="2" />
-          <rect x="-17" y="132" width="15" height="9" rx="2" />
-          <rect x="2"   y="132" width="15" height="9" rx="2" />
-        </g>
+        {/* Radar pulse from cab beacon */}
+        <circle
+          className={styles.radarRing}
+          cx="1024"
+          cy="270"
+          r="20"
+        />
 
         {/* Ground line */}
-        <rect className={styles.truck} x="0" y="508" width="1440" height="12" />
+        <rect className={styles.ground} x="0" y="510" width="1440" height="12" />
       </svg>
-
-      {/* Floating embers */}
-      <div className={styles.particles}>
-        {Array.from({ length: 8 }).map((_, i) => (
-          <span key={i} className={styles.particle} />
-        ))}
-      </div>
 
     </div>
   )

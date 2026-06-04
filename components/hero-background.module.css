@@ -1,7 +1,15 @@
 /* ────────────────────────────────────────────────────────
-   HeroBackground — isolated CSS Module
-   Affects only components/HeroBackground.tsx
-   Delete that file to remove entirely.
+   HeroBackground — refined v2
+   - Sólo usa tokens del design system (oklch values matching
+     --red, --faint, --bg2, --text)
+   - Sin scanline (duplica body::before global)
+   - Sin partículas / sin personajes literales
+   - Carro bomba con lineart blueprint, arcos de rueda
+   - Marcadores operacionales en color --faint (no rojo,
+     evita competir con pulse-dots existentes)
+   - Beacon glow anclado a la baliza del cab
+   - Pulse radar lento desde la baliza
+   - Líneas topográficas (capa de mapa operacional)
    ──────────────────────────────────────────────────────── */
 
 .root {
@@ -11,70 +19,46 @@
   overflow: hidden;
 }
 
-/* ── Atmospheric fog ─────────────────────────── */
+/* ── Atmospheric haze (single layer) ─────────── */
 .fog {
   position: absolute;
+  width: 65vw;
+  height: 48vh;
+  top: 6%;
+  right: -6%;
   border-radius: 50%;
+  background: radial-gradient(
+    ellipse,
+    oklch(15% 0.010 240 / 0.42) 0%,
+    transparent 65%
+  );
+  animation: fogDrift 28s ease-in-out infinite;
   will-change: transform;
 }
 
-.fog1 {
-  width: 58vw;
-  height: 48vh;
-  top: 8%;
-  left: -8%;
-  background: radial-gradient(ellipse, oklch(15% 0.010 240 / 0.55) 0%, transparent 68%);
-  animation: fogDrift1 24s ease-in-out infinite;
-}
-
-.fog2 {
-  width: 50vw;
-  height: 42vh;
-  top: 0;
-  right: -6%;
-  background: radial-gradient(ellipse, oklch(12% 0.008 240 / 0.42) 0%, transparent 68%);
-  animation: fogDrift2 30s ease-in-out infinite;
-}
-
-/* ── Emergency beacon glows ──────────────────── */
-.beacon {
+/* ── Operational map markers (3 ground positions) ── */
+.marker {
   position: absolute;
+  width: 5px;
+  height: 5px;
   border-radius: 50%;
-  will-change: transform, opacity;
+  background: oklch(34% 0.006 240);
 }
-
-.beaconL {
-  width: 42vw;
-  height: 42vw;
-  top: -20vw;
-  left: 8%;
-  background: radial-gradient(circle, oklch(44% 0.22 22 / 0.20) 0%, transparent 65%);
-  animation: beaconPulse 3.8s ease-in-out infinite;
-}
-
-.beaconR {
-  width: 32vw;
-  height: 32vw;
-  top: -14vw;
-  right: 12%;
-  background: radial-gradient(circle, oklch(44% 0.22 22 / 0.16) 0%, transparent 65%);
-  animation: beaconPulse 3.8s ease-in-out infinite 1.9s;
-}
-
-/* ── Scan line (tech / command feel) ─────────── */
-.scanline {
+.marker::before {
+  content: '';
   position: absolute;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: linear-gradient(
-    to right,
-    transparent,
-    oklch(52% 0.18 22 / 0.14),
-    transparent
-  );
-  animation: scanDown 14s linear infinite;
+  inset: -3px;
+  border: 1px solid oklch(34% 0.006 240 / 0.55);
+  border-radius: 50%;
+  animation: markerPulse 4s ease-in-out infinite;
 }
+
+.m1 { bottom: 24%; left: 14%; }
+.m1::before { animation-delay: 0s; }
+.m2 { bottom: 18%; left: 34%; }
+.m2::before { animation-delay: 1.6s; }
+.m3 { bottom: 28%; right: 17%; }
+.m3::before { animation-delay: 3.0s; }
 
 /* ── SVG scene ───────────────────────────────── */
 .scene {
@@ -86,92 +70,82 @@
   max-height: 85%;
 }
 
+.topo {
+  fill: none;
+  stroke: oklch(34% 0.006 240 / 0.40);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+
 .smoke {
   fill: oklch(78% 0.004 80);
-  opacity: 0.13;
+  opacity: 0.10;
 }
 
-.truck {
-  fill: oklch(80% 0.003 80);
-  opacity: 0.09;
+.truckFill {
+  fill: oklch(85% 0.003 80);
+  opacity: 0.07;
 }
 
-.person {
+.truckLines {
+  color: oklch(85% 0.003 80 / 0.22);
+}
+
+.beaconFill {
+  fill: oklch(52% 0.20 22 / 0.55);
+  animation: beaconPulse 5.4s ease-in-out infinite;
+  transform-origin: 1024px 270px;
+  transform-box: view-box;
+}
+
+.radarRing {
+  fill: none;
+  stroke: oklch(52% 0.20 22 / 0.5);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+  animation: radarExpand 9s linear infinite;
+}
+
+.ground {
   fill: oklch(82% 0.003 80);
-  opacity: 0.11;
+  opacity: 0.06;
 }
-
-/* ── Floating embers ─────────────────────────── */
-.particles {
-  position: absolute;
-  inset: 0;
-}
-
-.particle {
-  position: absolute;
-  display: block;
-  width: 2px;
-  height: 2px;
-  border-radius: 50%;
-  background: oklch(65% 0.18 22);
-  opacity: 0;
-  bottom: 35%;
-  animation: particleFloat linear infinite;
-}
-
-.particle:nth-child(1) { left: 22%; animation-duration: 6.2s; animation-delay: 0.0s; }
-.particle:nth-child(2) { left: 31%; animation-duration: 8.1s; animation-delay: 1.3s; }
-.particle:nth-child(3) { left: 43%; animation-duration: 5.8s; animation-delay: 2.6s; }
-.particle:nth-child(4) { left: 55%; animation-duration: 9.0s; animation-delay: 0.7s; }
-.particle:nth-child(5) { left: 64%; animation-duration: 6.8s; animation-delay: 3.4s; }
-.particle:nth-child(6) { left: 72%; animation-duration: 7.5s; animation-delay: 1.8s; }
-.particle:nth-child(7) { left: 80%; animation-duration: 5.5s; animation-delay: 4.1s; }
-.particle:nth-child(8) { left: 88%; animation-duration: 8.8s; animation-delay: 0.4s; }
 
 /* ── Keyframes ───────────────────────────────── */
 
-@keyframes fogDrift1 {
+@keyframes fogDrift {
   0%, 100% { transform: translate(0, 0) scale(1); }
-  35%       { transform: translate(35px, -18px) scale(1.07); }
-  68%       { transform: translate(-18px, 12px) scale(0.95); }
-}
-
-@keyframes fogDrift2 {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  42%       { transform: translate(-40px, 22px) scale(1.05); }
-  74%       { transform: translate(18px, -9px) scale(0.97); }
+  35%       { transform: translate(32px, -18px) scale(1.06); }
+  68%       { transform: translate(-16px, 10px) scale(0.96); }
 }
 
 @keyframes beaconPulse {
-  0%, 100% { opacity: 0.28; transform: scale(0.86); }
-  50%       { opacity: 1;    transform: scale(1.14); }
+  0%, 100% { opacity: 0.50; transform: scale(1); }
+  50%       { opacity: 1;    transform: scale(1.15); }
 }
 
-@keyframes scanDown {
-  from { top: -1px; }
-  to   { top: 100%; }
+@keyframes markerPulse {
+  0%, 100% { transform: scale(1);   opacity: 0.45; }
+  50%       { transform: scale(2.6); opacity: 0;    }
 }
 
-@keyframes particleFloat {
-  0%   { opacity: 0;    transform: translateY(0) translateX(0); }
-  15%  { opacity: 0.55; }
-  65%  { opacity: 0.22; transform: translateY(-140px) translateX(12px); }
-  100% { opacity: 0;    transform: translateY(-230px) translateX(20px); }
+@keyframes radarExpand {
+  0%   { r: 20px;  opacity: 0;    }
+  10%  { opacity: 0.55; }
+  100% { r: 280px; opacity: 0;    }
 }
 
 /* ── Reduced motion ──────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
-  .fog1, .fog2,
-  .beaconL, .beaconR,
-  .scanline,
-  .particle { animation: none; }
-  .particle  { display: none; }
+  .fog,
+  .beaconFill,
+  .marker::before,
+  .radarRing { animation: none; }
 }
 
 /* ── Mobile ──────────────────────────────────── */
 @media (max-width: 1040px) {
-  .scanline  { display: none; }
-  .particle  { display: none; }
-  .fog1, .fog2 { animation-duration: 55s; }
-  .scene { opacity: 0.75; }
+  .scene  { opacity: 0.65; }
+  .marker { display: none; }
+  .fog    { animation-duration: 55s; }
 }
