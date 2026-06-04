@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react'
 import WatchOrbit from './WatchOrbit'
 import Icon from './Icons'
+import HeroBackground from './HeroBackground'
 
 function useWatchScroll(ref: React.RefObject<HTMLImageElement | null>) {
   useEffect(() => {
@@ -162,6 +163,7 @@ export default function Hero({ onConversemos }: { onConversemos: () => void }) {
 
   return (
     <section className="hero" id="inicio">
+      <HeroBackground />
       <div className="hero-content">
         <div className="hero-kicker reveal in">
           <span className="pulse-dot"></span>
