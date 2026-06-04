@@ -1,0 +1,297 @@
+/* ─────────────────────────────────────────────────────────
+   /test-hero — experimental page, isolated CSS module
+   Delete app/test-hero/ to remove entirely
+   ───────────────────────────────────────────────────────── */
+
+.root {
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+  background: oklch(3.5% 0.008 240);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ── Background container ── */
+.bg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Fog / smoke layers ── */
+.fog {
+  position: absolute;
+  border-radius: 50%;
+}
+
+.fog1 {
+  width: 80vw;
+  height: 65vh;
+  top: 15%;
+  left: -15%;
+  background: radial-gradient(ellipse, oklch(18% 0.012 240 / 0.60) 0%, transparent 70%);
+  animation: fogDrift1 20s ease-in-out infinite;
+}
+
+.fog2 {
+  width: 75vw;
+  height: 55vh;
+  top: 5%;
+  right: -10%;
+  background: radial-gradient(ellipse, oklch(14% 0.010 240 / 0.45) 0%, transparent 70%);
+  animation: fogDrift2 25s ease-in-out infinite;
+}
+
+.fog3 {
+  width: 65vw;
+  height: 45vh;
+  bottom: 0;
+  left: 15%;
+  background: radial-gradient(ellipse, oklch(11% 0.008 240 / 0.40) 0%, transparent 70%);
+  animation: fogDrift3 30s ease-in-out infinite;
+}
+
+/* ── Emergency beacon lights ── */
+.beaconL {
+  position: absolute;
+  width: 55vw;
+  height: 55vw;
+  top: -25vw;
+  left: -12vw;
+  border-radius: 50%;
+  background: radial-gradient(circle, oklch(42% 0.20 22 / 0.22) 0%, transparent 65%);
+  animation: beaconPulse 4s ease-in-out infinite;
+}
+
+.beaconR {
+  position: absolute;
+  width: 45vw;
+  height: 45vw;
+  top: -18vw;
+  right: -8vw;
+  border-radius: 50%;
+  background: radial-gradient(circle, oklch(42% 0.20 22 / 0.18) 0%, transparent 65%);
+  animation: beaconPulse 4s ease-in-out infinite 2s;
+}
+
+/* ── Dot grid ── */
+.grid {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, oklch(32% 0.008 240 / 0.35) 1px, transparent 1px);
+  background-size: 40px 40px;
+  mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black, transparent);
+}
+
+/* ── Horizontal scan line (tech feel) ── */
+.scanline {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(to right, transparent, oklch(52% 0.18 22 / 0.18), transparent);
+  animation: scanDown 10s linear infinite;
+}
+
+/* ── Vignette + bottom fade ── */
+.vignette {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 110% 110% at 50% 50%, transparent 35%, oklch(2.5% 0.005 240 / 0.85) 100%),
+    linear-gradient(to bottom, oklch(2.5% 0.005 240 / 0.55) 0%, transparent 20%, transparent 75%, oklch(2.5% 0.005 240 / 0.92) 100%);
+}
+
+/* ── Content ── */
+.content {
+  position: relative;
+  z-index: 2;
+  max-width: 660px;
+  padding: 0 32px;
+  text-align: center;
+}
+
+.kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-m);
+  font-size: 11px;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: oklch(50% 0.005 80);
+  margin-bottom: 24px;
+}
+
+.pulse {
+  display: inline-block;
+  flex-shrink: 0;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: oklch(52% 0.20 22);
+  animation: pulseDot 2s ease-in-out infinite;
+}
+
+.h1 {
+  font-family: var(--font-h);
+  font-size: clamp(44px, 7.5vw, 84px);
+  font-weight: 800;
+  line-height: 1.04;
+  letter-spacing: -0.01em;
+  color: oklch(93% 0.004 80);
+  margin: 0 0 8px;
+}
+
+.h1Em {
+  font-style: normal;
+  color: oklch(60% 0.20 22);
+}
+
+.sub {
+  font-family: var(--font-b);
+  font-size: 17px;
+  line-height: 1.65;
+  color: oklch(60% 0.005 80);
+  max-width: 500px;
+  margin: 0 auto 40px;
+}
+
+.actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 28px;
+}
+
+.btnPrimary {
+  padding: 14px 28px;
+  background: oklch(52% 0.20 22);
+  color: oklch(97% 0.002 80);
+  font-family: var(--font-b);
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: 0.01em;
+  border-radius: 10px;
+  text-decoration: none;
+  transition: background 0.15s ease;
+}
+
+.btnPrimary:hover {
+  background: oklch(57% 0.20 22);
+}
+
+.btnGhost {
+  padding: 14px 28px;
+  background: oklch(100% 0 0 / 0.06);
+  color: oklch(68% 0.005 80);
+  font-family: var(--font-b);
+  font-weight: 600;
+  font-size: 14px;
+  border-radius: 10px;
+  text-decoration: none;
+  border: 1px solid oklch(100% 0 0 / 0.12);
+  transition: background 0.15s ease;
+}
+
+.btnGhost:hover {
+  background: oklch(100% 0 0 / 0.11);
+}
+
+.micro {
+  font-family: var(--font-m);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: oklch(32% 0.006 240);
+}
+
+/* Experiment marker */
+.label {
+  position: fixed;
+  bottom: 14px;
+  right: 16px;
+  font-family: var(--font-m);
+  font-size: 10px;
+  color: oklch(28% 0.006 240);
+  z-index: 10;
+  pointer-events: none;
+}
+
+/* ── Keyframes ── */
+
+@keyframes fogDrift1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33%       { transform: translate(40px, -20px) scale(1.08); }
+  66%       { transform: translate(-20px, 15px) scale(0.94); }
+}
+
+@keyframes fogDrift2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  40%       { transform: translate(-50px, 25px) scale(1.05); }
+  70%       { transform: translate(20px, -10px) scale(0.97); }
+}
+
+@keyframes fogDrift3 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50%       { transform: translate(30px, -30px) scale(1.06); }
+}
+
+@keyframes beaconPulse {
+  0%, 100% { opacity: 0.3; transform: scale(0.85); }
+  50%       { opacity: 1;   transform: scale(1.15); }
+}
+
+@keyframes scanDown {
+  from { top: -1px; }
+  to   { top: 100%; }
+}
+
+@keyframes pulseDot {
+  0%, 100% { opacity: 1;   transform: scale(1);   }
+  50%       { opacity: 0.4; transform: scale(0.7); }
+}
+
+/* ── Reduced motion ── */
+@media (prefers-reduced-motion: reduce) {
+  .fog1,
+  .fog2,
+  .fog3,
+  .beaconL,
+  .beaconR,
+  .scanline,
+  .pulse {
+    animation: none;
+  }
+}
+
+/* ── Mobile ── */
+@media (max-width: 640px) {
+  .content {
+    padding: 0 24px;
+  }
+
+  .actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .btnPrimary,
+  .btnGhost {
+    text-align: center;
+  }
+
+  .scanline {
+    display: none;
+  }
+
+  .fog1,
+  .fog2,
+  .fog3 {
+    animation-duration: 50s;
+  }
+}
