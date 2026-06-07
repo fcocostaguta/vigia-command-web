@@ -4,14 +4,46 @@ import { useState, useEffect, useRef, useCallback } from 'react'
 import HeroBackground from './HeroBackground'
 import Icon from './Icons'
 
+// DS-spec tiling EKG path — tile 0 + tile W for seamless scroll loop
+function ekgTiled(W: number, beats: number): string {
+  const seg = W / beats
+  const mid = 17
+  const tile = (off: number) => {
+    let d = ''
+    for (let i = 0; i < beats; i++) {
+      const x = off + i * seg
+      d += ` H${(x + seg * 0.40).toFixed(1)}`
+      d += ` l${(seg * 0.05).toFixed(1)} -4 l${(seg * 0.05).toFixed(1)} 7 l${(seg * 0.05).toFixed(1)} -15 l${(seg * 0.05).toFixed(1)} 20 l${(seg * 0.05).toFixed(1)} -8`
+      d += ` H${(off + (i + 1) * seg).toFixed(1)}`
+    }
+    return d
+  }
+  return `M0 ${mid}${tile(0)}${tile(W)}`
+}
+
 // ── TabletDash ────────────────────────────────────────────────────────────────
-// Internal component — renders the tactical dashboard inside the eco-tablet.
+type Tone = 'ok' | 'warn' | 'crit'
+type RowState = { id: string; rank: string; name: string; bpm: number; tone: Tone }
 
-const EKG_HALF = 'M0,17 L12,17 L14,6 L16,28 L18,17 L30,17 L32,6 L34,28 L36,17 L48,17 L50,6 L52,28 L54,17 L66,17 L68,6 L70,28 L72,17 L84,17 L86,6 L88,28 L90,17 L100,17'
-const EKG_FULL = `${EKG_HALF} M100,17 L112,17 L114,6 L116,28 L118,17 L130,17 L132,6 L134,28 L136,17 L148,17 L150,6 L152,28 L154,17 L166,17 L168,6 L170,28 L172,17 L184,17 L186,6 L188,28 L190,17 L200,17`
+const TD_INIT: RowState[] = [
+  { id: 'B-01', rank: 'Cap.',  name: 'Rojas',    bpm: 142, tone: 'ok'   },
+  { id: 'B-02', rank: 'Tte.',  name: 'Muñoz',    bpm: 181, tone: 'crit' },
+  { id: 'B-03', rank: 'Vol.',  name: 'Pérez',    bpm: 128, tone: 'ok'   },
+  { id: 'B-04', rank: 'Bbro.', name: 'Soto',     bpm: 168, tone: 'warn' },
+  { id: 'B-05', rank: 'Vol.',  name: 'Cárdenas', bpm: 116, tone: 'ok'   },
+]
 
-function TabletDash({ bpm }: { bpm: number }) {
+function toneBpmCls(tone: Tone): string {
+  return tone === 'crit' ? 'bpm-crit' : tone === 'warn' ? 'bpm-warn' : 'bpm-ok'
+}
+function toneSdotCls(tone: Tone): string {
+  return tone === 'crit' ? 'td-sdot-crit' : tone === 'warn' ? 'td-sdot-warn' : 'td-sdot-ok'
+}
+
+function TabletDash({ bpm: _bpm }: { bpm: number }) {
+  const [rows, setRows] = useState<RowState[]>(TD_INIT)
   const [clock, setClock] = useState('')
+  const ekg = ekgTiled(360, 5)
 
   useEffect(() => {
     const tick = () => setClock(new Date().toLocaleTimeString('es-CL', { hour12: false }))
@@ -20,95 +52,101 @@ function TabletDash({ bpm }: { bpm: number }) {
     return () => clearInterval(id)
   }, [])
 
-  const bpmCls  = bpm >= 170 ? 'bpm-crit' : bpm >= 150 ? 'bpm-warn' : 'bpm-ok'
-  const sdotCls = bpm >= 170 ? 'td-sdot-crit' : bpm >= 150 ? 'td-sdot-warn' : 'td-sdot-ok'
-
-  const ops = [
-    { n: 'Rojas',  rk: 'Cap.',  id: 'B-01', bpm: 142,  bCls: 'bpm-ok',   sCls: 'td-sdot-ok' },
-    { n: 'Muñoz',  rk: 'Tte.',  id: 'B-02', bpm,       bCls: bpmCls,     sCls: sdotCls },
-    { n: 'Pérez',  rk: 'Vol.',  id: 'B-03', bpm: 118,  bCls: 'bpm-ok',   sCls: 'td-sdot-ok' },
-    { n: 'Soto',   rk: 'Bbro.', id: 'B-04', bpm: 176,  bCls: 'bpm-warn', sCls: 'td-sdot-warn' },
-  ]
+  useEffect(() => {
+    const id = setInterval(() => setRows(p => p.map(r => {
+      if (r.tone === 'crit') {
+        return { ...r, bpm: Math.max(176, Math.min(188, Math.round(r.bpm + (Math.random() - 0.5) * 4))) }
+      }
+      const nb = Math.max(96, Math.min(174, Math.round(r.bpm + (Math.random() - 0.48) * 6)))
+      return { ...r, bpm: nb, tone: (nb >= 160 ? 'warn' : 'ok') as Tone }
+    })), 1500)
+    return () => clearInterval(id)
+  }, [])
 
   return (
     <div className="eco-screen">
       <div className="td-top">
         <div className="td-mark">
-          <b>VIGÍA</b>
+          <b>VIGÍA COMMAND</b>
         </div>
         <span className="td-live">
           <span className="pulse-dot" style={{ width: 5, height: 5, flexShrink: 0 }} />
           En vivo
         </span>
         <span className="td-clock" suppressHydrationWarning>{clock}</span>
-        <span className="td-conn">● Operativo</span>
       </div>
 
       <div className="td-inc">
         <span className="td-inc-dot" />
         Incendio estructural · 2ª alarma · Maitencillo
-        <span className="td-inc-dur">2h 18m</span>
+        <span className="td-inc-dur">02:18</span>
       </div>
 
       <div className="td-body">
         <div className="td-roster">
           <div className="td-rhd">
-            <span>Operador</span>
+            <span>Personal activo</span>
             <span>BPM</span>
           </div>
-          {ops.map(op => (
-            <div key={op.id} className={`td-row${op.id === 'B-02' && bpm >= 170 ? ' td-row-alert' : ''}`}>
-              <div className="td-nm">
-                <b>{op.n}</b>
-                <i>{op.rk} {op.id}</i>
-              </div>
-              <span className={`td-bpm ${op.bCls}`}>{op.bpm}</span>
-              <span className={`td-sdot ${op.sCls}`} />
+          {rows.map(r => (
+            <div key={r.id} className={`td-row${r.tone === 'crit' ? ' td-row-alert' : ''}`}>
+              <span className="td-nm">
+                <b>{r.rank} {r.name}</b>
+                <i>{r.id}</i>
+              </span>
+              <span className={`td-bpm ${toneBpmCls(r.tone)}`}>{r.bpm}</span>
+              <span className={`td-sdot ${toneSdotCls(r.tone)}`} />
             </div>
           ))}
         </div>
 
         <div className="td-mon">
           <div className="td-card">
-            <div className="td-card-k">BPM</div>
+            <div className="td-card-k">Frecuencia · Tte. Muñoz</div>
             <div className="td-bigwrap">
-              <span className={`td-big ${bpmCls}`}>{bpm}</span>
+              <span className={`td-big ${toneBpmCls(rows[1].tone)}`}>{rows[1].bpm}</span>
               <span className="td-unit">bpm</span>
             </div>
-          </div>
-
-          <div className="td-vitals" aria-hidden="true">
-            <svg viewBox="0 0 200 34" preserveAspectRatio="none">
-              <path className="td-vitals-path" d={EKG_FULL} />
-            </svg>
-          </div>
-
-          {bpm >= 150 && (
-            <div className="td-alertbar">
-              <span className="td-alertbar-pin" />
-              Tte. Muñoz — acción req.
-            </div>
-          )}
-
-          <div className="td-foot">
-            <span><b>4</b> ops.</span>
-            <span><b>2</b> alertas</span>
-            <div className="td-spark" aria-hidden="true">
-              {[...Array(6)].map((_, i) => (
-                <i key={i} style={{ height: `${35 + i * 12}%`, animationDelay: `${i * 0.26}s` }} />
-              ))}
+            <div className="td-vitals" aria-hidden="true">
+              <svg viewBox="0 0 720 34" preserveAspectRatio="none">
+                <path className="td-vitals-path" d={ekg} />
+              </svg>
             </div>
           </div>
+
+          <div className="td-alertbar">
+            <span className="td-alertbar-pin" />
+            Alerta biométrica · reevaluar
+          </div>
+
+          <div className="td-card" style={{ display: 'flex', gap: 14 }}>
+            <div>
+              <div className="td-card-k">Operadores</div>
+              <div className="td-bigwrap"><span className="td-big">5</span></div>
+            </div>
+            <div>
+              <div className="td-card-k">Alertas</div>
+              <div className="td-bigwrap"><span className="td-big bpm-crit">2</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="td-foot">
+        <span><b>5</b> operadores</span>
+        <span><b>2</b> alertas</span>
+        <span className="td-conn">Sincronizado</span>
+        <div className="td-spark" aria-hidden="true">
+          {[...Array(6)].map((_, i) => <i key={i} />)}
         </div>
       </div>
     </div>
   )
 }
 
-// Wire paths in the 580×540 SVG coordinate space.
-// Watch right edge ≈ (240, 360) → tablet left edge ≈ (148, 195).
-const WIRE_A = 'M 240,360 C 240,280 165,235 148,195'
-const WIRE_B = 'M 222,392 C 215,320 172,268 156,228'
+// Wire paths — DS spec, in the 580×540 SVG coordinate space
+const WIRE_A = 'M 168 318 C 196 286 214 250 256 226'
+const WIRE_B = 'M 176 338 C 250 320 318 312 372 296'
 
 // ── Hero ──────────────────────────────────────────────────────────────────────
 export default function Hero({ onConversemos }: { onConversemos: () => void }) {
@@ -139,7 +177,7 @@ export default function Hero({ onConversemos }: { onConversemos: () => void }) {
     el.style.setProperty('--py', '0')
   }, [])
 
-  const bpmCls = bpm >= 170 ? 'bpm-crit' : bpm >= 150 ? 'bpm-warn' : 'bpm-ok'
+  const chipBpmCls = bpm >= 152 ? 'bpm-warn' : 'bpm-ok'
 
   return (
     <section className="hero" id="inicio">
@@ -210,13 +248,13 @@ export default function Hero({ onConversemos }: { onConversemos: () => void }) {
             <div className="eco-glow" aria-hidden="true" />
             <div className="eco-floor" aria-hidden="true" />
 
-            {/* Tactical tablet — back layer */}
+            {/* Tactical tablet — protagonist */}
             <div className="eco-tablet">
               <span className="eco-tablet-cam" aria-hidden="true" />
               <TabletDash bpm={bpm} />
             </div>
 
-            {/* Telemetry SVG layer */}
+            {/* Telemetry SVG — DS-spec paths and packet travellers */}
             <svg
               className="eco-conn"
               viewBox="0 0 580 540"
@@ -224,16 +262,21 @@ export default function Hero({ onConversemos }: { onConversemos: () => void }) {
               overflow="visible"
             >
               <path className="eco-wire" d={WIRE_A} />
-              <path className="eco-flow" d={WIRE_A} />
               <path className="eco-wire" d={WIRE_B} />
+              <path className="eco-flow" d={WIRE_A} />
               <path className="eco-flow eco-flow-b" d={WIRE_B} />
-              <circle className="eco-node eco-node-pulse" cx="240" cy="360" r="4" />
-              <circle className="eco-node" cx="148" cy="195" r="3" />
+              <circle className="eco-node eco-node-pulse" cx="168" cy="318" r="3" />
+              <circle className="eco-node eco-node-pulse" cx="176" cy="338" r="3" />
+              <circle className="eco-node" cx="256" cy="226" r="2.4" />
+              <circle className="eco-node" cx="372" cy="296" r="2.4" />
+              <g className="eco-packet eco-pk-1"><circle r="2.6" /></g>
+              <g className="eco-packet eco-pk-2"><circle r="2.6" /></g>
+              <g className="eco-packet eco-pk-3"><circle r="2.2" /></g>
             </svg>
 
             <div className="eco-wirelabel">Telemetría activa</div>
 
-            {/* Watch — front layer */}
+            {/* Watch — secondary, front layer */}
             <div className="eco-watch">
               <img
                 src="/images/watch-vigia.png"
@@ -246,7 +289,7 @@ export default function Hero({ onConversemos }: { onConversemos: () => void }) {
             {/* BPM chip */}
             <div className="eco-chip eco-chip-a">
               <span className="eco-chip-l">BPM</span>
-              <span className={`eco-chip-v ${bpmCls}`}>{bpm}</span>
+              <span className={`eco-chip-v ${chipBpmCls} pulsing`}>{bpm}</span>
             </div>
 
             {/* SpO₂ chip */}
