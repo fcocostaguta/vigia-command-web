@@ -4,6 +4,7 @@ import { useRef, useCallback, useEffect, MutableRefObject } from 'react'
 import Header from '@/components/Header'
 import Hero from '@/components/Hero'
 import PanelSection from '@/components/PanelSection'
+import CommandSection from '@/components/CommandSection'
 import ProblemBand from '@/components/ProblemBand'
 import CajaNegra from '@/components/CajaNegra'
 import CTABand from '@/components/CTABand'
@@ -43,6 +44,7 @@ export default function HomePage() {
       <main>
         <Hero onConversemos={scrollToForm} />
         <PanelSection />
+        <CommandSection />
         <ProblemBand />
         <CajaNegra />
         <CTABand onConversemos={scrollToForm} />

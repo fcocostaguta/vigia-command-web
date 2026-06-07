@@ -1,158 +1,119 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
-import WatchOrbit from './WatchOrbit'
-import Icon from './Icons'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import HeroBackground from './HeroBackground'
+import Icon from './Icons'
 
-function useWatchScroll(ref: React.RefObject<HTMLImageElement | null>) {
+// ── TabletDash ────────────────────────────────────────────────────────────────
+// Internal component — renders the tactical dashboard inside the eco-tablet.
+
+const EKG_HALF = 'M0,17 L12,17 L14,6 L16,28 L18,17 L30,17 L32,6 L34,28 L36,17 L48,17 L50,6 L52,28 L54,17 L66,17 L68,6 L70,28 L72,17 L84,17 L86,6 L88,28 L90,17 L100,17'
+const EKG_FULL = `${EKG_HALF} M100,17 L112,17 L114,6 L116,28 L118,17 L130,17 L132,6 L134,28 L136,17 L148,17 L150,6 L152,28 L154,17 L166,17 L168,6 L170,28 L172,17 L184,17 L186,6 L188,28 L190,17 L200,17`
+
+function TabletDash({ bpm }: { bpm: number }) {
+  const [clock, setClock] = useState('')
+
   useEffect(() => {
-    const el = ref.current
-    if (!el) return
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
-    if (window.innerWidth < 1040) return
+    const tick = () => setClock(new Date().toLocaleTimeString('es-CL', { hour12: false }))
+    tick()
+    const id = setInterval(tick, 1000)
+    return () => clearInterval(id)
+  }, [])
 
-    let currentTransform = { y: 0, rx: 0, ry: 0, rz: 0, scale: 1 }
-    let targetTransform  = { y: 0, rx: 0, ry: 0, rz: 0, scale: 1 }
-    let rafId: number | null = null
-    let ticking = false
-
-    const lerp = (a: number, b: number, t: number) => a + (b - a) * t
-
-    const applyTransform = () => {
-      const { y, rx, ry, rz, scale } = currentTransform
-      el.style.transform =
-        `translateY(${y}px) perspective(1000px) rotateX(${rx}deg) rotateY(${ry}deg) rotateZ(${rz}deg) scale(${scale})`
-    }
-
-    const animate = () => {
-      const speed = 0.08
-      currentTransform.y     = lerp(currentTransform.y,     targetTransform.y,     speed)
-      currentTransform.rx    = lerp(currentTransform.rx,    targetTransform.rx,    speed)
-      currentTransform.ry    = lerp(currentTransform.ry,    targetTransform.ry,    speed)
-      currentTransform.rz    = lerp(currentTransform.rz,    targetTransform.rz,    speed)
-      currentTransform.scale = lerp(currentTransform.scale, targetTransform.scale, speed)
-      applyTransform()
-      rafId = requestAnimationFrame(animate)
-    }
-
-    const getSectionProgress = () => {
-      const ids = ['solucion', 'como-funciona', 'casos']
-      const viewH = window.innerHeight
-      const scrollY = window.scrollY
-      const heroProg = Math.min(1, scrollY / (viewH * 0.8))
-      let activeSection = 'hero'
-      ids.forEach(id => {
-        const s = document.getElementById(id)
-        if (!s) return
-        const rect = s.getBoundingClientRect()
-        if (rect.top < viewH * 0.6 && rect.bottom > viewH * 0.2) activeSection = id
-      })
-      return { heroProg, activeSection }
-    }
-
-    const update = () => {
-      const { heroProg, activeSection } = getSectionProgress()
-      if (activeSection === 'hero') {
-        targetTransform.y = heroProg * -28
-        targetTransform.rx = 0; targetTransform.ry = 0; targetTransform.rz = 0; targetTransform.scale = 1
-        el.classList.add('floating')
-      } else if (activeSection === 'solucion') {
-        el.classList.remove('floating')
-        targetTransform.y = -36; targetTransform.rx = 12; targetTransform.ry = -16; targetTransform.rz = 2; targetTransform.scale = 0.96
-      } else if (activeSection === 'como-funciona') {
-        el.classList.remove('floating')
-        targetTransform.y = -52; targetTransform.rx = 6; targetTransform.ry = -8; targetTransform.rz = -3; targetTransform.scale = 0.90
-      } else {
-        el.classList.remove('floating')
-        targetTransform.y = -60; targetTransform.rx = 4; targetTransform.ry = 6; targetTransform.rz = 0; targetTransform.scale = 0.88
-      }
-      ticking = false
-    }
-
-    const onScroll = () => {
-      if (!ticking) { ticking = true; requestAnimationFrame(update) }
-    }
-
-    rafId = requestAnimationFrame(animate)
-    window.addEventListener('scroll', onScroll, { passive: true })
-    update()
-    return () => {
-      window.removeEventListener('scroll', onScroll)
-      if (rafId) cancelAnimationFrame(rafId)
-    }
-  }, [ref])
-}
-
-function HeroTablet({ bpm }: { bpm: number }) {
-  const munozBCls = bpm >= 152 ? 'bpm-crit' : 'bpm-warn'
-  const munozSCls = bpm >= 152 ? 's-crit'   : 's-warn'
-  const munozLbl  = bpm >= 152 ? 'Alerta'   : 'Exigido'
+  const bpmCls  = bpm >= 170 ? 'bpm-crit' : bpm >= 150 ? 'bpm-warn' : 'bpm-ok'
+  const sdotCls = bpm >= 170 ? 'td-sdot-crit' : bpm >= 150 ? 'td-sdot-warn' : 'td-sdot-ok'
 
   const ops = [
-    { n: 'Rojas',  id: 'B-01', v: 142, bCls: 'bpm-ok',   sCls: 's-ok',    lbl: 'Normal', al: false },
-    { n: 'Muñoz', id: 'B-02', v: bpm,  bCls: munozBCls,  sCls: munozSCls, lbl: munozLbl, al: bpm >= 152 },
-    { n: 'Pérez', id: 'B-03', v: 118,  bCls: 'bpm-ok',   sCls: 's-ok',    lbl: 'Normal', al: false },
-    { n: 'Soto',  id: 'B-04', v: 176,  bCls: 'bpm-warn', sCls: 's-rehab', lbl: 'Rehab.', al: false },
+    { n: 'Rojas',  rk: 'Cap.',  id: 'B-01', bpm: 142,  bCls: 'bpm-ok',   sCls: 'td-sdot-ok' },
+    { n: 'Muñoz',  rk: 'Tte.',  id: 'B-02', bpm,       bCls: bpmCls,     sCls: sdotCls },
+    { n: 'Pérez',  rk: 'Vol.',  id: 'B-03', bpm: 118,  bCls: 'bpm-ok',   sCls: 'td-sdot-ok' },
+    { n: 'Soto',   rk: 'Bbro.', id: 'B-04', bpm: 176,  bCls: 'bpm-warn', sCls: 'td-sdot-warn' },
   ]
 
   return (
-    <div className="hero-tablet">
-      <div className="ht-device">
-        <div className="ht-screen">
+    <div className="eco-screen">
+      <div className="td-top">
+        <div className="td-mark">
+          <b>VIGÍA</b>
+        </div>
+        <span className="td-live">
+          <span className="pulse-dot" style={{ width: 5, height: 5, flexShrink: 0 }} />
+          En vivo
+        </span>
+        <span className="td-clock" suppressHydrationWarning>{clock}</span>
+        <span className="td-conn">● Operativo</span>
+      </div>
 
-          <div className="ht-topbar">
-            <div className="ht-topbar-l">
-              <span className="pulse-dot" style={{ width: 5, height: 5, flexShrink: 0 }} />
-              <span className="ht-brand">VIGÍA</span>
+      <div className="td-inc">
+        <span className="td-inc-dot" />
+        Incendio estructural · 2ª alarma · Maitencillo
+        <span className="td-inc-dur">2h 18m</span>
+      </div>
+
+      <div className="td-body">
+        <div className="td-roster">
+          <div className="td-rhd">
+            <span>Operador</span>
+            <span>BPM</span>
+          </div>
+          {ops.map(op => (
+            <div key={op.id} className={`td-row${op.id === 'B-02' && bpm >= 170 ? ' td-row-alert' : ''}`}>
+              <div className="td-nm">
+                <b>{op.n}</b>
+                <i>{op.rk} {op.id}</i>
+              </div>
+              <span className={`td-bpm ${op.bCls}`}>{op.bpm}</span>
+              <span className={`td-sdot ${op.sCls}`} />
             </div>
-            <span className="ht-incident">Incendio · 2ª alarma · Maitencillo</span>
+          ))}
+        </div>
+
+        <div className="td-mon">
+          <div className="td-card">
+            <div className="td-card-k">BPM</div>
+            <div className="td-bigwrap">
+              <span className={`td-big ${bpmCls}`}>{bpm}</span>
+              <span className="td-unit">bpm</span>
+            </div>
           </div>
 
-          <div className="ht-sect">Personal en escena</div>
-          <div className="ht-ops">
-            {ops.map(op => (
-              <div key={op.id} className={`ht-op${op.al ? ' ht-op-al' : ''}`}>
-                <div className="ht-op-meta">
-                  <span className="ht-op-name">{op.n}</span>
-                  <span className="ht-op-id">{op.id}</span>
-                </div>
-                <span className={`tt-bpm ${op.bCls}`} style={{ fontSize: 10 }}>{op.v}</span>
-                <span className={`status-badge ${op.sCls}`} style={{ fontSize: 7, padding: '1px 4px' }}>{op.lbl}</span>
-              </div>
-            ))}
+          <div className="td-vitals" aria-hidden="true">
+            <svg viewBox="0 0 200 34" preserveAspectRatio="none">
+              <path className="td-vitals-path" d={EKG_FULL} />
+            </svg>
           </div>
 
-          <div className="ht-strip">
-            <div className="ht-si"><span className="ht-dot ht-dot-ok" />Offline</div>
-            <div className="ht-si"><span className="ht-dot ht-dot-rec" />Grabando</div>
-            <div className="ht-si"><span className="ht-dot ht-dot-dim" />Sync pend.</div>
-          </div>
+          {bpm >= 150 && (
+            <div className="td-alertbar">
+              <span className="td-alertbar-pin" />
+              Tte. Muñoz — acción req.
+            </div>
+          )}
 
-          <div className="ht-sect" style={{ marginTop: 6 }}>Eventos recientes</div>
-          <div className="ht-evts">
-            {[
-              { t: '14:11', b: 'Alerta BPM — Muñoz' },
-              { t: '14:19', b: 'Soto → rehabilitación' },
-              { t: '14:23', b: '4 operadores activos' },
-            ].map(ev => (
-              <div key={ev.t} className="ht-evt">
-                <span className="ht-evt-t">{ev.t}</span>
-                <span className="ht-evt-b">{ev.b}</span>
-              </div>
-            ))}
+          <div className="td-foot">
+            <span><b>4</b> ops.</span>
+            <span><b>2</b> alertas</span>
+            <div className="td-spark" aria-hidden="true">
+              {[...Array(6)].map((_, i) => (
+                <i key={i} style={{ height: `${35 + i * 12}%`, animationDelay: `${i * 0.26}s` }} />
+              ))}
+            </div>
           </div>
-
         </div>
       </div>
     </div>
   )
 }
 
+// Wire paths in the 580×540 SVG coordinate space.
+// Watch right edge ≈ (240, 360) → tablet left edge ≈ (148, 195).
+const WIRE_A = 'M 240,360 C 240,280 165,235 148,195'
+const WIRE_B = 'M 222,392 C 215,320 172,268 156,228'
+
+// ── Hero ──────────────────────────────────────────────────────────────────────
 export default function Hero({ onConversemos }: { onConversemos: () => void }) {
-  const watchRef = useRef<HTMLImageElement>(null)
   const [bpm, setBpm] = useState(142)
-  useWatchScroll(watchRef)
+  const stageRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const id = setInterval(() => {
@@ -161,12 +122,32 @@ export default function Hero({ onConversemos }: { onConversemos: () => void }) {
     return () => clearInterval(id)
   }, [])
 
+  const onPointerMove = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
+    const el = stageRef.current
+    if (!el) return
+    const rect = el.getBoundingClientRect()
+    const px = Math.max(-1, Math.min(1, (e.clientX - rect.left - rect.width  / 2) / (rect.width  / 2)))
+    const py = Math.max(-1, Math.min(1, (e.clientY - rect.top  - rect.height / 2) / (rect.height / 2)))
+    el.style.setProperty('--px', px.toFixed(3))
+    el.style.setProperty('--py', py.toFixed(3))
+  }, [])
+
+  const onPointerLeave = useCallback(() => {
+    const el = stageRef.current
+    if (!el) return
+    el.style.setProperty('--px', '0')
+    el.style.setProperty('--py', '0')
+  }, [])
+
+  const bpmCls = bpm >= 170 ? 'bpm-crit' : bpm >= 150 ? 'bpm-warn' : 'bpm-ok'
+
   return (
     <section className="hero" id="inicio">
       <HeroBackground />
+
       <div className="hero-content">
         <div className="hero-kicker reveal in">
-          <span className="pulse-dot"></span>
+          <span className="pulse-dot" />
           Sistema táctico · Offline-first
         </div>
         <h1 className="reveal in">
@@ -217,78 +198,65 @@ export default function Hero({ onConversemos }: { onConversemos: () => void }) {
         </div>
       </div>
 
-      <div className="hero-visual">
-        <div className="watch-stage">
+      {/* ── Ecosystem visual ── */}
+      <div
+        className="hero-visual"
+        onPointerMove={onPointerMove}
+        onPointerLeave={onPointerLeave}
+      >
+        <div className="eco-stage" ref={stageRef}>
+          <div className="eco-3d">
 
-          <div className="watch-glow"></div>
-          <div className="watch-glow-inner"></div>
-          <WatchOrbit />
-          <img
-            ref={watchRef}
-            src="/images/watch-vigia.png"
-            alt="VIGÍA — dispositivo de monitoreo táctico"
-            className="watch-img floating"
-          />
+            <div className="eco-glow" aria-hidden="true" />
+            <div className="eco-floor" aria-hidden="true" />
 
-          {/* Right chips */}
-          <div className="chip-wrap" style={{ top: '50%', left: '50%', transform: 'translate(108px,-180px)' }}>
-            <div className="watch-chip" style={{ animation: 'chip-float-a 4.4s ease-in-out infinite' }}>
-              <div className="watch-chip-label">BPM</div>
-              <div className={`watch-chip-val${bpm >= 152 ? ' warn' : ' ok'}`}>{bpm}</div>
+            {/* Tactical tablet — back layer */}
+            <div className="eco-tablet">
+              <span className="eco-tablet-cam" aria-hidden="true" />
+              <TabletDash bpm={bpm} />
             </div>
-          </div>
-          <div className="chip-wrap" style={{ top: '50%', left: '50%', transform: 'translate(116px,-20px)' }}>
-            <div className="watch-chip" style={{ animation: 'chip-float-b 5.2s ease-in-out infinite' }}>
-              <div className="watch-chip-label">SpO₂</div>
-              <div className="watch-chip-val ok">98%</div>
-            </div>
-          </div>
-          <div className="chip-wrap" style={{ top: '50%', left: '50%', transform: 'translate(108px,130px)' }}>
-            <div className="watch-chip" style={{ animation: 'chip-float-c 4.8s ease-in-out infinite 0.6s' }}>
-              <div className="watch-chip-label">Temp.</div>
-              <div className="watch-chip-val dim">36.8°C</div>
-            </div>
-          </div>
 
-          {/* Left chips */}
-          <div className="chip-wrap" style={{ top: '50%', left: '50%', transform: 'translate(-200px,-180px)' }}>
-            <div className="watch-chip" style={{ animation: 'chip-float-b 5s ease-in-out infinite 1.1s' }}>
-              <div className="watch-chip-label">Actividad</div>
-              <div className="watch-chip-val warn">Alta</div>
-            </div>
-          </div>
-          <div className="chip-wrap" style={{ top: '50%', left: '50%', transform: 'translate(-196px,-20px)' }}>
-            <div className="watch-chip" style={{ animation: 'chip-float-a 4.6s ease-in-out infinite 0.4s' }}>
-              <div className="watch-chip-label">Batería</div>
-              <div className="watch-chip-val ok">82%</div>
-            </div>
-          </div>
-          <div className="chip-wrap" style={{ top: '50%', left: '50%', transform: 'translate(-200px,130px)' }}>
-            <div className="watch-chip" style={{ animation: 'chip-float-d 5.4s ease-in-out infinite 0.9s' }}>
-              <div className="watch-chip-label">GPS · Activo</div>
-              <div className="watch-chip-val ok">En línea</div>
-            </div>
-          </div>
+            {/* Telemetry SVG layer */}
+            <svg
+              className="eco-conn"
+              viewBox="0 0 580 540"
+              aria-hidden="true"
+              overflow="visible"
+            >
+              <path className="eco-wire" d={WIRE_A} />
+              <path className="eco-flow" d={WIRE_A} />
+              <path className="eco-wire" d={WIRE_B} />
+              <path className="eco-flow eco-flow-b" d={WIRE_B} />
+              <circle className="eco-node eco-node-pulse" cx="240" cy="360" r="4" />
+              <circle className="eco-node" cx="148" cy="195" r="3" />
+            </svg>
 
-          {/* Bottom center */}
-          <div className="chip-wrap" style={{ top: '50%', left: '50%', transform: 'translate(-50%,210px)' }}>
-            <div className="watch-chip" style={{
-              flexDirection: 'row', gap: 12, minWidth: 'auto',
-              animation: 'chip-float-c 5.6s ease-in-out infinite 1.4s',
-            }}>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-                <div className="watch-chip-label">SOS</div>
-                <div className="watch-chip-val dim">Inactivo</div>
-              </div>
-              <div style={{ width: 1, background: 'oklch(22% 0.010 240)', alignSelf: 'stretch' }}></div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-                <div className="watch-chip-label">Caída</div>
-                <div className="watch-chip-val dim">No detect.</div>
-              </div>
+            <div className="eco-wirelabel">Telemetría activa</div>
+
+            {/* Watch — front layer */}
+            <div className="eco-watch">
+              <img
+                src="/images/watch-vigia.png"
+                alt="VIGÍA — dispositivo de monitoreo táctico"
+                width={252}
+                height={280}
+              />
             </div>
+
+            {/* BPM chip */}
+            <div className="eco-chip eco-chip-a">
+              <span className="eco-chip-l">BPM</span>
+              <span className={`eco-chip-v ${bpmCls}`}>{bpm}</span>
+            </div>
+
+            {/* SpO₂ chip */}
+            <div className="eco-chip eco-chip-b">
+              <span className="eco-chip-l">SpO₂</span>
+              <span className="eco-chip-v bpm-ok">98%</span>
+            </div>
+
           </div>
         </div>
-        <HeroTablet bpm={bpm} />
       </div>
     </section>
   )
