@@ -60,10 +60,13 @@ const CajaNegraMock = () => (
         ))}
         <div className="sm-snap-label" style={{ marginTop: 10 }}>Timeline</div>
         {[
-          { t: '14:05', txt: 'Incidente iniciado' },
-          { t: '14:11', txt: 'Alerta BPM — Tte. Muñoz' },
-          { t: '14:19', txt: 'Soto a rehabilitación' },
-          { t: '14:23', txt: 'Incidente cerrado' },
+          { t: '14:02', txt: 'Alerta inicial' },
+          { t: '14:05', txt: 'Personal desplegado' },
+          { t: '14:07', txt: 'Monitoreo iniciado' },
+          { t: '14:11', txt: 'Alerta biométrica' },
+          { t: '14:19', txt: 'Rehabilitación' },
+          { t: '15:44', txt: 'Recuperación' },
+          { t: '16:23', txt: 'Registro cerrado' },
         ].map(ev => (
           <div key={ev.t} className="sm-snap-evt">
             <span className="sm-snap-evt-t">{ev.t}</span>

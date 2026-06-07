@@ -117,13 +117,13 @@ export default function PanelSection() {
               <div className="flow-step">
                 <div className="flow-n">01</div>
                 <div className="flow-step-body">
-                  <h4>Sensor en el operador</h4>
+                  <h4>Monitoreo en el operador</h4>
                 </div>
               </div>
               <div className="flow-step">
                 <div className="flow-n">02</div>
                 <div className="flow-step-body">
-                  <h4>Gateway táctico</h4>
+                  <h4>Punto de mando local</h4>
                 </div>
               </div>
               <div className="flow-step">

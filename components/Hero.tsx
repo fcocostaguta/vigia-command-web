@@ -106,7 +106,7 @@ function HeroTablet({ bpm }: { bpm: number }) {
               <span className="pulse-dot" style={{ width: 5, height: 5, flexShrink: 0 }} />
               <span className="ht-brand">VIGÍA</span>
             </div>
-            <span className="ht-incident">Incendio · 2ª alarma</span>
+            <span className="ht-incident">Incendio · 2ª alarma · Maitencillo</span>
           </div>
 
           <div className="ht-sect">Personal en escena</div>
@@ -265,7 +265,7 @@ export default function Hero({ onConversemos }: { onConversemos: () => void }) {
           </div>
           <div className="chip-wrap" style={{ top: '50%', left: '50%', transform: 'translate(-200px,130px)' }}>
             <div className="watch-chip" style={{ animation: 'chip-float-d 5.4s ease-in-out infinite 0.9s' }}>
-              <div className="watch-chip-label">GPS · LoRa</div>
+              <div className="watch-chip-label">GPS · Activo</div>
               <div className="watch-chip-val ok">En línea</div>
             </div>
           </div>

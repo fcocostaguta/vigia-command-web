@@ -3,7 +3,7 @@ export default function OfflineFirst() {
     <section className="offline-section" id="offline-first">
       <div className="container">
         <div className="reveal">
-          <div className="tag">Arquitectura de campo</div>
+          <div className="tag">Operación en terreno</div>
           <h2>Opera sin señal.<br/><em style={{ fontStyle: 'normal', color: 'var(--red-b)' }}>Sincroniza después.</em></h2>
         </div>
 
@@ -12,7 +12,7 @@ export default function OfflineFirst() {
           <div className="offline-stage stage-active">
             <div className="offline-stage-num">01 · CAMPO</div>
             <h4>Emergencia activa</h4>
-            <div className="offline-stage-tag tag-offline">Sin internet · Operativo</div>
+            <div className="offline-stage-tag tag-offline">Sin conexión externa · Operativo</div>
           </div>
 
           <div className="offline-arrow">
@@ -24,7 +24,7 @@ export default function OfflineFirst() {
           <div className="offline-stage">
             <div className="offline-stage-num">02 · MANDO LOCAL</div>
             <h4>Panel táctico en terreno</h4>
-            <div className="offline-stage-tag tag-active">Red local · Tiempo real</div>
+            <div className="offline-stage-tag tag-active">Coordinación activa · Tiempo real</div>
           </div>
 
           <div className="offline-arrow">
@@ -36,7 +36,7 @@ export default function OfflineFirst() {
           <div className="offline-stage">
             <div className="offline-stage-num">03 · POST-INCIDENTE</div>
             <h4>Sincronización automática</h4>
-            <div className="offline-stage-tag tag-sync">Sync · Caja Negra al cloud</div>
+            <div className="offline-stage-tag tag-sync">Registro sincronizado · Auditable</div>
           </div>
 
         </div>

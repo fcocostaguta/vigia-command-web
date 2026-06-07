@@ -9,7 +9,7 @@ export default function CajaNegra() {
             <h2>La emergencia deja<br/><em style={{ fontStyle: 'normal', color: 'var(--red-b)' }}>registro automático.</em></h2>
             <div className="cbn-bullets">
               <div className="cbn-bullet"><strong>Snapshot inmutable por incidente</strong></div>
-              <div className="cbn-bullet"><strong>Historial auditable desde el cloud</strong></div>
+              <div className="cbn-bullet"><strong>Historial auditable posterior al incidente</strong></div>
               <div className="cbn-bullet"><strong>Base para mejora y aprendizaje operacional</strong></div>
             </div>
           </div>
@@ -55,24 +55,39 @@ export default function CajaNegra() {
               <div className="cbn-mock-section">
                 <div className="cbn-mock-label">Timeline de eventos</div>
                 <div className="cbn-event-row">
+                  <span className="cbn-event-time">14:02</span>
+                  <span className="cbn-event-dot ok">●</span>
+                  <span className="cbn-event-text">Alerta inicial — 2ª alarma confirmada</span>
+                </div>
+                <div className="cbn-event-row">
                   <span className="cbn-event-time">14:05</span>
                   <span className="cbn-event-dot ok">●</span>
-                  <span className="cbn-event-text">Incidente iniciado — 4 operadores desplegados</span>
+                  <span className="cbn-event-text">Personal desplegado — 4 operadores en escena</span>
+                </div>
+                <div className="cbn-event-row">
+                  <span className="cbn-event-time">14:07</span>
+                  <span className="cbn-event-dot ok">●</span>
+                  <span className="cbn-event-text">Monitoreo iniciado — vitales activos</span>
                 </div>
                 <div className="cbn-event-row">
                   <span className="cbn-event-time">14:11</span>
                   <span className="cbn-event-dot warn">⚠</span>
-                  <span className="cbn-event-text">Alerta BPM — Tte. Muñoz (181 bpm)</span>
+                  <span className="cbn-event-text">Alerta biométrica — Tte. Muñoz (181 bpm)</span>
                 </div>
                 <div className="cbn-event-row">
                   <span className="cbn-event-time">14:19</span>
                   <span className="cbn-event-dot warn">⚠</span>
-                  <span className="cbn-event-text">Bbro. Soto enviado a rehabilitación</span>
+                  <span className="cbn-event-text">Rehabilitación — Bbro. Soto retirado de escena</span>
                 </div>
                 <div className="cbn-event-row">
-                  <span className="cbn-event-time">14:23</span>
+                  <span className="cbn-event-time">15:44</span>
                   <span className="cbn-event-dot ok">●</span>
-                  <span className="cbn-event-text">Incidente cerrado — snapshot generado</span>
+                  <span className="cbn-event-text">Recuperación — Tte. Muñoz normalizado</span>
+                </div>
+                <div className="cbn-event-row">
+                  <span className="cbn-event-time">16:23</span>
+                  <span className="cbn-event-dot ok">●</span>
+                  <span className="cbn-event-text">Registro cerrado — snapshot generado</span>
                 </div>
               </div>
             </div>

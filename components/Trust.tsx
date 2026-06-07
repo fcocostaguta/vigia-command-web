@@ -1,24 +1,20 @@
 export default function Trust() {
   const pillars = [
     {
-      label: 'Operativo sin Internet',
-      body: 'La operación táctica completa —BLE, MQTT, alertas, historial— corre en el equipo de campo sin depender de conectividad externa. Internet solo se usa para sincronizar el registro post-incidente.',
-      tag: 'Arquitectura offline-first',
+      label: 'La operación no queda a oscuras',
+      tag: 'Continuidad de mando',
     },
     {
-      label: 'Caja Negra de cada incidente',
-      body: 'Al cerrar un incidente, el sistema genera un snapshot inmutable con vitales por bombero, asignaciones, timeline de eventos y metadatos de campo. Queda sincronizado al cloud y es auditable.',
+      label: 'Cada decisión queda respaldada',
       tag: 'Trazabilidad total',
     },
     {
-      label: 'Biometría según NFPA 1582 / 1584',
-      body: 'Los umbrales de frecuencia cardíaca, SpO₂, temperatura y tiempo en escena están calibrados según protocolo NFPA. El sistema identifica condición crítica y genera alerta en tiempo real.',
-      tag: 'Protocolo validado',
+      label: 'El estado del personal, claro',
+      tag: 'Visibilidad en vivo',
     },
     {
-      label: 'Validado en hardware de campo',
-      body: 'Probado en Raspberry Pi 4 con sensores BLE (Polar H10, ESP32) y comunicación LoRa. El stack completo funciona en condiciones reales, no solo en simulación.',
-      tag: 'Hardware real',
+      label: 'Una sola fuente de verdad',
+      tag: 'Coordinación',
     },
   ]
 
