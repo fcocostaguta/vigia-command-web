@@ -2,7 +2,7 @@
 
 import React from 'react'
 
-type IconName = 'eye' | 'pulse' | 'gateway' | 'screen' | 'fire' | 'factory' | 'rescue' | 'arrow' | 'lock' | 'linkedin' | 'arrowRight'
+type IconName = 'eye' | 'pulse' | 'gateway' | 'screen' | 'fire' | 'factory' | 'rescue' | 'arrow' | 'lock' | 'linkedin' | 'instagram' | 'arrowRight'
 
 const ICONS: Record<IconName, [number, React.ReactNode]> = {
   eye: [20, <><ellipse key="e" cx="10" cy="10" rx="8" ry="5" stroke="currentColor" strokeWidth="1.4"/><circle key="c" cx="10" cy="10" r="2" stroke="currentColor" strokeWidth="1.4"/></>],
@@ -16,6 +16,7 @@ const ICONS: Record<IconName, [number, React.ReactNode]> = {
   lock: [16, <><rect key="r" x="3" y="7" width="10" height="8" rx="1" stroke="currentColor" strokeWidth="1.4"/><path key="p" d="M5 7V5a3 3 0 016 0v2" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/></>],
   linkedin: [24, <><rect key="r" x="2" y="2" width="20" height="20" rx="3" stroke="currentColor" strokeWidth="1.5"/><path key="p" d="M7 10v7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/><circle key="c" cx="7" cy="7" r="0.5" fill="currentColor" stroke="currentColor" strokeWidth="1"/><path key="p2" d="M12 17v-3.5a2.5 2.5 0 015 0V17M12 10v7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/></>],
   arrowRight: [24, <path key="p" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" stroke="currentColor" d="M13 7l5 5m0 0l-5 5m5-5H6"/>],
+  instagram: [24, <><rect key="r" x="3" y="3" width="18" height="18" rx="5" stroke="currentColor" strokeWidth="1.5"/><circle key="c" cx="12" cy="12" r="4" stroke="currentColor" strokeWidth="1.5"/><circle key="d" cx="17.2" cy="6.8" r="1" fill="currentColor"/></>],
 }
 
 export function Icon({ name, size }: { name: IconName; size?: number }) {

@@ -1,15 +1,12 @@
 'use client'
 
 import { useState, useEffect, useRef, useCallback } from 'react'
-import { CommercialHeader } from './CommercialSections'
+import { CommercialHeader, CommercialFlow } from './CommercialSections'
 import CommercialHero from './CommercialHero'
-import { CommercialPanel, CommercialFlow } from './CommercialSections'
-import CommercialCommand from './CommercialCommand'
 import {
-  CommercialCajaNegra,
   CommercialOffline,
   CommercialCases,
-  CommercialTrust,
+  CommercialCajaNegra,
   CommercialContact,
   CommercialFooter,
 } from './CommercialSections2'
@@ -50,15 +47,14 @@ export default function CommercialLanding() {
   return (
     <div className="vk" ref={wrapRef}>
       <CommercialHeader onContact={onContact} />
-      <CommercialHero onContact={onContact} bpm={bpm} />
-      <CommercialPanel />
-      <CommercialCommand />
-      <CommercialFlow />
-      <CommercialCajaNegra />
-      <CommercialOffline />
-      <CommercialCases />
-      <CommercialTrust />
-      <CommercialContact />
+      <main>
+        <CommercialHero onContact={onContact} bpm={bpm} />
+        <CommercialFlow />
+        <CommercialOffline />
+        <CommercialCases />
+        <CommercialCajaNegra />
+        <CommercialContact />
+      </main>
       <CommercialFooter onContact={onContact} />
     </div>
   )

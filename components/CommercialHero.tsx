@@ -1,8 +1,10 @@
 'use client'
 
-import { useState, useEffect, useRef, useCallback } from 'react'
-import { HeroAtmosphere, HeroEkg, Signal } from './CommercialAtmosphere'
+import { useState, useEffect, useRef } from 'react'
+import Image from 'next/image'
+import { HeroAtmosphere, Signal } from './CommercialAtmosphere'
 import { Icon } from './CommercialIcons'
+import { track } from '@/lib/analytics'
 
 function ekgTiled(W: number, beats: number): string {
   const seg = W / beats, mid = 17
@@ -30,7 +32,7 @@ const TD_INIT: RowState[] = [
   { id: 'B-05', rank: 'Vol.',  name: 'Cárdenas', bpm: 116, tone: 'ok'   },
 ]
 
-function TabletDash({ bpm: _bpm }: { bpm: number }) {
+function TabletDash() {
   const [rows, setRows] = useState<RowState[]>(TD_INIT)
   const [clock, setClock] = useState('')
   const ekg = ekgTiled(360, 5)
@@ -59,19 +61,18 @@ function TabletDash({ bpm: _bpm }: { bpm: number }) {
       <div className="eco-screen">
         <div className="td-top">
           <span className="td-mark">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/images/logo-vigia.png" alt="" width={18} height={18} style={{ objectFit: 'contain' }} />
+            <Image src="/images/logo-vigia.png" alt="" width={18} height={18} style={{ objectFit: 'contain' }} />
             <b>VIGÍA COMMAND</b>
           </span>
           <span className="td-live">
-            <span className="vg-pulse-dot is-fast" /> En vivo
+            <span className="vg-pulse-dot is-fast" /> Demostración
           </span>
           <span className="td-clock" suppressHydrationWarning>{clock}</span>
         </div>
 
         <div className="td-inc">
           <span className="dot" />
-          Incendio estructural · 2ª alarma · Maitencillo
+          Incidente simulado · datos de ejemplo
           <span className="dur">02:18</span>
         </div>
 
@@ -170,27 +171,26 @@ export default function CommercialHero({ onContact, bpm }: { onContact: () => vo
 
       <div className="vk-hero-content">
         <div className="vk-kicker">
-          <span className="vg-pulse-dot" /> Sistema táctico · Offline-first <Signal />
+          <span className="vg-pulse-dot" /> Tecnología operacional para emergencias
         </div>
         <h1>
-          Caja Negra<br />
-          Operacional para<br />
-          <em>Emergencias.</em>
+          Información crítica<br />
+          del personal.<br />
+          Directo <em>al mando.</em>
         </h1>
         <p className="vk-hero-sub">
-          Monitoreo offline. Registro inmutable. Sincronización automática.
+          VIGÍA conecta monitoreo, alertas y registro operacional en una plataforma diseñada para
+          apoyar decisiones durante una emergencia, incluso cuando la conectividad es limitada.
         </p>
         <div className="vk-hero-actions">
-          <button className="vg-btn vg-btn-red vg-btn-lg" onClick={onContact}>
-            ME INTERESA <Icon name="arrow" />
+          <button className="vg-btn vg-btn-red vg-btn-lg" onClick={() => { track('cta_contact_click', { placement: 'hero' }); onContact() }}>
+            Conversemos <Icon name="arrow" />
           </button>
           <a
             className="vg-btn vg-btn-ghost vg-btn-lg"
-            href="https://mando.vigiacommand.cl"
-            target="_blank"
-            rel="noopener noreferrer"
+            href="#como-funciona"
           >
-            <Icon name="lock" /> Ingresar a Mando
+            Ver cómo funciona
           </a>
         </div>
         <div className="vk-hero-micro">
@@ -203,7 +203,7 @@ export default function CommercialHero({ onContact, bpm }: { onContact: () => vo
           <div className="eco-3d">
             <div className="eco-glow" />
             <div className="eco-floor" />
-            <TabletDash bpm={bpm} />
+            <TabletDash />
             <svg className="eco-conn" viewBox="0 0 580 540" aria-hidden="true" overflow="visible">
               <path className="wire" d="M 168 318 C 196 286 214 250 256 226" />
               <path className="wire" d="M 176 338 C 250 320 318 312 372 296" />
@@ -219,8 +219,14 @@ export default function CommercialHero({ onContact, bpm }: { onContact: () => vo
             </svg>
             <div className="eco-wirelabel one">Telemetría</div>
             <div className="eco-watch">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/images/watch-vigia.png" alt="VIGÍA — dispositivo de monitoreo táctico" />
+              <Image
+                src="/images/watch-vigia.png"
+                alt="VIGÍA — dispositivo de monitoreo en la muñeca del operador"
+                width={1536}
+                height={1024}
+                sizes="(max-width: 980px) 190px, 252px"
+                priority
+              />
             </div>
             <div className="eco-chip eco-chip-a">
               <span className="l">BPM</span>
@@ -232,9 +238,8 @@ export default function CommercialHero({ onContact, bpm }: { onContact: () => vo
             </div>
           </div>
         </div>
+        <div className="vk-hero-visual-caption">Demostración · datos simulados</div>
       </div>
-
-      <HeroEkg />
     </section>
   )
 }

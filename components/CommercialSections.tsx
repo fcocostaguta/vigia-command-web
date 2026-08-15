@@ -1,158 +1,132 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { Corners, Signal } from './CommercialAtmosphere'
-import { Icon, Tag, Badge, bpmCls } from './CommercialIcons'
+import { useState, useRef, useEffect } from 'react'
+import Image from 'next/image'
+import { Icon, Tag } from './CommercialIcons'
+import { track } from '@/lib/analytics'
 
 const NAV: [string, string][] = [
-  ['Solución', 'solucion'],
   ['Cómo funciona', 'como-funciona'],
-  ['Casos de uso', 'casos'],
-  ['Contacto', 'contacto'],
+  ['Continuidad', 'continuidad'],
+  ['Aplicaciones', 'aplicaciones'],
+  ['Registro', 'registro'],
 ]
 
-function go(id: string) {
+function go(id: string, e?: React.MouseEvent) {
   const el = document.getElementById(id)
-  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  if (el) {
+    e?.preventDefault()
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
 }
 
 export function CommercialHeader({ onContact }: { onContact: () => void }) {
+  const [open, setOpen] = useState(false)
+  const firstLinkRef = useRef<HTMLAnchorElement>(null)
+  const menuBtnRef = useRef<HTMLButtonElement>(null)
+
+  useEffect(() => {
+    document.body.style.overflow = open ? 'hidden' : ''
+    if (open) firstLinkRef.current?.focus()
+    return () => { document.body.style.overflow = '' }
+  }, [open])
+
+  useEffect(() => {
+    if (!open) return
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setOpen(false)
+        menuBtnRef.current?.focus()
+      }
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [open])
+
+  const navClick = (id: string) => (e: React.MouseEvent) => { go(id, e); setOpen(false) }
+
   return (
+    <>
     <header className="vk-header">
       <div className="vk-header-inner">
         <a
           className="vk-logo"
-          style={{ display: 'flex', alignItems: 'center', gap: 12, cursor: 'pointer' }}
-          onClick={() => go('inicio')}
+          href="#inicio"
+          style={{ display: 'flex', alignItems: 'center', gap: 12 }}
+          onClick={(e) => { go('inicio', e); setOpen(false) }}
         >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/images/logo-vigia.png" alt="VIGÍA" style={{ width: 34, height: 34, objectFit: 'contain' }} />
+          <Image src="/images/logo-vigia.png" alt="VIGÍA" width={34} height={34} style={{ objectFit: 'contain' }} />
           <span style={{ fontFamily: 'var(--font-h)', fontSize: '1.3rem', fontWeight: 900, letterSpacing: '0.06em', textTransform: 'uppercase' }}>
             VIGÍA
           </span>
         </a>
-        <nav className="vk-nav">
+        <nav className="vk-nav" aria-label="Navegación principal">
           {NAV.map(([l, id]) => (
-            <a key={id} onClick={() => go(id)} style={{ cursor: 'pointer' }}>{l}</a>
+            <a key={id} href={`#${id}`} onClick={(e) => go(id, e)}>{l}</a>
           ))}
         </nav>
         <div className="vk-header-ctas">
-          <button className="vg-btn vg-btn-ghost vg-btn-sm" onClick={onContact}>CONVERSEMOS</button>
+          <button className="vg-btn vg-btn-red vg-btn-sm" onClick={() => { track('cta_contact_click', { placement: 'header' }); onContact() }}>Conversemos</button>
           <a
             className="vg-btn-ingresar"
             href="https://mando.vigiacommand.cl"
             target="_blank"
             rel="noopener noreferrer"
+            onClick={() => track('login_click', { placement: 'header' })}
           >
             <Icon name="lock" /> Ingresar
           </a>
+          <button
+            ref={menuBtnRef}
+            className="vk-menu-btn"
+            aria-expanded={open}
+            aria-controls="vk-mobile-nav"
+            aria-label={open ? 'Cerrar menú' : 'Abrir menú'}
+            onClick={() => setOpen(v => !v)}
+          >
+            {open ? (
+              <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 4l12 12M16 4L4 16" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" /></svg>
+            ) : (
+              <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M3 5h14M3 10h14M3 15h14" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" /></svg>
+            )}
+          </button>
         </div>
       </div>
     </header>
+      <nav id="vk-mobile-nav" className="vk-mobile-nav" aria-label="Navegación móvil" hidden={!open}>
+        {NAV.map(([l, id], i) => (
+          <a
+            key={id}
+            href={`#${id}`}
+            ref={i === 0 ? firstLinkRef : undefined}
+            onClick={navClick(id)}
+          >
+            {l}
+          </a>
+        ))}
+        <a
+          className="vk-mobile-ingresar"
+          href="https://mando.vigiacommand.cl"
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={() => track('login_click', { placement: 'mobile_nav' })}
+        >
+          <Icon name="lock" /> Ingresar
+        </a>
+        <div className="vk-mobile-cta">
+          <button className="vg-btn vg-btn-red vg-btn-lg" onClick={() => { track('cta_contact_click', { placement: 'mobile_nav' }); onContact(); setOpen(false) }}>
+            Conversemos
+          </button>
+        </div>
+      </nav>
+    </>
   )
 }
 
-type Tone = 'ok' | 'warn' | 'crit'
-interface PanelRow {
-  id: string; rank: string; name: string; bpm: number
-  status: string; tone: Tone; alert: string | null
-}
-
-const INIT_ROWS: PanelRow[] = [
-  { id: 'B-01', rank: 'Cap.',  name: 'Rojas',    bpm: 142, status: 'Operativo',  tone: 'ok',   alert: null         },
-  { id: 'B-02', rank: 'Tte.',  name: 'Muñoz',    bpm: 168, status: 'Exigido',    tone: 'warn', alert: 'Reevaluar'  },
-  { id: 'B-03', rank: 'Vol.',  name: 'Pérez',    bpm: 118, status: 'Disponible', tone: 'ok',   alert: null         },
-  { id: 'B-04', rank: 'Bbro.', name: 'Soto',     bpm: 176, status: 'Rehab.',     tone: 'warn', alert: 'Alta carga' },
-  { id: 'B-05', rank: 'Vol.',  name: 'Cárdenas', bpm: 104, status: 'Operativo',  tone: 'ok',   alert: null         },
-]
-
-export function CommercialPanel() {
-  const [rows, setRows] = useState<PanelRow[]>(INIT_ROWS)
-  const [clock, setClock] = useState('')
-
-  useEffect(() => {
-    const t = () => setClock(new Date().toLocaleTimeString('es-CL', { hour12: false }))
-    t()
-    const id = setInterval(t, 1000)
-    return () => clearInterval(id)
-  }, [])
-
-  useEffect(() => {
-    const id = setInterval(() => setRows(p => p.map(r =>
-      r.status === 'Rehab.' ? r
-        : { ...r, bpm: Math.max(60, Math.min(185, Math.round(r.bpm + (Math.random() - 0.48) * 5))) }
-    )), 1600)
-    return () => clearInterval(id)
-  }, [])
-
-  const rowTone = (r: PanelRow): Tone => r.bpm >= 170 ? 'crit' : r.tone
-  const rowBg = (r: PanelRow) =>
-    (r.bpm >= 170 || r.alert === 'Alta carga') ? 'is-alert' : r.status === 'Rehab.' ? 'is-rehab' : ''
-
-  return (
-    <section className="vk-section alt" id="solucion">
-      <div className="vk-container vk-panel-wrap">
-
-        <div data-reveal="left">
-          <Tag>VIGÍA Command · Software</Tag>
-          <h2 style={{ marginTop: 16 }}>Del sensor al mando, en segundos.</h2>
-          <div className="vk-flowlist">
-            {([
-              ['01', 'Monitoreo en el operador'],
-              ['02', 'Punto de mando local'],
-              ['03', 'Panel VIGÍA Command'],
-            ] as [string, string][]).map(([n, h], i) => (
-              <div className="step" key={n} data-reveal style={{ '--d': (0.1 + i * 0.08) + 's' } as React.CSSProperties}>
-                <span className="n">{n}</span>
-                <h4>{h}</h4>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div data-reveal="right">
-          <div style={{ marginBottom: 14 }}><Tag>Panel táctico · Vista en vivo</Tag></div>
-          <div className="vk-table">
-            <Corners />
-            <div className="vk-tt-top">
-              <span className="vk-tt-live"><span className="vg-pulse-dot is-fast" /> VIGÍA Command · En vivo</span>
-              <span className="vk-tt-incident">Incendio estructural · 2ª alarma</span>
-              <span className="vk-tt-time" suppressHydrationWarning>{clock}</span>
-            </div>
-            <div className="vk-tt-head">
-              <div>Cargo</div><div>Nombre</div><div>BPM</div><div>Estado</div><div>Alerta</div>
-            </div>
-            {rows.map(r => (
-              <div key={r.id} className={`vg-trow ${rowBg(r)}`}>
-                <div className="vg-trow-rank">{r.rank}</div>
-                <div style={{ display: 'flex', flexDirection: 'column' }}>
-                  <span className="vg-trow-name">{r.name}</span>
-                  <span className="vg-trow-id">{r.id}</span>
-                </div>
-                <div><span className={`vg-trow-bpm ${bpmCls(r.bpm)}`}>{r.bpm}</span></div>
-                <div><Badge tone={rowTone(r)}>{r.status}</Badge></div>
-                <div style={{ fontFamily: 'var(--font-m)', fontSize: 10, color: r.alert ? 'var(--amber)' : 'var(--faint)', letterSpacing: '0.06em' }}>
-                  {r.alert || '—'}
-                </div>
-              </div>
-            ))}
-            <div className="vk-tt-foot">
-              <span>5 operadores · 2 alertas activas</span>
-              <span className="ok"><Signal /> En línea</span>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </section>
-  )
-}
-
-const FLOW_STEPS = [
-  { n: '01', label: 'El reloj',            desc: 'Toma señales críticas del operador.',     icon: 'pulse'  as const },
-  { n: '02', label: 'El mando centraliza', desc: 'Visibilidad operacional en tiempo real.',  icon: 'screen' as const },
-  { n: '03', label: 'El oficial decide',   desc: 'Estado en vivo de cada operador.',         icon: 'eye'    as const },
-  { n: '04', label: 'Queda registro',      desc: 'El incidente se archiva automáticamente.', icon: 'lock'   as const },
+const HOW_STEPS = [
+  { n: '01', label: 'En terreno',  desc: 'El personal utiliza dispositivos conectados que reportan información relevante durante la operación.',        icon: 'pulse'  as const },
+  { n: '02', label: 'En el mando', desc: 'La información se concentra en una interfaz clara para visualizar estados y alertas sin sumar complejidad a la emergencia.', icon: 'screen' as const },
+  { n: '03', label: 'Después',     desc: 'El evento queda registrado para facilitar su revisión y trazabilidad posterior.',                                icon: 'lock'   as const },
 ]
 
 export function CommercialFlow() {
@@ -160,10 +134,15 @@ export function CommercialFlow() {
     <section className="vk-section" id="como-funciona">
       <div className="vk-container">
         <div style={{ textAlign: 'center', marginBottom: 56 }} data-reveal>
-          <h2>Así funciona en terreno.</h2>
+          <Tag center>Cómo funciona</Tag>
+          <h2 style={{ marginTop: 16 }}>Del terreno al mando.</h2>
+          <p style={{ color: 'var(--muted)', maxWidth: 560, margin: '16px auto 0' }}>
+            VIGÍA integra dispositivos, comunicaciones y software en una sola capa operacional para
+            entregar al mando una visión más clara de lo que ocurre con su personal durante una emergencia.
+          </p>
         </div>
         <div className="vk-flow-steps">
-          {FLOW_STEPS.map((s, i) => (
+          {HOW_STEPS.map((s, i) => (
             <>
               <div
                 key={s.n}
@@ -173,10 +152,10 @@ export function CommercialFlow() {
               >
                 <div className="vk-flow-ico"><Icon name={s.icon} size={26} /></div>
                 <div className="vk-flow-n">{s.n}</div>
-                <div className="vk-flow-label">{s.label}</div>
+                <h3 className="vk-flow-label">{s.label}</h3>
                 <div className="vk-flow-desc">{s.desc}</div>
               </div>
-              {i < FLOW_STEPS.length - 1 && <div key={`arr-${i}`} className="vk-flow-arrow">→</div>}
+              {i < HOW_STEPS.length - 1 && <div key={`arr-${i}`} className="vk-flow-arrow">→</div>}
             </>
           ))}
         </div>
