@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
+import { Fragment, useState, useRef, useEffect } from 'react'
 import Image from 'next/image'
 import { Icon, Tag } from './CommercialIcons'
 import { track } from '@/lib/analytics'
@@ -143,9 +143,8 @@ export function CommercialFlow() {
         </div>
         <div className="vk-flow-steps">
           {HOW_STEPS.map((s, i) => (
-            <>
+            <Fragment key={s.n}>
               <div
-                key={s.n}
                 className="vk-flow-step"
                 data-reveal="scale"
                 style={{ '--d': (i * 0.1) + 's' } as React.CSSProperties}
@@ -155,8 +154,8 @@ export function CommercialFlow() {
                 <h3 className="vk-flow-label">{s.label}</h3>
                 <div className="vk-flow-desc">{s.desc}</div>
               </div>
-              {i < HOW_STEPS.length - 1 && <div key={`arr-${i}`} className="vk-flow-arrow">→</div>}
-            </>
+              {i < HOW_STEPS.length - 1 && <div className="vk-flow-arrow">→</div>}
+            </Fragment>
           ))}
         </div>
       </div>

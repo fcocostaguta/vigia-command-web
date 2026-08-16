@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
+import { Fragment, useState, useRef, useEffect } from 'react'
 import Image from 'next/image'
 import { Corners } from './CommercialAtmosphere'
 import { Icon, Tag, Badge } from './CommercialIcons'
@@ -97,9 +97,8 @@ export function CommercialOffline() {
         </div>
         <div className="vk-off-stages">
           {CONTINUITY_STAGES.map((s, i) => (
-            <>
+            <Fragment key={s.n}>
               <div
-                key={s.n}
                 className={i === 0 ? 'vk-off-stage active' : 'vk-off-stage'}
                 data-reveal="scale"
                 style={{ '--d': (i * 0.12) + 's' } as React.CSSProperties}
@@ -109,8 +108,8 @@ export function CommercialOffline() {
                 <p style={{ fontSize: '.8rem', color: 'var(--muted)', lineHeight: 1.6, marginTop: 8 }}>{s.desc}</p>
                 <div className={`vk-off-tag ${s.cls}`}>{s.badge}</div>
               </div>
-              {i < CONTINUITY_STAGES.length - 1 && <div key={`arr-${i}`} className="vk-off-arrow"><Icon name="arrowRight" size={20} /></div>}
-            </>
+              {i < CONTINUITY_STAGES.length - 1 && <div className="vk-off-arrow"><Icon name="arrowRight" size={20} /></div>}
+            </Fragment>
           ))}
         </div>
       </div>
@@ -126,8 +125,17 @@ const APPS = [
 
 export function CommercialCases() {
   return (
-    <section className="vk-section" id="aplicaciones">
-      <div className="vk-container">
+    <section className="vk-section vk-apps" id="aplicaciones">
+      <div className="vk-apps-photo" aria-hidden="true">
+        <Image
+          src="/images/bomberos-field.jpg"
+          alt=""
+          fill
+          sizes="100vw"
+          style={{ objectFit: 'cover', objectPosition: '68% 52%' }}
+        />
+      </div>
+      <div className="vk-container" style={{ position: 'relative', zIndex: 2 }}>
         <div data-reveal>
           <Tag>Aplicaciones</Tag>
           <h2 style={{ marginTop: 16 }}>Una plataforma.<br />Distintos equipos de respuesta.</h2>
@@ -334,10 +342,17 @@ export function CommercialContact() {
                   <span>Mensaje (opcional)</span>
                   <textarea name="mensaje" placeholder="Cuéntanos sobre tu institución o contexto operacional…" disabled={loading} />
                 </label>
-                <label className="vk-consent">
-                  <input type="checkbox" name="consentimiento" required disabled={loading} />
-                  <span>Acepto el tratamiento de mis datos para responder esta solicitud.</span>
-                </label>
+                <div className="vk-consent-block">
+                  <label className="vk-consent">
+                    <input type="checkbox" name="consentimiento" required disabled={loading} />
+                    <span>Autorizo el tratamiento de mis datos personales para responder esta solicitud y ser contactado en relación con ella.</span>
+                  </label>
+                  <p className="vk-consent-micro">
+                    Responsable actual: VIGÍA. Finalidad: gestionar esta solicitud de contacto y responderla.
+                    Si deseas actualizar o eliminar tus datos, escríbenos a{' '}
+                    <a href="mailto:contacto@vigiacommand.cl">contacto@vigiacommand.cl</a>.
+                  </p>
+                </div>
                 {error && (
                   <div className="vk-form-error" role="alert">{error}</div>
                 )}
