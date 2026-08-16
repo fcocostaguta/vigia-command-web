@@ -23,6 +23,11 @@ const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000
 const RATE_LIMIT_MAX = 5
 const hits = new Map<string, number[]>()
 
+// Bump when the consent copy in CommercialContact.tsx changes, to keep an audit trail
+// of which wording a given lead actually agreed to.
+const CONSENT_VERSION = '2026-08-16'
+const CONSENT_TEXT = 'Autorizo el tratamiento de mis datos personales para responder esta solicitud y ser contactado en relación con ella.'
+
 function rateLimited(ip: string): boolean {
   const now = Date.now()
   const prev = (hits.get(ip) ?? []).filter(t => now - t < RATE_LIMIT_WINDOW_MS)
@@ -111,7 +116,10 @@ export async function POST(request: Request) {
   const safeOrg = org.replace(/[\r\n]/g, ' ').trim()
   const safeNombre = nombre.replace(/[\r\n]/g, ' ').trim()
 
-  await persistLead({ nombre, cargo, org, email, tel, tipoOrganizacion, objetivo, personas, mensaje })
+  await persistLead({
+    nombre, cargo, org, email, tel, tipoOrganizacion, objetivo, personas, mensaje,
+    consentimiento, consentVersion: CONSENT_VERSION, consentText: CONSENT_TEXT,
+  })
 
   const resend = new Resend(apiKey)
   const { error } = await resend.emails.send({
