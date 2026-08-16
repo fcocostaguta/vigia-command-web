@@ -65,14 +65,14 @@ function TabletDash() {
             <b>VIGÍA COMMAND</b>
           </span>
           <span className="td-live">
-            <span className="vg-pulse-dot is-fast" /> Demostración
+            <span className="vg-pulse-dot is-fast" /> Ejemplo operacional
           </span>
           <span className="td-clock" suppressHydrationWarning>{clock}</span>
         </div>
 
         <div className="td-inc">
           <span className="dot" />
-          Incidente simulado · datos de ejemplo
+          Incidente de ejemplo
           <span className="dur">02:18</span>
         </div>
 
@@ -179,8 +179,8 @@ export default function CommercialHero({ onContact, bpm }: { onContact: () => vo
           Directo <em>al mando.</em>
         </h1>
         <p className="vk-hero-sub">
-          VIGÍA conecta monitoreo, alertas y registro operacional en una plataforma diseñada para
-          apoyar decisiones durante una emergencia, incluso cuando la conectividad es limitada.
+          VIGÍA integra monitoreo, alertas y registro operacional en una sola plataforma para
+          apoyar al mando durante una emergencia, incluso cuando la conectividad es limitada.
         </p>
         <div className="vk-hero-actions">
           <button className="vg-btn vg-btn-red vg-btn-lg" onClick={() => { track('cta_contact_click', { placement: 'hero' }); onContact() }}>
@@ -238,7 +238,6 @@ export default function CommercialHero({ onContact, bpm }: { onContact: () => vo
             </div>
           </div>
         </div>
-        <div className="vk-hero-visual-caption">Demostración · datos simulados</div>
       </div>
     </section>
   )
