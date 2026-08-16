@@ -348,8 +348,8 @@ export function CommercialContact() {
                     <span>Autorizo el tratamiento de mis datos personales para responder esta solicitud y ser contactado en relación con ella.</span>
                   </label>
                   <p className="vk-consent-micro">
-                    Responsable actual: VIGÍA. Finalidad: gestionar esta solicitud de contacto y responderla.
-                    Si deseas actualizar o eliminar tus datos, escríbenos a{' '}
+                    Los datos serán utilizados únicamente para gestionar esta solicitud y responderla.
+                    Para solicitar su actualización o eliminación, escríbenos a{' '}
                     <a href="mailto:contacto@vigiacommand.cl">contacto@vigiacommand.cl</a>.
                   </p>
                 </div>

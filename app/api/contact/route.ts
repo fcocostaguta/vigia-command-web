@@ -25,7 +25,7 @@ const hits = new Map<string, number[]>()
 
 // Bump when the consent copy in CommercialContact.tsx changes, to keep an audit trail
 // of which wording a given lead actually agreed to.
-const CONSENT_VERSION = '2026-08-16'
+const CONSENT_VERSION = '2026-08-16.2'
 const CONSENT_TEXT = 'Autorizo el tratamiento de mis datos personales para responder esta solicitud y ser contactado en relación con ella.'
 
 function rateLimited(ip: string): boolean {
