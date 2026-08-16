@@ -5,6 +5,7 @@ export const metadata: Metadata = {
   title: 'Política de Privacidad — VIGÍA',
   description: 'Cómo VIGÍA recopila, usa y protege la información entregada a través de este sitio.',
   alternates: { canonical: '/privacidad' },
+  robots: { index: false, follow: false },
 }
 
 export default function PrivacidadPage() {

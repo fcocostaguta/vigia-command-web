@@ -43,7 +43,7 @@ export function CommercialCajaNegra() {
           <div className="vk-mock-top">
             <div>
               <span style={{ color: 'var(--muted)' }}>SNAPSHOT #0042</span>
-              <span style={{ color: 'var(--faint)', fontSize: 9, marginLeft: 10 }}>Demostración · datos simulados</span>
+              <span style={{ color: 'var(--faint)', fontSize: 9, marginLeft: 10 }}>Escenario de referencia</span>
             </div>
             <Badge tone="ok">Cerrado</Badge>
           </div>
@@ -242,8 +242,8 @@ export function CommercialContact() {
           <h2 style={{ marginTop: 16 }}>Conversemos sobre tu operación.</h2>
           <p>Cuéntanos qué tipo de equipo gestionas y qué necesitas resolver. Revisaremos tu solicitud y nos pondremos en contacto contigo.</p>
           <div className="vk-checks">
-            <div className="vk-check"><span className="d">●</span> Demostración a medida según tu institución</div>
-            <div className="vk-check"><span className="d">●</span> Evaluación de escenario operacional</div>
+            <div className="vk-check"><span className="d">●</span> Contacto enfocado en tu operación</div>
+            <div className="vk-check"><span className="d">●</span> Revisión inicial de tu contexto operacional</div>
           </div>
         </div>
 
@@ -336,8 +336,7 @@ export function CommercialContact() {
                 </label>
                 <label className="vk-consent">
                   <input type="checkbox" name="consentimiento" required disabled={loading} />
-                  <span>Acepto el tratamiento de mis datos para responder esta solicitud, de acuerdo con la{' '}
-                    <a href="/privacidad">Política de Privacidad</a>.</span>
+                  <span>Acepto el tratamiento de mis datos para responder esta solicitud.</span>
                 </label>
                 {error && (
                   <div className="vk-form-error" role="alert">{error}</div>
@@ -424,7 +423,6 @@ export function CommercialFooter({ onContact }: { onContact: () => void }) {
             <div className="vk-footer-col">
               <h3>Sistema</h3>
               <a href="https://mando.vigiacommand.cl" target="_blank" rel="noopener noreferrer" onClick={() => track('login_click', { placement: 'footer' })}>Ingresar al panel</a>
-              <a href="/privacidad">Política de Privacidad</a>
             </div>
           </div>
         </div>
