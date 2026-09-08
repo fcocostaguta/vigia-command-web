@@ -44,9 +44,19 @@ async function persistLead(lead: Record<string, string>): Promise<void> {
     console.warn('[contact] KV_REST_API_URL/KV_REST_API_TOKEN no configurados — el lead no queda persistido, solo por correo.')
     return
   }
+
+  const value = JSON.stringify({ ...lead, receivedAt: new Date().toISOString() })
+
   try {
-    const res = await fetch(`${url}/lpush/leads/${encodeURIComponent(JSON.stringify({ ...lead, receivedAt: new Date().toISOString() }))}`, {
-      headers: { Authorization: `Bearer ${token}` },
+    // Keep personal data out of the request URL. Upstash-compatible Redis REST APIs
+    // accept the complete Redis command as a JSON array in the POST body.
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(['LPUSH', 'leads', value]),
     })
     if (!res.ok) console.error('[contact] Falló la persistencia del lead en KV:', res.status)
   } catch (err) {
