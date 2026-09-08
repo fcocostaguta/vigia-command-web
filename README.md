@@ -1,165 +1,99 @@
-# VIGÍA Command — Landing Page
+# VIGÍA Command — sitio público
 
-Plataforma de monitoreo operacional para bomberos.
-Landing comercial construida con **Next.js 14 App Router**, **TypeScript** y **TailwindCSS**.
+Sitio comercial público de VIGÍA, construido con Next.js, React y TypeScript.
 
----
+> **Alcance del repositorio:** este repositorio contiene exclusivamente la experiencia web pública. No debe usarse para almacenar arquitectura interna del producto, documentación de pilotos, inventarios de dispositivos, credenciales, datos personales reales ni procedimientos operacionales internos.
 
-## Estructura del proyecto
+## Requisitos
 
-```
-vigia-command/
-├── app/
-│   ├── layout.tsx          ← Metadata SEO + fuentes
-│   ├── page.tsx            ← Página principal (ensambla componentes)
-│   └── globals.css         ← Diseño visual completo (tokens, layouts, componentes)
-├── components/
-│   ├── Header.tsx
-│   ├── HeroSection.tsx
-│   ├── TacticalPanel.tsx   ← Panel animado con BPM en tiempo real
-│   ├── ProblemSection.tsx
-│   ├── SolutionSection.tsx
-│   ├── HowItWorksSection.tsx
-│   ├── TacticalModeSection.tsx
-│   ├── BlackBoxSection.tsx
-│   ├── BenefitsSection.tsx
-│   ├── DevelopmentStatusSection.tsx
-│   ├── ContactSection.tsx
-│   ├── DemoModal.tsx
-│   ├── Footer.tsx
-│   └── Icons.tsx
-├── lib/
-│   └── content.ts          ← TODO el texto editable de la landing
-├── package.json
-├── tailwind.config.ts
-├── tsconfig.json
-└── next.config.ts
-```
-
----
+- Node.js 20+
+- npm
 
 ## Inicio rápido
 
 ```bash
-npm install
-npm run dev       # http://localhost:3000
-npm run build     # build de producción
-npm run start     # servidor de producción local
+npm ci
+cp .env.example .env.local
+npm run dev
 ```
 
----
-
-## Cómo editar textos
-
-**Todos los textos están en `lib/content.ts`.**
-
-Cada sección tiene su propia constante:
-
-| Constante        | Sección                  |
-|------------------|--------------------------|
-| `HERO`           | Hero principal           |
-| `PROBLEM`        | El problema              |
-| `SOLUTION`       | La solución              |
-| `HOW_IT_WORKS`   | Cómo funciona            |
-| `TACTICAL_MODE`  | Modo Táctico             |
-| `BLACK_BOX`      | Caja negra               |
-| `BENEFITS`       | Beneficios               |
-| `DEV_STATUS`     | Estado de desarrollo     |
-| `CTA`            | CTA final / Contacto     |
-| `FOOTER`         | Pie de página            |
-| `INIT_OPERATORS` | Datos del panel táctico  |
-
-Ejemplo — cambiar el título del Hero:
-
-```ts
-// lib/content.ts
-export const HERO = {
-  title_plain: 'Monitoreo operacional para ',
-  title_em:    'bomberos',      // ← texto en rojo
-  title_end:   ' en tiempo real',
-  ...
-}
-```
-
----
+El sitio queda disponible en `http://localhost:3000`.
 
 ## Variables de entorno
 
-No se requieren variables de entorno para el funcionamiento actual de la landing.
+`.env.example` contiene únicamente nombres de variables y valores públicos o vacíos. Los valores reales deben configurarse localmente y en el proveedor de despliegue; nunca deben subirse a Git.
 
-Si en el futuro se integra un backend de formulario (Resend, Formspree, etc.), crear un archivo `.env.local`:
+Variables utilizadas por el formulario de contacto:
 
-```env
-NEXT_PUBLIC_FORM_ENDPOINT=https://...
-```
+- `RESEND_API_KEY`: credencial server-side para envío de correos.
+- `CONTACT_EMAIL_TO`: destinatario del formulario.
+- `CONTACT_EMAIL_FROM`: remitente verificado del formulario.
+- `KV_REST_API_URL`: endpoint server-side opcional para persistencia de leads.
+- `KV_REST_API_TOKEN`: token server-side opcional para persistencia de leads.
 
----
+Ningún secreto debe usar el prefijo `NEXT_PUBLIC_`.
 
-## Despliegue en Vercel
-
-### Opción 1 — Desde GitHub (recomendado)
-
-1. Sube el proyecto a un repositorio en GitHub:
-   ```bash
-   git init
-   git add .
-   git commit -m "feat: landing VIGÍA Command"
-   git remote add origin https://github.com/tu-usuario/vigia-command.git
-   git push -u origin main
-   ```
-
-2. Ve a [vercel.com](https://vercel.com) → **Add New Project**
-
-3. Importa el repositorio de GitHub
-
-4. Vercel detecta Next.js automáticamente — haz clic en **Deploy**
-
-5. Tu landing estará en `https://vigia-command.vercel.app`
-
-6. Para usar el dominio `vigiacommand.cl`: ve a **Settings → Domains** en Vercel y agrega el dominio.
-
-### Opción 2 — Vercel CLI
+## Comandos
 
 ```bash
-npm i -g vercel
-vercel        # sigue el asistente
-vercel --prod # deploy a producción
+npm run dev      # desarrollo local
+npm run build    # build de producción
+npm run start    # servir build de producción
+npm run lint     # lint
 ```
 
----
+Antes de integrar un cambio ejecutar, como mínimo:
 
-## Rutas disponibles
-
-| Ruta  | Descripción              |
-|-------|--------------------------|
-| `/`   | Landing comercial        |
-
-No se crean rutas `/dashboard`, `/admin` ni `/api/vitals`.
-
-El botón **Ingresar a Mando** redirige a `https://mando.vigiacommand.cl`.
-
----
-
-## Diseño visual
-
-Los tokens de diseño están definidos como variables CSS en `app/globals.css`:
-
-```css
-:root {
-  --col-bg:       oklch(9%  0.008 250);   /* Fondo principal     */
-  --col-surface:  oklch(13% 0.009 250);   /* Superficies         */
-  --col-red:      oklch(54% 0.22 22);     /* Acento emergencia   */
-  --col-amber:    oklch(72% 0.15 65);     /* Alertas / warning   */
-  --col-green:    oklch(65% 0.17 155);    /* Estado activo / ok  */
-}
+```bash
+npm run lint
+npm run build
 ```
 
-Para cambiar la paleta completa, modifica solo estas variables en `:root`.
+## Estructura relevante
 
----
+```text
+app/
+  api/contact/     endpoint server-side del formulario
+  privacidad/      política de privacidad
+  layout.tsx       metadata y layout global
+  page.tsx         página principal
+components/        componentes de la landing
+lib/               utilidades compartidas
+public/            assets públicos
+```
 
-## Estado del proyecto
+## Rutas
 
-VIGÍA Command está en **etapa de desarrollo y validación técnica**.
-Esta landing es el sitio comercial público — no incluye lógica operativa,
-autenticación ni APIs de sensores.
+- `/` — landing comercial.
+- `/privacidad` — política de privacidad.
+- `/api/contact` — endpoint POST del formulario.
+
+No dejar rutas de experimentación o pruebas desplegadas en producción. Las pruebas visuales temporales deben ejecutarse localmente o eliminarse antes de integrar.
+
+## Datos y seguridad
+
+Este es un repositorio público. Antes de cada commit comprobar que no se incluyan:
+
+- archivos `.env` reales;
+- API keys, tokens, certificados o llaves privadas;
+- datos recibidos desde formularios;
+- nombres, correos o teléfonos de prospectos/clientes obtenidos fuera del contenido público intencional del sitio;
+- identificadores reales de dispositivos;
+- documentación de arquitectura interna, auditorías privadas o planes comerciales;
+- rutas locales del computador de un contribuidor.
+
+El endpoint de contacto procesa datos personales. Evitar incluir el payload del lead en URLs, logs o mensajes de error. Los secretos deben leerse únicamente desde variables de entorno server-side.
+
+Si un secreto real se publica por error, eliminarlo del código **no es suficiente**: debe revocarse o rotarse de inmediato y luego evaluarse la limpieza del historial Git.
+
+## Flujo de trabajo
+
+1. Partir desde `main` actualizado.
+2. Crear una rama corta (`feature/...`, `fix/...`, `chore/...`).
+3. Hacer el cambio y ejecutar lint/build.
+4. Integrar únicamente cuando el repositorio quede sin archivos locales, pruebas temporales o información sensible.
+5. Eliminar la rama cuando ya esté integrada y no conserve trabajo único.
+
+## Despliegue
+
+El sitio está preparado para desplegarse como aplicación Next.js en Vercel. Las credenciales y variables reales se configuran en el entorno de despliegue, no en este repositorio.
