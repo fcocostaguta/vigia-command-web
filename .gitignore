@@ -15,16 +15,19 @@
 
 # misc
 .DS_Store
+.Rhistory
 *.pem
+*.key
+*.p12
 
 # debug
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# local env files
-.env*.local
-.env
+# environment files — only the sanitized template is versioned
+.env*
+!.env.example
 
 # vercel
 .vercel
