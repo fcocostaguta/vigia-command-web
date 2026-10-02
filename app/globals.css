@@ -129,15 +129,6 @@ button { cursor: pointer; font-family: var(--font-b); }
   .vg-btn-red:hover, .vg-btn-ghost:hover { transform: none; }
   .vg-btn-red::after, .vg-btn-ghost::after { display: none; }
 }
-.vg-btn-ingresar {
-  background: transparent; color: var(--muted); border: 1px solid var(--border);
-  font-family: var(--font-m); font-size: 0.75rem; letter-spacing: 0.1em;
-  padding: 8px 16px; border-radius: var(--radius-xs); text-transform: uppercase;
-  transition: all var(--t-fast); display: inline-flex; align-items: center; gap: 6px; cursor: pointer; flex-shrink: 0;
-  text-decoration: none;
-}
-.vg-btn-ingresar:hover { border-color: oklch(52% 0.20 30 / 0.6); color: var(--text); background: var(--surf);
-  box-shadow: 0 0 16px oklch(52% 0.20 30 / 0.14); }
 
 /* Pulse dot */
 .vg-pulse-dot {
@@ -275,11 +266,9 @@ button { cursor: pointer; font-family: var(--font-b); }
 .vk-mobile-nav a:focus-visible, .vk-mobile-nav .vg-btn:focus-visible { outline: 2px solid var(--red-b); outline-offset: -2px; }
 .vk-mobile-nav .vk-mobile-cta { padding: 20px 32px 8px; border-bottom: none; }
 .vk-mobile-nav .vk-mobile-cta .vg-btn { width: 100%; justify-content: center; min-height: 52px; }
-.vk-mobile-ingresar { color: var(--muted) !important; font-size: .92rem !important; }
 
 @media (max-width: 1024px) {
   .vk-nav { display: none; }
-  .vk-header-ctas .vg-btn-ingresar { display: none; }
   .vk-menu-btn { display: inline-flex; }
 }
 @media (min-width: 1025px) { .vk-mobile-nav { display: none; } }
