@@ -67,15 +67,6 @@ export function CommercialHeader({ onContact }: { onContact: () => void }) {
         </nav>
         <div className="vk-header-ctas">
           <button className="vg-btn vg-btn-red vg-btn-sm" onClick={() => { track('cta_contact_click', { placement: 'header' }); onContact() }}>Conversemos</button>
-          <a
-            className="vg-btn-ingresar"
-            href="https://mando.vigiacommand.cl"
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={() => track('login_click', { placement: 'header' })}
-          >
-            <Icon name="lock" /> Ingresar
-          </a>
           <button
             ref={menuBtnRef}
             className="vk-menu-btn"
@@ -104,15 +95,6 @@ export function CommercialHeader({ onContact }: { onContact: () => void }) {
             {l}
           </a>
         ))}
-        <a
-          className="vk-mobile-ingresar"
-          href="https://mando.vigiacommand.cl"
-          target="_blank"
-          rel="noopener noreferrer"
-          onClick={() => track('login_click', { placement: 'mobile_nav' })}
-        >
-          <Icon name="lock" /> Ingresar
-        </a>
         <div className="vk-mobile-cta">
           <button className="vg-btn vg-btn-red vg-btn-lg" onClick={() => { track('cta_contact_click', { placement: 'mobile_nav' }); onContact(); setOpen(false) }}>
             Conversemos

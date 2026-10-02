@@ -435,10 +435,6 @@ export function CommercialFooter({ onContact }: { onContact: () => void }) {
               <a href="#contacto" onClick={(e) => { go('contacto', e); onContact() }}>Conversemos</a>
               <a href="mailto:contacto@vigiacommand.cl">contacto@vigiacommand.cl</a>
             </div>
-            <div className="vk-footer-col">
-              <h3>Sistema</h3>
-              <a href="https://mando.vigiacommand.cl" target="_blank" rel="noopener noreferrer" onClick={() => track('login_click', { placement: 'footer' })}>Ingresar al panel</a>
-            </div>
           </div>
         </div>
         <div className="vk-footer-bottom">
