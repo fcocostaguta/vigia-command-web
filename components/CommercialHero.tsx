@@ -22,23 +22,33 @@ function ekgTiled(W: number, beats: number): string {
 }
 
 type Tone = 'ok' | 'warn' | 'crit'
-type RowState = { id: string; rank: string; name: string; bpm: number; tone: Tone }
+type RowState = { id: string; rank: string; name: string; bpm: number; temp: number; tone: Tone }
 
 const TD_INIT: RowState[] = [
-  { id: 'B-01', rank: 'Cap.',  name: 'Rojas',    bpm: 142, tone: 'ok'   },
-  { id: 'B-02', rank: 'Tte.',  name: 'Muñoz',    bpm: 181, tone: 'crit' },
-  { id: 'B-03', rank: 'Vol.',  name: 'Pérez',    bpm: 128, tone: 'ok'   },
-  { id: 'B-04', rank: 'Bbro.', name: 'Soto',     bpm: 168, tone: 'warn' },
-  { id: 'B-05', rank: 'Vol.',  name: 'Cárdenas', bpm: 116, tone: 'ok'   },
+  { id: 'B-01', rank: 'Cap.',  name: 'Rojas',    bpm: 142, temp: 37.1, tone: 'ok'   },
+  { id: 'B-02', rank: 'Tte.',  name: 'Muñoz',    bpm: 181, temp: 37.9, tone: 'crit' },
+  { id: 'B-03', rank: 'Vol.',  name: 'Pérez',    bpm: 128, temp: 36.9, tone: 'ok'   },
+  { id: 'B-04', rank: 'Bbro.', name: 'Soto',     bpm: 168, temp: 37.6, tone: 'warn' },
+  { id: 'B-05', rank: 'Vol.',  name: 'Cárdenas', bpm: 116, temp: 37.0, tone: 'ok'   },
 ]
+
+// Example incident started 2:18 before the page loaded; the timer keeps counting from there.
+const INCIDENT_OFFSET_S = 2 * 60 + 18
+const fmtTemp = (t: number) => t.toFixed(1).replace('.', ',')
+const fmtElapsed = (s: number) => `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`
 
 function TabletDash() {
   const [rows, setRows] = useState<RowState[]>(TD_INIT)
   const [clock, setClock] = useState('')
+  const [elapsed, setElapsed] = useState(INCIDENT_OFFSET_S)
   const ekg = ekgTiled(360, 5)
 
   useEffect(() => {
-    const t = () => setClock(new Date().toLocaleTimeString('es-CL', { hour12: false }))
+    const t0 = Date.now()
+    const t = () => {
+      setClock(new Date().toLocaleTimeString('es-CL', { hour12: false }))
+      setElapsed(INCIDENT_OFFSET_S + Math.floor((Date.now() - t0) / 1000))
+    }
     t()
     const id = setInterval(t, 1000)
     return () => clearInterval(id)
@@ -55,6 +65,9 @@ function TabletDash() {
     return () => clearInterval(id)
   }, [])
 
+  const focus = rows[1]
+  const alerts = rows.filter(r => r.tone !== 'ok').length
+
   return (
     <div className="eco-tablet">
       <span className="eco-tablet-cam" />
@@ -64,23 +77,25 @@ function TabletDash() {
             <Image src="/images/logo-vigia.png" alt="" width={18} height={18} style={{ objectFit: 'contain' }} />
             <b>VIGÍA COMMAND</b>
           </span>
-          <span className="td-live">
-            <span className="vg-pulse-dot is-fast" /> Ejemplo operacional
-          </span>
+          <span className="td-demo">Datos de ejemplo</span>
           <span className="td-clock" suppressHydrationWarning>{clock}</span>
         </div>
 
         <div className="td-inc">
           <span className="dot" />
-          Incidente de ejemplo
-          <span className="dur">02:18</span>
+          <b>Incidente activo</b>
+          <span className="td-inc-sep" />
+          <span>{rows.length} en terreno</span>
+          <span className="dur" suppressHydrationWarning>{fmtElapsed(elapsed)}</span>
         </div>
 
         <div className="td-body">
           <div className="td-roster">
             <div className="td-rhd">
-              <span>Personal activo</span>
-              <span>BPM</span>
+              <span>Personal</span>
+              <span>FC</span>
+              <span>T °C</span>
+              <span />
             </div>
             {rows.map(r => (
               <div key={r.id} className={`td-row${r.tone === 'crit' ? ' alert' : ''}`}>
@@ -88,19 +103,24 @@ function TabletDash() {
                   <b>{r.rank} {r.name}</b>
                   <i>{r.id}</i>
                 </span>
-                <span className={`td-bpm ${r.tone === 'crit' ? 'vg-bpm-crit' : r.tone === 'warn' ? 'vg-bpm-warn' : 'vg-bpm-ok'}`}>
+                <span className={`td-num ${r.tone === 'crit' ? 'vg-bpm-crit' : r.tone === 'warn' ? 'vg-bpm-warn' : 'vg-bpm-ok'}`}>
                   {r.bpm}
                 </span>
+                <span className="td-num td-temp">{fmtTemp(r.temp)}</span>
                 <span className={`td-sdot ${r.tone}`} />
               </div>
             ))}
           </div>
 
           <div className="td-mon">
-            <div className="td-card">
-              <div className="k">Frecuencia · Tte. Muñoz</div>
+            <div className="td-card td-focus">
+              <div className="td-focus-hd">
+                <span><b>{focus.rank} {focus.name}</b> {focus.id}</span>
+                <span className="td-state crit">Alerta</span>
+              </div>
+              <div className="k">Frecuencia cardiaca</div>
               <div className="td-bigwrap">
-                <span className="td-big crit">{rows[1].bpm}</span>
+                <span className="td-big crit">{focus.bpm}</span>
                 <span className="td-unit">bpm</span>
               </div>
               <div className="td-vitals" aria-hidden="true">
@@ -108,30 +128,24 @@ function TabletDash() {
                   <path d={ekg} />
                 </svg>
               </div>
+              <div className="td-subvitals">
+                <div><span className="k">SpO₂</span><span className="v">95<small>%</small></span></div>
+                <div><span className="k">Temp.</span><span className="v">{fmtTemp(focus.temp)}<small>°C</small></span></div>
+              </div>
             </div>
 
             <div className="td-alertbar">
-              <span className="pin" /> Alerta biométrica · reevaluar
-            </div>
-
-            <div className="td-card" style={{ display: 'flex', gap: 14 }}>
-              <div>
-                <div className="k">Operadores</div>
-                <div className="td-bigwrap"><span className="td-big">5</span></div>
-              </div>
-              <div>
-                <div className="k">Alertas</div>
-                <div className="td-bigwrap"><span className="td-big crit">2</span></div>
-              </div>
+              <span className="pin" />
+              <span>Alerta biométrica</span>
+              <b>Reevaluar</b>
             </div>
           </div>
         </div>
 
         <div className="td-foot">
-          <span><b>5</b> operadores</span>
-          <span><b>2</b> alertas</span>
+          <span><b>{rows.length}</b> operadores</span>
+          <span><b className={alerts ? 'is-alert' : undefined}>{alerts}</b> en alerta</span>
           <span className="td-conn"><Signal /> Sincronizado</span>
-          <span className="td-spark"><i /><i /><i /><i /><i /><i /></span>
         </div>
       </div>
     </div>
@@ -230,13 +244,19 @@ export default function CommercialHero({ onContact, bpm }: { onContact: () => vo
                 priority
               />
             </div>
-            <div className="eco-chip eco-chip-a">
-              <span className="l">BPM</span>
-              <span className={`v pulsing ${chipBpmCls}`}>{bpm}</span>
-            </div>
-            <div className="eco-chip eco-chip-b">
-              <span className="l">SpO₂</span>
-              <span className="v vg-bpm-ok">98%</span>
+            <div className="eco-vitals" aria-hidden="true">
+              <div className="eco-chip">
+                <span className="l">Pulso</span>
+                <span className={`v ${chipBpmCls}`}>{bpm}<small>bpm</small></span>
+              </div>
+              <div className="eco-chip">
+                <span className="l">SpO₂</span>
+                <span className="v vg-bpm-ok">98<small>%</small></span>
+              </div>
+              <div className="eco-chip">
+                <span className="l">Temp.</span>
+                <span className="v vg-bpm-ok">37,1<small>°C</small></span>
+              </div>
             </div>
           </div>
         </div>

@@ -6,14 +6,23 @@ import { Corners } from './CommercialAtmosphere'
 import { Icon, Tag, Badge } from './CommercialIcons'
 import { track } from '@/lib/analytics'
 
+// Example record, mirroring what VIGÍA stores when an incident closes:
+// per-person vital summaries plus the event timeline.
+const CBN_META = [
+  { k: 'Duración', v: '42 min' },
+  { k: 'Personal', v: '5' },
+  { k: 'Alertas',  v: '1' },
+]
+
 const CBN_OPS = [
-  { name: 'Cap. Rojas', id: 'B-01', bpm: '142 bpm', cls: 'vg-bpm-ok',   tone: 'ok'   as const, s: 'Normal' },
-  { name: 'Tte. Muñoz', id: 'B-02', bpm: '181 bpm', cls: 'vg-bpm-crit', tone: 'crit' as const, s: 'Alerta' },
+  { name: 'Cap. Rojas', id: 'B-01', fc: '152', fcCls: 'vg-bpm-ok',   spo2: '97', temp: '37,4', alerts: 0 },
+  { name: 'Tte. Muñoz', id: 'B-02', fc: '181', fcCls: 'vg-bpm-crit', spo2: '95', temp: '38,1', alerts: 1 },
 ]
 
 const CBN_EVTS = [
-  { t: '14:11', x: 'Alerta biométrica · Tte. Muñoz (181 bpm)', tone: 'warn' },
-  { t: '14:23', x: 'Incidente cerrado · snapshot generado',     tone: 'ok'   },
+  { t: '13:41', x: 'Inicio del incidente',                        tone: 'info' },
+  { t: '14:11', x: 'Alerta biométrica · Tte. Muñoz, FC 181 bpm',   tone: 'warn' },
+  { t: '14:23', x: 'Incidente cerrado · registro generado',       tone: 'ok'   },
 ]
 
 export function CommercialCajaNegra() {
@@ -32,7 +41,7 @@ export function CommercialCajaNegra() {
             y aprender de cada operación.
           </p>
           <ul className="vk-cbn-bullets">
-            <li className="vk-cbn-bullet">Snapshot por incidente</li>
+            <li className="vk-cbn-bullet">Un registro por cada emergencia</li>
             <li className="vk-cbn-bullet">Historial para revisión posterior</li>
             <li className="vk-cbn-bullet">Base para la mejora operacional</li>
           </ul>
@@ -42,31 +51,51 @@ export function CommercialCajaNegra() {
           <Corners />
           <div className="vk-mock-top">
             <div className="vk-mock-id">
-              <span>Snapshot #0042</span>
-              <span className="vk-mock-ref">Escenario de referencia</span>
+              <span className="vk-mock-title">Registro de la emergencia</span>
+              <span className="vk-mock-ref">Incidente #0042 · datos de ejemplo</span>
             </div>
             <Badge tone="ok">Cerrado</Badge>
           </div>
+          <dl className="vk-mock-meta">
+            {CBN_META.map(m => (
+              <div key={m.k}><dt>{m.k}</dt><dd>{m.v}</dd></div>
+            ))}
+          </dl>
           <div className="vk-mock-sec">
-            <div className="vk-mock-label">Vitales registrados</div>
+            <div className="vk-mock-label">Resumen por persona</div>
+            <div className="vk-mock-thead" aria-hidden="true">
+              <span />
+              <span>FC máx.</span>
+              <span>SpO₂ mín.</span>
+              <span>Temp. máx.</span>
+              <span />
+            </div>
             {CBN_OPS.map(o => (
               <div className="vk-mock-op" key={o.id}>
-                <span className="vk-mock-name">{o.name}</span>
-                <span className="vk-mock-opid">{o.id}</span>
-                <span className={`vk-mock-bpm ${o.cls}`}>{o.bpm}</span>
-                <Badge tone={o.tone}>{o.s}</Badge>
+                <span className="vk-mock-who">
+                  <span className="vk-mock-name">{o.name}</span>
+                  <span className="vk-mock-opid">{o.id}</span>
+                </span>
+                <span className={`vk-mock-v ${o.fcCls}`}><b>{o.fc}</b> bpm</span>
+                <span className="vk-mock-v"><b>{o.spo2}</b> %</span>
+                <span className="vk-mock-v"><b>{o.temp}</b> °C</span>
+                <span className={`vk-mock-alerts${o.alerts ? ' has' : ''}`}>
+                  {o.alerts ? `${o.alerts} alerta` : 'Sin alertas'}
+                </span>
               </div>
             ))}
           </div>
           <div className="vk-mock-sec">
-            <div className="vk-mock-label">Timeline de eventos</div>
-            {CBN_EVTS.map(e => (
-              <div className="vk-evt" key={e.t}>
-                <span className="vk-evt-t">{e.t}</span>
-                <span className={`vk-evt-dot ${e.tone}`} aria-hidden="true" />
-                <span className="vk-evt-x">{e.x}</span>
-              </div>
-            ))}
+            <div className="vk-mock-label">Línea de tiempo</div>
+            <ol className="vk-evts">
+              {CBN_EVTS.map(e => (
+                <li className="vk-evt" key={e.t}>
+                  <span className="vk-evt-t">{e.t}</span>
+                  <span className={`vk-evt-dot ${e.tone}`} aria-hidden="true" />
+                  <span className="vk-evt-x">{e.x}</span>
+                </li>
+              ))}
+            </ol>
           </div>
         </div>
 

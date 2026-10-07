@@ -92,6 +92,7 @@ export default function PrivacidadPage() {
             <ul style={{ marginTop: 8, paddingLeft: 20, display: 'flex', flexDirection: 'column', gap: 4 }}>
               <li><strong style={{ color: 'var(--text)' }}>Vercel</strong>: alojamiento del sitio y procesamiento del formulario.</li>
               <li><strong style={{ color: 'var(--text)' }}>Resend</strong>: entrega por correo electrónico de tu solicitud.</li>
+              <li><strong style={{ color: 'var(--text)' }}>Upstash</strong>: base de datos donde se guarda una copia de tu solicitud para darle seguimiento.</li>
             </ul>
             <p style={{ marginTop: 8 }}>
               Estos proveedores pueden tratar los datos en servidores ubicados fuera de Chile, solo para prestar el
@@ -102,8 +103,9 @@ export default function PrivacidadPage() {
           <section>
             <h2 style={{ fontSize: '1.2rem', color: 'var(--text)', marginBottom: 10 }}>5. Cuánto tiempo la conservamos</h2>
             <p>
-              Conservamos la información entregada mientras sea necesaria para evaluar y responder tu solicitud, y
-              mientras exista una relación comercial o de evaluación activa. Puedes solicitar su eliminación en
+              Cada solicitud se guarda junto con la versión del texto de consentimiento aceptado. Conservamos esta
+              información mientras sea necesaria para evaluar y responder tu solicitud, y mientras exista una relación
+              comercial o de evaluación activa. Puedes solicitar su eliminación en
               cualquier momento según se describe en la sección 7.
             </p>
           </section>
