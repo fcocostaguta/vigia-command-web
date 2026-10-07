@@ -103,9 +103,9 @@ export function CommercialHeader({ onContact }: { onContact: () => void }) {
 }
 
 const HOW_STEPS = [
-  { n: '01', label: 'En terreno',  desc: 'El personal utiliza dispositivos conectados que reportan información relevante durante la operación.',        icon: 'pulse'  as const },
-  { n: '02', label: 'En el mando', desc: 'La información se concentra en una interfaz clara para visualizar estados y alertas sin sumar complejidad a la emergencia.', icon: 'screen' as const },
-  { n: '03', label: 'Después',     desc: 'El evento queda registrado para facilitar su revisión y trazabilidad posterior.',                                icon: 'lock'   as const },
+  { n: '01', label: 'En terreno',  desc: 'El personal porta dispositivos conectados que reportan su estado durante la operación.', icon: 'pulse'  as const },
+  { n: '02', label: 'En el mando', desc: 'Estados y alertas del personal en una interfaz clara, sin sumar complejidad a la emergencia.', icon: 'screen' as const },
+  { n: '03', label: 'Después',     desc: 'Cada evento queda registrado para revisarlo y mantener la trazabilidad.', icon: 'lock'   as const },
 ]
 
 export function CommercialFlow() {
@@ -118,8 +118,8 @@ export function CommercialFlow() {
             <h2>Del terreno al mando.</h2>
           </div>
           <p className="vk-lead">
-            VIGÍA integra dispositivos, comunicaciones y software en una sola capa operacional para
-            entregar al mando una visión más clara de lo que ocurre con su personal durante una emergencia.
+            Dispositivos, comunicaciones y software en una sola capa operacional, para que el mando
+            vea con claridad qué ocurre con su personal.
           </p>
         </div>
         <ol className="vk-flow" data-reveal="line">

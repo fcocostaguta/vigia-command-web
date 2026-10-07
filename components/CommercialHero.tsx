@@ -179,8 +179,8 @@ export default function CommercialHero({ onContact, bpm }: { onContact: () => vo
           Directo <em>al mando.</em>
         </h1>
         <p className="vk-hero-sub">
-          VIGÍA integra monitoreo, alertas y registro operacional en una sola plataforma para
-          apoyar al mando durante una emergencia, incluso cuando la conectividad es limitada.
+          Monitoreo del personal, alertas y registro del evento en una sola plataforma,
+          pensada para apoyar al mando incluso cuando la conectividad es limitada.
         </p>
         <div className="vk-hero-actions">
           <button className="vg-btn vg-btn-red vg-btn-lg" onClick={() => { track('cta_contact_click', { placement: 'hero' }); onContact() }}>
@@ -223,9 +223,9 @@ export default function CommercialHero({ onContact, bpm }: { onContact: () => vo
             <div className="eco-watch">
               <Image
                 src="/images/watch-vigia.png"
-                alt="VIGÍA — dispositivo de monitoreo en la muñeca del operador"
-                width={1536}
-                height={1024}
+                alt="Reloj de monitoreo VIGÍA"
+                width={1024}
+                height={683}
                 sizes="(max-width: 980px) 190px, 252px"
                 priority
               />

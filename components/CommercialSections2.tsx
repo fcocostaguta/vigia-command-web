@@ -28,13 +28,13 @@ export function CommercialCajaNegra() {
             <em className="vk-accent">La información no.</em>
           </h2>
           <p className="vk-lead">
-            VIGÍA conserva el registro del evento para facilitar la revisión de lo ocurrido,
-            aportar trazabilidad y generar información útil después de la operación.
+            Cada incidente queda registrado para revisar lo ocurrido, mantener la trazabilidad
+            y aprender de cada operación.
           </p>
           <ul className="vk-cbn-bullets">
-            <li className="vk-cbn-bullet">Snapshot generado por incidente</li>
-            <li className="vk-cbn-bullet">Historial disponible para revisión posterior</li>
-            <li className="vk-cbn-bullet">Base para mejora y aprendizaje operacional</li>
+            <li className="vk-cbn-bullet">Snapshot por incidente</li>
+            <li className="vk-cbn-bullet">Historial para revisión posterior</li>
+            <li className="vk-cbn-bullet">Base para la mejora operacional</li>
           </ul>
         </div>
 
@@ -76,9 +76,9 @@ export function CommercialCajaNegra() {
 }
 
 const CONTINUITY_STAGES = [
-  { n: '01 · OPERACIÓN LOCAL',          h: 'La emergencia activa',    badge: 'Prioridad local',    cls: 'offline', desc: 'El sistema prioriza el registro y funcionamiento local durante la operación.' },
-  { n: '02 · SINCRONIZACIÓN POSTERIOR', h: 'Conectividad disponible', badge: 'Sincronización auto', cls: 'act',     desc: 'La información se sincroniza automáticamente cuando vuelve a haber conexión.' },
-  { n: '03 · CONTINUIDAD DEL REGISTRO', h: 'Después de la operación', badge: 'Registro continuo',   cls: 'sync',    desc: 'El registro operacional no depende de tener conexión constante.' },
+  { n: '01', h: 'Durante la emergencia',   badge: 'Prioridad local',          cls: 'offline', desc: 'El registro y el funcionamiento local tienen prioridad.' },
+  { n: '02', h: 'Al volver la conexión',   badge: 'Sincronización automática', cls: 'act',     desc: 'La información se sincroniza sin intervención del equipo.' },
+  { n: '03', h: 'Después de la operación', badge: 'Registro continuo',        cls: 'sync',    desc: 'El registro se conserva sin depender de una conexión constante.' },
 ]
 
 export function CommercialOffline() {
@@ -94,7 +94,7 @@ export function CommercialOffline() {
           </div>
           <p className="vk-lead">
             Una emergencia no puede depender de una conexión perfecta. VIGÍA prioriza la operación
-            local y sincroniza la información cuando la conectividad vuelve a estar disponible.
+            local y sincroniza cuando vuelve la conectividad.
           </p>
         </div>
         <div className="vk-off-stages">
@@ -142,8 +142,8 @@ export function CommercialCases() {
           <Tag>Aplicaciones</Tag>
           <h2>Una plataforma.<br />Distintos equipos de respuesta.</h2>
           <p className="vk-lead">
-            VIGÍA está diseñado para organizaciones que necesitan mantener visibilidad sobre
-            su personal cuando la operación exige más.
+            Para organizaciones que necesitan visibilidad sobre su personal cuando la operación
+            exige más.
           </p>
         </div>
         <div className="vk-pq-grid">
@@ -250,11 +250,7 @@ export function CommercialContact() {
         <div className="vk-contact-lead" data-reveal>
           <Tag>Contacto</Tag>
           <h2>Conversemos sobre tu operación.</h2>
-          <p>Cuéntanos qué tipo de equipo gestionas y qué necesitas resolver. Revisaremos tu solicitud y nos pondremos en contacto contigo.</p>
-          <ul className="vk-checks">
-            <li className="vk-check"><Icon name="check" size={16} /> Contacto enfocado en tu operación</li>
-            <li className="vk-check"><Icon name="check" size={16} /> Revisión inicial de tu contexto operacional</li>
-          </ul>
+          <p>Cuéntanos qué equipo gestionas y qué necesitas: conocer VIGÍA, ver una demostración o evaluar un piloto. Te responderemos directamente.</p>
           <a className="vk-contact-direct" href="mailto:contacto@vigiacommand.cl">
             <span className="vk-contact-direct-ico"><Icon name="mail" size={18} /></span>
             <span>
@@ -281,7 +277,7 @@ export function CommercialContact() {
             </div>
           ) : (
             <>
-              <div className="vk-form-head"><Tag>Solicitar información</Tag></div>
+              <div className="vk-form-head"><Tag>Tu solicitud</Tag></div>
               <form onSubmit={submit} onFocus={markStarted} noValidate>
                 <label className="vg-field vk-hp" aria-hidden="true">
                   <span>No completar</span>
@@ -357,9 +353,8 @@ export function CommercialContact() {
                     <span>Autorizo el tratamiento de mis datos personales para responder esta solicitud y ser contactado en relación con ella.</span>
                   </label>
                   <p className="vk-consent-micro">
-                    Los datos serán utilizados únicamente para gestionar esta solicitud y responderla.
-                    Para solicitar su actualización o eliminación, escríbenos a{' '}
-                    <a href="mailto:contacto@vigiacommand.cl">contacto@vigiacommand.cl</a>.
+                    Usaremos tus datos solo para responder esta solicitud. Detalles en la{' '}
+                    <a href="/privacidad">política de privacidad</a>.
                   </p>
                 </div>
                 {error && (
@@ -405,7 +400,7 @@ export function CommercialFooter({ onContact }: { onContact: () => void }) {
               <Image src="/images/logo-vigia.png" alt="" width={30} height={30} style={{ objectFit: 'contain' }} />
               <span className="vk-wordmark is-sm">VIGÍA</span>
             </div>
-            <p>Tecnología operacional para emergencias. Del pulso al mando.</p>
+            <p>Del pulso al mando. Tecnología operacional para equipos de emergencia.</p>
             <div className="vk-footer-social">
               <a
                 className="vk-social-link"
@@ -445,7 +440,7 @@ export function CommercialFooter({ onContact }: { onContact: () => void }) {
         </div>
         <div className="vk-footer-bottom">
           <span>© 2026 VIGÍA. Todos los derechos reservados.</span>
-          <span className="vk-footer-domain">vigiacommand.cl</span>
+          <a className="vk-footer-legal" href="/privacidad">Política de privacidad</a>
         </div>
       </div>
     </footer>
