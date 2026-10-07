@@ -758,7 +758,7 @@ button { cursor: pointer; font-family: var(--font-b); }
   background: oklch(15% 0.06 28 / .22); border-bottom: 1px solid oklch(40% 0.14 28 / .18);
   font-size: 8.5px; color: var(--muted); letter-spacing: .04em; }
 .td-inc b { font-weight: 500; color: var(--text); }
-.td-inc .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--red-b); box-shadow: 0 0 8px var(--red-b); }
+.td-inc .dot { flex-shrink: 0; width: 5px; height: 5px; border-radius: 50%; background: var(--red-b); box-shadow: 0 0 8px var(--red-b); }
 .td-inc-sep { width: 1px; height: 9px; background: var(--border2); }
 .td-inc .dur { margin-left: auto; color: var(--text); font-variant-numeric: tabular-nums; }
 
@@ -778,7 +778,7 @@ button { cursor: pointer; font-family: var(--font-b); }
 .td-nm i { font-size: 7px; font-style: normal; color: var(--faint); letter-spacing: .08em; }
 .td-num { font-size: 10px; text-align: right; font-variant-numeric: tabular-nums; }
 .td-temp { color: var(--muted); }
-.td-sdot { width: 6px; height: 6px; border-radius: 50%; }
+.td-sdot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
 .td-sdot.ok   { background: var(--green); }
 .td-sdot.warn { background: var(--amber); }
 .td-sdot.crit { background: var(--red-b); box-shadow: 0 0 6px var(--red-b); }
@@ -815,7 +815,8 @@ button { cursor: pointer; font-family: var(--font-b); }
   font-size: 8px; color: oklch(74% 0.15 22); letter-spacing: .04em; }
 .td-alertbar b { margin-left: auto; font-weight: 500; font-size: 7px; letter-spacing: .14em; text-transform: uppercase;
   color: var(--text); border: 1px solid oklch(52% 0.20 22 / .5); border-radius: 2px; padding: 1px 5px; }
-.td-alertbar .pin { width: 5px; height: 5px; border-radius: 50%; background: var(--red-b); box-shadow: 0 0 6px var(--red-b); }
+.td-alertbar span:not(.pin) { white-space: nowrap; }
+.td-alertbar .pin { flex-shrink: 0; width: 5px; height: 5px; border-radius: 50%; background: var(--red-b); box-shadow: 0 0 6px var(--red-b); }
 
 /* footer */
 .td-foot { display: flex; align-items: center; gap: 12px; padding: 6px 10px;
