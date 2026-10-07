@@ -194,7 +194,9 @@ export default function CommercialHero({ onContact, bpm }: { onContact: () => vo
           </a>
         </div>
         <div className="vk-hero-micro">
-          Bomberos · Brigadas industriales · Equipos de respuesta
+          <span>Bomberos</span>
+          <span>Brigadas industriales</span>
+          <span>Equipos de respuesta</span>
         </div>
       </div>
 

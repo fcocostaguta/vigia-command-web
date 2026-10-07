@@ -1,6 +1,6 @@
 'use client'
 
-import { Fragment, useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import Image from 'next/image'
 import { Icon, Tag } from './CommercialIcons'
 import { track } from '@/lib/analytics'
@@ -52,13 +52,10 @@ export function CommercialHeader({ onContact }: { onContact: () => void }) {
         <a
           className="vk-logo"
           href="#inicio"
-          style={{ display: 'flex', alignItems: 'center', gap: 12 }}
           onClick={(e) => { go('inicio', e); setOpen(false) }}
         >
-          <Image src="/images/logo-vigia.png" alt="VIGÍA" width={34} height={34} style={{ objectFit: 'contain' }} />
-          <span style={{ fontFamily: 'var(--font-h)', fontSize: '1.3rem', fontWeight: 900, letterSpacing: '0.06em', textTransform: 'uppercase' }}>
-            VIGÍA
-          </span>
+          <Image src="/images/logo-vigia.png" alt="" width={34} height={34} style={{ objectFit: 'contain' }} />
+          <span className="vk-wordmark">VIGÍA</span>
         </a>
         <nav className="vk-nav" aria-label="Navegación principal">
           {NAV.map(([l, id]) => (
@@ -115,31 +112,33 @@ export function CommercialFlow() {
   return (
     <section className="vk-section" id="como-funciona">
       <div className="vk-container">
-        <div style={{ textAlign: 'center', marginBottom: 56 }} data-reveal>
-          <Tag center>Cómo funciona</Tag>
-          <h2 style={{ marginTop: 16 }}>Del terreno al mando.</h2>
-          <p style={{ color: 'var(--muted)', maxWidth: 560, margin: '16px auto 0' }}>
+        <div className="vk-split-head" data-reveal>
+          <div>
+            <Tag>Cómo funciona</Tag>
+            <h2>Del terreno al mando.</h2>
+          </div>
+          <p className="vk-lead">
             VIGÍA integra dispositivos, comunicaciones y software en una sola capa operacional para
             entregar al mando una visión más clara de lo que ocurre con su personal durante una emergencia.
           </p>
         </div>
-        <div className="vk-flow-steps">
+        <ol className="vk-flow" data-reveal="line">
           {HOW_STEPS.map((s, i) => (
-            <Fragment key={s.n}>
-              <div
-                className="vk-flow-step"
-                data-reveal="scale"
-                style={{ '--d': (i * 0.1) + 's' } as React.CSSProperties}
-              >
-                <div className="vk-flow-ico"><Icon name={s.icon} size={26} /></div>
+            <li
+              key={s.n}
+              className="vk-flow-step"
+              data-reveal
+              style={{ '--d': (0.15 + i * 0.18) + 's' } as React.CSSProperties}
+            >
+              <div className="vk-flow-ico"><Icon name={s.icon} size={24} /></div>
+              <div className="vk-flow-body">
                 <div className="vk-flow-n">{s.n}</div>
                 <h3 className="vk-flow-label">{s.label}</h3>
-                <div className="vk-flow-desc">{s.desc}</div>
+                <p className="vk-flow-desc">{s.desc}</p>
               </div>
-              {i < HOW_STEPS.length - 1 && <div className="vk-flow-arrow">→</div>}
-            </Fragment>
+            </li>
           ))}
-        </div>
+        </ol>
       </div>
     </section>
   )

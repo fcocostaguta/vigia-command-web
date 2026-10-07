@@ -12,8 +12,8 @@ const CBN_OPS = [
 ]
 
 const CBN_EVTS = [
-  { t: '14:11', x: 'Alerta biométrica — Tte. Muñoz (181 bpm)', c: 'var(--amber)' },
-  { t: '14:23', x: 'Incidente cerrado — snapshot generado',    c: 'var(--green)' },
+  { t: '14:11', x: 'Alerta biométrica · Tte. Muñoz (181 bpm)', tone: 'warn' },
+  { t: '14:23', x: 'Incidente cerrado · snapshot generado',     tone: 'ok'   },
 ]
 
 export function CommercialCajaNegra() {
@@ -21,29 +21,29 @@ export function CommercialCajaNegra() {
     <section className="vk-section" id="registro">
       <div className="vk-container vk-cbn-grid">
 
-        <div data-reveal="left">
+        <div data-reveal>
           <Tag>Registro operacional</Tag>
-          <h2 style={{ marginTop: 16 }}>
+          <h2>
             La emergencia termina.<br />
-            <em style={{ fontStyle: 'normal', color: 'var(--red-b)' }}>La información no.</em>
+            <em className="vk-accent">La información no.</em>
           </h2>
-          <p style={{ color: 'var(--muted)', marginTop: 16, maxWidth: 440, lineHeight: 1.85 }}>
+          <p className="vk-lead">
             VIGÍA conserva el registro del evento para facilitar la revisión de lo ocurrido,
             aportar trazabilidad y generar información útil después de la operación.
           </p>
-          <div className="vk-cbn-bullets">
-            <div className="vk-cbn-bullet">Snapshot generado por incidente</div>
-            <div className="vk-cbn-bullet">Historial disponible para revisión posterior</div>
-            <div className="vk-cbn-bullet">Base para mejora y aprendizaje operacional</div>
-          </div>
+          <ul className="vk-cbn-bullets">
+            <li className="vk-cbn-bullet">Snapshot generado por incidente</li>
+            <li className="vk-cbn-bullet">Historial disponible para revisión posterior</li>
+            <li className="vk-cbn-bullet">Base para mejora y aprendizaje operacional</li>
+          </ul>
         </div>
 
-        <div className="vk-mock" data-reveal="right">
+        <div className="vk-mock" data-reveal style={{ '--d': '0.12s' } as React.CSSProperties}>
           <Corners />
           <div className="vk-mock-top">
-            <div>
-              <span style={{ color: 'var(--muted)' }}>SNAPSHOT #0042</span>
-              <span style={{ color: 'var(--faint)', fontSize: 9, marginLeft: 10 }}>Escenario de referencia</span>
+            <div className="vk-mock-id">
+              <span>Snapshot #0042</span>
+              <span className="vk-mock-ref">Escenario de referencia</span>
             </div>
             <Badge tone="ok">Cerrado</Badge>
           </div>
@@ -51,9 +51,9 @@ export function CommercialCajaNegra() {
             <div className="vk-mock-label">Vitales registrados</div>
             {CBN_OPS.map(o => (
               <div className="vk-mock-op" key={o.id}>
-                <span style={{ color: 'var(--text)', fontWeight: 500 }}>{o.name}</span>
-                <span style={{ color: 'var(--faint)', fontSize: 9 }}>{o.id}</span>
-                <span className={o.cls} style={{ fontSize: 11 }}>{o.bpm}</span>
+                <span className="vk-mock-name">{o.name}</span>
+                <span className="vk-mock-opid">{o.id}</span>
+                <span className={`vk-mock-bpm ${o.cls}`}>{o.bpm}</span>
                 <Badge tone={o.tone}>{o.s}</Badge>
               </div>
             ))}
@@ -63,7 +63,7 @@ export function CommercialCajaNegra() {
             {CBN_EVTS.map(e => (
               <div className="vk-evt" key={e.t}>
                 <span className="vk-evt-t">{e.t}</span>
-                <span style={{ color: e.c, fontSize: 7 }}>●</span>
+                <span className={`vk-evt-dot ${e.tone}`} aria-hidden="true" />
                 <span className="vk-evt-x">{e.x}</span>
               </div>
             ))}
@@ -85,12 +85,14 @@ export function CommercialOffline() {
   return (
     <section className="vk-section surf" id="continuidad">
       <div className="vk-container">
-        <div data-reveal="left">
-          <Tag>Continuidad operacional</Tag>
-          <h2 style={{ marginTop: 16, maxWidth: '18ch' }}>
-            Diseñado para seguir operando <em style={{ fontStyle: 'normal', color: 'var(--red-b)' }}>cuando la conexión no acompaña.</em>
-          </h2>
-          <p style={{ color: 'var(--muted)', marginTop: 16, maxWidth: 560, lineHeight: 1.85 }}>
+        <div className="vk-split-head" data-reveal>
+          <div>
+            <Tag>Continuidad operacional</Tag>
+            <h2>
+              Diseñado para seguir operando <em className="vk-accent">cuando la conexión no acompaña.</em>
+            </h2>
+          </div>
+          <p className="vk-lead">
             Una emergencia no puede depender de una conexión perfecta. VIGÍA prioriza la operación
             local y sincroniza la información cuando la conectividad vuelve a estar disponible.
           </p>
@@ -100,12 +102,12 @@ export function CommercialOffline() {
             <Fragment key={s.n}>
               <div
                 className={i === 0 ? 'vk-off-stage active' : 'vk-off-stage'}
-                data-reveal="scale"
-                style={{ '--d': (i * 0.12) + 's' } as React.CSSProperties}
+                data-reveal
+                style={{ '--d': (i * 0.1) + 's' } as React.CSSProperties}
               >
                 <div className="vk-off-n">{s.n}</div>
                 <h3>{s.h}</h3>
-                <p style={{ fontSize: '.8rem', color: 'var(--muted)', lineHeight: 1.6, marginTop: 8 }}>{s.desc}</p>
+                <p>{s.desc}</p>
                 <div className={`vk-off-tag ${s.cls}`}>{s.badge}</div>
               </div>
               {i < CONTINUITY_STAGES.length - 1 && <div className="vk-off-arrow"><Icon name="arrowRight" size={20} /></div>}
@@ -135,11 +137,11 @@ export function CommercialCases() {
           style={{ objectFit: 'cover', objectPosition: '68% 52%' }}
         />
       </div>
-      <div className="vk-container" style={{ position: 'relative', zIndex: 2 }}>
+      <div className="vk-container vk-apps-inner">
         <div data-reveal>
           <Tag>Aplicaciones</Tag>
-          <h2 style={{ marginTop: 16 }}>Una plataforma.<br />Distintos equipos de respuesta.</h2>
-          <p style={{ color: 'var(--muted)', marginTop: 16, maxWidth: 560, lineHeight: 1.85 }}>
+          <h2>Una plataforma.<br />Distintos equipos de respuesta.</h2>
+          <p className="vk-lead">
             VIGÍA está diseñado para organizaciones que necesitan mantener visibilidad sobre
             su personal cuando la operación exige más.
           </p>
@@ -149,12 +151,12 @@ export function CommercialCases() {
             <div
               className="vk-pq-card"
               key={a.title}
-              data-reveal="scale"
+              data-reveal
               style={{ '--d': (i * 0.1) + 's' } as React.CSSProperties}
             >
               <div className="vk-pq-ico"><Icon name={a.icon} /></div>
               <h3>{a.title}</h3>
-              <p style={{ fontSize: '.85rem', color: 'var(--muted)', lineHeight: 1.6, marginTop: 6 }}>{a.desc}</p>
+              <p>{a.desc}</p>
             </div>
           ))}
         </div>
@@ -245,21 +247,28 @@ export function CommercialContact() {
     <section className="vk-section" id="contacto">
       <div className="vk-container vk-contact-grid">
 
-        <div className="vk-contact-lead" data-reveal="left">
+        <div className="vk-contact-lead" data-reveal>
           <Tag>Contacto</Tag>
-          <h2 style={{ marginTop: 16 }}>Conversemos sobre tu operación.</h2>
+          <h2>Conversemos sobre tu operación.</h2>
           <p>Cuéntanos qué tipo de equipo gestionas y qué necesitas resolver. Revisaremos tu solicitud y nos pondremos en contacto contigo.</p>
-          <div className="vk-checks">
-            <div className="vk-check"><span className="d">●</span> Contacto enfocado en tu operación</div>
-            <div className="vk-check"><span className="d">●</span> Revisión inicial de tu contexto operacional</div>
-          </div>
+          <ul className="vk-checks">
+            <li className="vk-check"><Icon name="check" size={16} /> Contacto enfocado en tu operación</li>
+            <li className="vk-check"><Icon name="check" size={16} /> Revisión inicial de tu contexto operacional</li>
+          </ul>
+          <a className="vk-contact-direct" href="mailto:contacto@vigiacommand.cl">
+            <span className="vk-contact-direct-ico"><Icon name="mail" size={18} /></span>
+            <span>
+              <span className="vk-contact-direct-k">¿Prefieres escribirnos directamente?</span>
+              <span className="vk-contact-direct-v">contacto@vigiacommand.cl</span>
+            </span>
+          </a>
         </div>
 
-        <div className="vk-form" data-reveal="right">
+        <div className="vk-form" data-reveal style={{ '--d': '0.1s' } as React.CSSProperties}>
           <Corners />
           {sent ? (
             <div className="vk-success" role="status">
-              <div className="ico">✓</div>
+              <div className="ico"><Icon name="check" size={28} /></div>
               <h3>Solicitud recibida</h3>
               <p>Revisaremos la información y nos pondremos en contacto contigo.</p>
               <button
@@ -272,7 +281,7 @@ export function CommercialContact() {
             </div>
           ) : (
             <>
-              <div style={{ marginBottom: 24 }}><Tag>Solicitar información</Tag></div>
+              <div className="vk-form-head"><Tag>Solicitar información</Tag></div>
               <form onSubmit={submit} onFocus={markStarted} noValidate>
                 <label className="vg-field vk-hp" aria-hidden="true">
                   <span>No completar</span>
@@ -358,9 +367,9 @@ export function CommercialContact() {
                 )}
                 <button
                   type="submit"
-                  className="vg-btn vg-btn-red vg-btn-lg"
-                  style={{ width: '100%', justifyContent: 'center', marginTop: 8 }}
+                  className="vg-btn vg-btn-red vg-btn-lg vk-form-submit"
                   disabled={loading}
+                  aria-busy={loading}
                 >
                   {loading ? 'Enviando…' : <><span>Enviar solicitud</span> <Icon name="arrow" /></>}
                 </button>
@@ -392,14 +401,11 @@ export function CommercialFooter({ onContact }: { onContact: () => void }) {
       <div className="vk-container">
         <div className="vk-footer-inner">
           <div className="vk-footer-brand">
-            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-              <Image src="/images/logo-vigia.png" alt="VIGÍA" width={30} height={30} style={{ objectFit: 'contain' }} />
-              <span style={{ fontFamily: 'var(--font-h)', fontSize: '1.15rem', fontWeight: 900, letterSpacing: '0.06em', textTransform: 'uppercase' }}>
-                VIGÍA
-              </span>
+            <div className="vk-logo">
+              <Image src="/images/logo-vigia.png" alt="" width={30} height={30} style={{ objectFit: 'contain' }} />
+              <span className="vk-wordmark is-sm">VIGÍA</span>
             </div>
-            <p>Tecnología operativa para emergencias. Del pulso al mando.</p>
-            <div className="vk-footer-domain">vigiacommand.cl</div>
+            <p>Tecnología operacional para emergencias. Del pulso al mando.</p>
             <div className="vk-footer-social">
               <a
                 className="vk-social-link"
@@ -439,7 +445,7 @@ export function CommercialFooter({ onContact }: { onContact: () => void }) {
         </div>
         <div className="vk-footer-bottom">
           <span>© 2026 VIGÍA. Todos los derechos reservados.</span>
-          <span style={{ fontFamily: 'var(--font-m)' }}>Tecnología operativa para emergencias.</span>
+          <span className="vk-footer-domain">vigiacommand.cl</span>
         </div>
       </div>
     </footer>
