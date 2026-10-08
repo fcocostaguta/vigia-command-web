@@ -2,58 +2,58 @@
 
 import { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
-import { HeroAtmosphere, Signal } from './CommercialAtmosphere'
+import { HeroAtmosphere } from './CommercialAtmosphere'
 import { Icon } from './CommercialIcons'
 import { track } from '@/lib/analytics'
 
-function ekgTiled(W: number, beats: number): string {
-  const seg = W / beats, mid = 17
-  const tile = (off: number) => {
-    let d = ''
-    for (let i = 0; i < beats; i++) {
-      const x = off + i * seg
-      d += ` H${(x + seg * 0.40).toFixed(1)}`
-      d += ` l${(seg * 0.05).toFixed(1)} -4 l${(seg * 0.05).toFixed(1)} 7 l${(seg * 0.05).toFixed(1)} -15 l${(seg * 0.05).toFixed(1)} 20 l${(seg * 0.05).toFixed(1)} -8`
-      d += ` H${(off + (i + 1) * seg).toFixed(1)}`
-    }
-    return d
-  }
-  return `M0 ${mid}${tile(0)}${tile(W)}`
-}
+// Illustrative recreation of the VIGÍA field dashboard: same structure and labels as the
+// product (incident strip, KPI strip, personnel table, "Lecturas del reloj" panel).
+// Values follow the product thresholds: Pulso ≥ 140 bpm sets the "Alerta" status.
+const FC_ALERT = 140
 
-type Tone = 'ok' | 'warn' | 'crit'
-type RowState = { id: string; rank: string; name: string; bpm: number; tone: Tone }
+type Row = { id: string; rank: string; name: string; bpm: number; lo: number; hi: number; spo2: number; temp: number; age: number }
 
-const TD_INIT: RowState[] = [
-  { id: 'B-01', rank: 'Cap.',  name: 'Rojas',    bpm: 142, tone: 'ok'   },
-  { id: 'B-02', rank: 'Tte.',  name: 'Muñoz',    bpm: 181, tone: 'crit' },
-  { id: 'B-03', rank: 'Vol.',  name: 'Pérez',    bpm: 128, tone: 'ok'   },
-  { id: 'B-04', rank: 'Bbro.', name: 'Soto',     bpm: 168, tone: 'warn' },
-  { id: 'B-05', rank: 'Vol.',  name: 'Cárdenas', bpm: 116, tone: 'ok'   },
+const ROWS_INIT: Row[] = [
+  { id: 'B-02', rank: 'Tte.',  name: 'Muñoz',    bpm: 172, lo: 165, hi: 179, spo2: 96, temp: 37.9, age: 6  },
+  { id: 'B-04', rank: 'Bbro.', name: 'Soto',     bpm: 148, lo: 142, hi: 156, spo2: 97, temp: 37.6, age: 21 },
+  { id: 'B-01', rank: 'Cap.',  name: 'Rojas',    bpm: 126, lo: 116, hi: 136, spo2: 98, temp: 37.1, age: 12 },
+  { id: 'B-03', rank: 'Vol.',  name: 'Pérez',    bpm: 118, lo: 104, hi: 130, spo2: 97, temp: 36.9, age: 33 },
+  { id: 'B-05', rank: 'Vol.',  name: 'Cárdenas', bpm: 110, lo: 98,  hi: 124, spo2: 98, temp: 37.0, age: 18 },
 ]
 
+// The example emergency began 24 minutes before the page loaded.
+const INCIDENT_OFFSET_MIN = 24
+const fmtTemp = (t: number) => t.toFixed(1).replace('.', ',')
+const isAlert = (r: Row) => r.bpm >= FC_ALERT
+
 function TabletDash() {
-  const [rows, setRows] = useState<RowState[]>(TD_INIT)
-  const [clock, setClock] = useState('')
-  const ekg = ekgTiled(360, 5)
+  const [rows, setRows] = useState<Row[]>(ROWS_INIT)
+  const [elapsedMin, setElapsedMin] = useState(INCIDENT_OFFSET_MIN)
 
+  // Readings arrive per watch, not all at once: every tick ages all rows and refreshes one.
   useEffect(() => {
-    const t = () => setClock(new Date().toLocaleTimeString('es-CL', { hour12: false }))
-    t()
-    const id = setInterval(t, 1000)
+    const t0 = Date.now()
+    const id = setInterval(() => {
+      setElapsedMin(INCIDENT_OFFSET_MIN + Math.floor((Date.now() - t0) / 60000))
+      setRows(prev => {
+        const pick = Math.floor(Math.random() * prev.length)
+        return prev.map((r, i) => i === pick
+          ? { ...r, age: 1, bpm: Math.max(r.lo, Math.min(r.hi, Math.round(r.bpm + (Math.random() - 0.5) * 8))) }
+          : { ...r, age: r.age + 1 })
+      })
+    }, 1000)
     return () => clearInterval(id)
   }, [])
 
-  useEffect(() => {
-    const id = setInterval(() => setRows(p => p.map(r => {
-      if (r.tone === 'crit') {
-        return { ...r, bpm: Math.max(176, Math.min(188, Math.round(r.bpm + (Math.random() - 0.5) * 4))) }
-      }
-      const nb = Math.max(96, Math.min(174, Math.round(r.bpm + (Math.random() - 0.48) * 6)))
-      return { ...r, bpm: nb, tone: (nb >= 160 ? 'warn' : 'ok') as Tone }
-    })), 1500)
-    return () => clearInterval(id)
-  }, [])
+  const focus = rows[0]
+  const kpis: [string, number, string][] = [
+    ['Relojes en línea', rows.length, 'ok'],
+    ['En alerta', rows.filter(isAlert).length, 'warn'],
+    ['SOS', 0, 'sos'],
+    ['Sin señal', 0, ''],
+    ['Temp alta', 0, 'warn'],
+    ['Batería baja', 0, 'warn'],
+  ]
 
   return (
     <div className="eco-tablet">
@@ -62,77 +62,73 @@ function TabletDash() {
         <div className="td-top">
           <span className="td-mark">
             <Image src="/images/logo-vigia.png" alt="" width={18} height={18} style={{ objectFit: 'contain' }} />
-            <b>VIGÍA COMMAND</b>
+            <b>VIGÍA</b>
           </span>
-          <span className="td-live">
-            <span className="vg-pulse-dot is-fast" /> Ejemplo operacional
+          <span className="td-nav">
+            <span className="is-active">Dashboard</span>
+            <span>Historial</span>
+            <span>Voluntarios</span>
           </span>
-          <span className="td-clock" suppressHydrationWarning>{clock}</span>
+          <span className="td-health"><i />Sistema operativo</span>
         </div>
 
         <div className="td-inc">
-          <span className="dot" />
-          Incidente de ejemplo
-          <span className="dur">02:18</span>
+          <b>Emergencia activa</b>
+          <span className="td-inc-bits">Estructural · B-12 · Cap. Rojas</span>
+          <span className="td-inc-time">{elapsedMin}m</span>
+          <span className="td-inc-btn">Cerrar emergencia</span>
+        </div>
+
+        <div className="td-kpis">
+          {kpis.map(([l, v, tone]) => (
+            <div key={l} className={`td-kpi${v === 0 ? ' is-zero' : ` is-${tone}`}`}>
+              <span className="v">{v}</span>
+              <span className="l">{l}</span>
+            </div>
+          ))}
         </div>
 
         <div className="td-body">
-          <div className="td-roster">
-            <div className="td-rhd">
-              <span>Personal activo</span>
-              <span>BPM</span>
+          <div className="td-table">
+            <div className="td-tr td-th">
+              <span>Bombero</span><span>Estado</span><span>Pulso</span><span>SpO₂</span><span>Temp.</span><span>Últ. señal</span>
             </div>
-            {rows.map(r => (
-              <div key={r.id} className={`td-row${r.tone === 'crit' ? ' alert' : ''}`}>
-                <span className="td-nm">
-                  <b>{r.rank} {r.name}</b>
-                  <i>{r.id}</i>
-                </span>
-                <span className={`td-bpm ${r.tone === 'crit' ? 'vg-bpm-crit' : r.tone === 'warn' ? 'vg-bpm-warn' : 'vg-bpm-ok'}`}>
-                  {r.bpm}
-                </span>
-                <span className={`td-sdot ${r.tone}`} />
+            {rows.map((r, i) => (
+              <div key={r.id} className={`td-tr${isAlert(r) ? ' is-alert' : ''}${i === 0 ? ' is-selected' : ''}`}>
+                <span className="td-who"><b>{r.rank} {r.name}</b><i>{r.id}</i></span>
+                <span><span className={`td-pill ${isAlert(r) ? 'warn' : 'ok'}`}>{isAlert(r) ? 'Alerta' : 'Normal'}</span></span>
+                <span className={`td-num${isAlert(r) ? ' is-crit' : ''}`}>{r.bpm}</span>
+                <span className="td-num">{r.spo2}%</span>
+                <span className="td-num">{fmtTemp(r.temp)}°</span>
+                <span className="td-age">hace {r.age} s</span>
               </div>
             ))}
           </div>
 
-          <div className="td-mon">
-            <div className="td-card">
-              <div className="k">Frecuencia · Tte. Muñoz</div>
-              <div className="td-bigwrap">
-                <span className="td-big crit">{rows[1].bpm}</span>
-                <span className="td-unit">bpm</span>
-              </div>
-              <div className="td-vitals" aria-hidden="true">
-                <svg viewBox="0 0 720 34" preserveAspectRatio="none">
-                  <path d={ekg} />
-                </svg>
-              </div>
+          <div className="td-drawer">
+            <div className="td-drawer-hd">
+              <b>{focus.rank} {focus.name}</b>
+              <span className="td-pill warn">Alerta</span>
             </div>
-
-            <div className="td-alertbar">
-              <span className="pin" /> Alerta biométrica · reevaluar
-            </div>
-
-            <div className="td-card" style={{ display: 'flex', gap: 14 }}>
-              <div>
-                <div className="k">Operadores</div>
-                <div className="td-bigwrap"><span className="td-big">5</span></div>
-              </div>
-              <div>
-                <div className="k">Alertas</div>
-                <div className="td-bigwrap"><span className="td-big crit">2</span></div>
-              </div>
+            <div className="td-sec-t">Lecturas del reloj</div>
+            <div className="td-sec-c">Datos del reloj, sin grado médico.</div>
+            <div className="td-readings">
+              {([
+                ['Pulso', `${focus.bpm}`, 'bpm', true],
+                ['SpO₂', `${focus.spo2}`, '%', false],
+                ['Temp.', fmtTemp(focus.temp), '°C', false],
+              ] as [string, string, string, boolean][]).map(([l, v, u, alert]) => (
+                <div key={l} className="td-reading">
+                  <span className="l">{l}</span>
+                  <span className={`v${alert ? ' is-crit' : ''}`}>{v}<small>{u}</small></span>
+                  <span className="a">hace {focus.age} s · LoRa</span>
+                </div>
+              ))}
             </div>
           </div>
         </div>
 
-        <div className="td-foot">
-          <span><b>5</b> operadores</span>
-          <span><b>2</b> alertas</span>
-          <span className="td-conn"><Signal /> Sincronizado</span>
-          <span className="td-spark"><i /><i /><i /><i /><i /><i /></span>
-        </div>
+        <div className="td-foot">VIGÍA es apoyo operacional al mando. No es un dispositivo médico.</div>
       </div>
     </div>
   )
@@ -163,7 +159,7 @@ export default function CommercialHero({ onContact, bpm }: { onContact: () => vo
     return () => { el.removeEventListener('pointermove', onMove); cancelAnimationFrame(raf.current) }
   }, [])
 
-  const chipBpmCls = bpm >= 152 ? 'vg-bpm-warn' : 'vg-bpm-ok'
+  const chipBpmCls = bpm >= 140 ? 'vg-bpm-warn' : 'vg-bpm-ok'
 
   return (
     <section className="vk-hero" id="inicio" ref={ref}>
@@ -179,8 +175,8 @@ export default function CommercialHero({ onContact, bpm }: { onContact: () => vo
           Directo <em>al mando.</em>
         </h1>
         <p className="vk-hero-sub">
-          VIGÍA integra monitoreo, alertas y registro operacional en una sola plataforma para
-          apoyar al mando durante una emergencia, incluso cuando la conectividad es limitada.
+          Monitoreo del personal, alertas y registro del evento en una sola plataforma,
+          pensada para apoyar al mando incluso cuando la conectividad es limitada.
         </p>
         <div className="vk-hero-actions">
           <button className="vg-btn vg-btn-red vg-btn-lg" onClick={() => { track('cta_contact_click', { placement: 'hero' }); onContact() }}>
@@ -194,7 +190,9 @@ export default function CommercialHero({ onContact, bpm }: { onContact: () => vo
           </a>
         </div>
         <div className="vk-hero-micro">
-          Bomberos · Brigadas industriales · Equipos de respuesta
+          <span>Bomberos</span>
+          <span>Brigadas industriales</span>
+          <span>Equipos de respuesta</span>
         </div>
       </div>
 
@@ -204,40 +202,33 @@ export default function CommercialHero({ onContact, bpm }: { onContact: () => vo
             <div className="eco-glow" />
             <div className="eco-floor" />
             <TabletDash />
-            <svg className="eco-conn" viewBox="0 0 580 540" aria-hidden="true" overflow="visible">
-              <path className="wire" d="M 168 318 C 196 286 214 250 256 226" />
-              <path className="wire" d="M 176 338 C 250 320 318 312 372 296" />
-              <path className="flow" d="M 168 318 C 196 286 214 250 256 226" />
-              <path className="flow b" d="M 176 338 C 250 320 318 312 372 296" />
-              <circle className="eco-node pulse" cx="168" cy="318" r="3" />
-              <circle className="eco-node pulse" cx="176" cy="338" r="3" />
-              <circle className="eco-node" cx="256" cy="226" r="2.4" />
-              <circle className="eco-node" cx="372" cy="296" r="2.4" />
-              <g className="eco-packet eco-pk-1"><circle r="2.6" /></g>
-              <g className="eco-packet eco-pk-2"><circle r="2.6" /></g>
-              <g className="eco-packet eco-pk-3"><circle r="2.2" /></g>
-            </svg>
-            <div className="eco-wirelabel one">Telemetría</div>
             <div className="eco-watch">
               <Image
                 src="/images/watch-vigia.png"
-                alt="VIGÍA — dispositivo de monitoreo en la muñeca del operador"
-                width={1536}
-                height={1024}
+                alt="Reloj de monitoreo VIGÍA"
+                width={1024}
+                height={683}
                 sizes="(max-width: 980px) 190px, 252px"
                 priority
               />
             </div>
-            <div className="eco-chip eco-chip-a">
-              <span className="l">BPM</span>
-              <span className={`v pulsing ${chipBpmCls}`}>{bpm}</span>
-            </div>
-            <div className="eco-chip eco-chip-b">
-              <span className="l">SpO₂</span>
-              <span className="v vg-bpm-ok">98%</span>
+            <div className="eco-vitals" aria-hidden="true">
+              <div className="eco-chip">
+                <span className="l">Pulso</span>
+                <span className={`v ${chipBpmCls}`}>{bpm}<small>bpm</small></span>
+              </div>
+              <div className="eco-chip">
+                <span className="l">SpO₂</span>
+                <span className="v vg-bpm-ok">98<small>%</small></span>
+              </div>
+              <div className="eco-chip">
+                <span className="l">Temp.</span>
+                <span className="v vg-bpm-ok">37,1<small>°C</small></span>
+              </div>
             </div>
           </div>
         </div>
+        <p className="vk-illus-note">Vista ilustrativa de la plataforma</p>
       </div>
     </section>
   )

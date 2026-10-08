@@ -3,17 +3,28 @@
 import { Fragment, useState, useRef, useEffect } from 'react'
 import Image from 'next/image'
 import { Corners } from './CommercialAtmosphere'
-import { Icon, Tag, Badge } from './CommercialIcons'
+import { Icon, Tag } from './CommercialIcons'
 import { track } from '@/lib/analytics'
 
-const CBN_OPS = [
-  { name: 'Cap. Rojas', id: 'B-01', bpm: '142 bpm', cls: 'vg-bpm-ok',   tone: 'ok'   as const, s: 'Normal' },
-  { name: 'Tte. Muñoz', id: 'B-02', bpm: '181 bpm', cls: 'vg-bpm-crit', tone: 'crit' as const, s: 'Alerta' },
+// Illustrative record with the same sections as the product's emergency record:
+// metadata, registered alerts and a per-firefighter vitals summary.
+const CBN_META = [
+  { k: 'Inicio',             v: '13:41' },
+  { k: 'Cierre',             v: '14:23' },
+  { k: 'Duración',           v: '42m 10s' },
+  { k: 'Oficial a cargo',    v: 'Cap. Rojas' },
+  { k: 'Unidad',             v: 'B-12' },
+  { k: 'Bomberos asignados', v: '5' },
 ]
 
-const CBN_EVTS = [
-  { t: '14:11', x: 'Alerta biométrica — Tte. Muñoz (181 bpm)', c: 'var(--amber)' },
-  { t: '14:23', x: 'Incidente cerrado — snapshot generado',    c: 'var(--green)' },
+const CBN_ALERTS = [
+  { t: '14:11:08', label: 'Umbral fisiológico superado',   tone: 'warn', who: 'Tte. Muñoz', detail: 'Pulso 181 bpm' },
+  { t: '14:16:40', label: 'Umbral fisiológico normalizado', tone: 'ok',   who: 'Tte. Muñoz', detail: 'Pulso 136 bpm' },
+]
+
+const CBN_VITALS = [
+  { name: 'Tte. Muñoz', id: 'B-02', avg: '158', max: '181', maxAlert: true,  spo2: '96', temp: '38,1' },
+  { name: 'Cap. Rojas', id: 'B-01', avg: '121', max: '136', maxAlert: false, spo2: '97', temp: '37,4' },
 ]
 
 export function CommercialCajaNegra() {
@@ -21,53 +32,68 @@ export function CommercialCajaNegra() {
     <section className="vk-section" id="registro">
       <div className="vk-container vk-cbn-grid">
 
-        <div data-reveal="left">
+        <div data-reveal>
           <Tag>Registro operacional</Tag>
-          <h2 style={{ marginTop: 16 }}>
+          <h2>
             La emergencia termina.<br />
-            <em style={{ fontStyle: 'normal', color: 'var(--red-b)' }}>La información no.</em>
+            <em className="vk-accent">La información no.</em>
           </h2>
-          <p style={{ color: 'var(--muted)', marginTop: 16, maxWidth: 440, lineHeight: 1.85 }}>
-            VIGÍA conserva el registro del evento para facilitar la revisión de lo ocurrido,
-            aportar trazabilidad y generar información útil después de la operación.
+          <p className="vk-lead">
+            Cada incidente queda registrado para revisar lo ocurrido, mantener la trazabilidad
+            y aprender de cada operación.
           </p>
-          <div className="vk-cbn-bullets">
-            <div className="vk-cbn-bullet">Snapshot generado por incidente</div>
-            <div className="vk-cbn-bullet">Historial disponible para revisión posterior</div>
-            <div className="vk-cbn-bullet">Base para mejora y aprendizaje operacional</div>
-          </div>
+          <ul className="vk-cbn-bullets">
+            <li className="vk-cbn-bullet">Un registro por cada emergencia</li>
+            <li className="vk-cbn-bullet">Historial para revisión posterior</li>
+            <li className="vk-cbn-bullet">Base para la mejora operacional</li>
+          </ul>
         </div>
 
-        <div className="vk-mock" data-reveal="right">
-          <Corners />
-          <div className="vk-mock-top">
-            <div>
-              <span style={{ color: 'var(--muted)' }}>SNAPSHOT #0042</span>
-              <span style={{ color: 'var(--faint)', fontSize: 9, marginLeft: 10 }}>Escenario de referencia</span>
+        <div className="vk-mock-wrap" data-reveal style={{ '--d': '0.12s' } as React.CSSProperties}>
+          <div className="vk-mock">
+            <div className="vk-mock-top">
+              <div className="vk-mock-id">
+                <span className="vk-mock-sync"><i />Sincronizado</span>
+                <span className="vk-mock-title">Registro de la emergencia</span>
+                <span className="vk-mock-ref">Estructural · Unidad B-12</span>
+              </div>
+              <span className="vk-mock-pill">Cerrada</span>
             </div>
-            <Badge tone="ok">Cerrado</Badge>
-          </div>
-          <div className="vk-mock-sec">
-            <div className="vk-mock-label">Vitales registrados</div>
-            {CBN_OPS.map(o => (
-              <div className="vk-mock-op" key={o.id}>
-                <span style={{ color: 'var(--text)', fontWeight: 500 }}>{o.name}</span>
-                <span style={{ color: 'var(--faint)', fontSize: 9 }}>{o.id}</span>
-                <span className={o.cls} style={{ fontSize: 11 }}>{o.bpm}</span>
-                <Badge tone={o.tone}>{o.s}</Badge>
+            <dl className="vk-mock-meta">
+              {CBN_META.map(m => (
+                <div key={m.k}><dt>{m.k}</dt><dd>{m.v}</dd></div>
+              ))}
+            </dl>
+            <div className="vk-mock-sec">
+              <div className="vk-mock-label">Alertas registradas <span>({CBN_ALERTS.length})</span></div>
+              <ul className="vk-mock-alerts">
+                {CBN_ALERTS.map(a => (
+                  <li key={a.t}>
+                    <span className={`vk-mock-badge ${a.tone}`}>{a.label}</span>
+                    <span className="vk-mock-time">{a.t}</span>
+                    <span className="vk-mock-what"><b>{a.who}</b> · {a.detail}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="vk-mock-sec">
+              <div className="vk-mock-label">Resumen de vitales por bombero</div>
+              <div className="vk-mock-thead" aria-hidden="true">
+                <span>Bombero</span><span>Pulso prom.</span><span>Pulso máx.</span><span>SpO₂ mín.</span><span>Temp. máx.</span>
               </div>
-            ))}
+              {CBN_VITALS.map(o => (
+                <div className="vk-mock-op" key={o.id}>
+                  <span className="vk-mock-who"><span className="vk-mock-name">{o.name}</span><span className="vk-mock-opid">{o.id}</span></span>
+                  <span className="vk-mock-v"><b>{o.avg}</b> bpm</span>
+                  <span className={`vk-mock-v${o.maxAlert ? ' is-alert' : ''}`}><b>{o.max}</b> bpm</span>
+                  <span className="vk-mock-v"><b>{o.spo2}</b> %</span>
+                  <span className="vk-mock-v"><b>{o.temp}</b> °C</span>
+                </div>
+              ))}
+              <div className="vk-mock-more">3 bomberos más sin alertas</div>
+            </div>
           </div>
-          <div className="vk-mock-sec">
-            <div className="vk-mock-label">Timeline de eventos</div>
-            {CBN_EVTS.map(e => (
-              <div className="vk-evt" key={e.t}>
-                <span className="vk-evt-t">{e.t}</span>
-                <span style={{ color: e.c, fontSize: 7 }}>●</span>
-                <span className="vk-evt-x">{e.x}</span>
-              </div>
-            ))}
-          </div>
+          <p className="vk-illus-note is-static">Vista ilustrativa del registro</p>
         </div>
 
       </div>
@@ -76,23 +102,25 @@ export function CommercialCajaNegra() {
 }
 
 const CONTINUITY_STAGES = [
-  { n: '01 · OPERACIÓN LOCAL',          h: 'La emergencia activa',    badge: 'Prioridad local',    cls: 'offline', desc: 'El sistema prioriza el registro y funcionamiento local durante la operación.' },
-  { n: '02 · SINCRONIZACIÓN POSTERIOR', h: 'Conectividad disponible', badge: 'Sincronización auto', cls: 'act',     desc: 'La información se sincroniza automáticamente cuando vuelve a haber conexión.' },
-  { n: '03 · CONTINUIDAD DEL REGISTRO', h: 'Después de la operación', badge: 'Registro continuo',   cls: 'sync',    desc: 'El registro operacional no depende de tener conexión constante.' },
+  { n: '01', h: 'Durante la emergencia',   badge: 'Prioridad local',          cls: 'offline', desc: 'El registro y el funcionamiento local tienen prioridad.' },
+  { n: '02', h: 'Al volver la conexión',   badge: 'Sincronización automática', cls: 'act',     desc: 'La información se sincroniza sin intervención del equipo.' },
+  { n: '03', h: 'Después de la operación', badge: 'Registro continuo',        cls: 'sync',    desc: 'El registro se conserva sin depender de una conexión constante.' },
 ]
 
 export function CommercialOffline() {
   return (
     <section className="vk-section surf" id="continuidad">
       <div className="vk-container">
-        <div data-reveal="left">
-          <Tag>Continuidad operacional</Tag>
-          <h2 style={{ marginTop: 16, maxWidth: '18ch' }}>
-            Diseñado para seguir operando <em style={{ fontStyle: 'normal', color: 'var(--red-b)' }}>cuando la conexión no acompaña.</em>
-          </h2>
-          <p style={{ color: 'var(--muted)', marginTop: 16, maxWidth: 560, lineHeight: 1.85 }}>
+        <div className="vk-split-head" data-reveal>
+          <div>
+            <Tag>Continuidad operacional</Tag>
+            <h2>
+              Diseñado para seguir operando <em className="vk-accent">cuando la conexión no acompaña.</em>
+            </h2>
+          </div>
+          <p className="vk-lead">
             Una emergencia no puede depender de una conexión perfecta. VIGÍA prioriza la operación
-            local y sincroniza la información cuando la conectividad vuelve a estar disponible.
+            local y sincroniza cuando vuelve la conectividad.
           </p>
         </div>
         <div className="vk-off-stages">
@@ -100,12 +128,12 @@ export function CommercialOffline() {
             <Fragment key={s.n}>
               <div
                 className={i === 0 ? 'vk-off-stage active' : 'vk-off-stage'}
-                data-reveal="scale"
-                style={{ '--d': (i * 0.12) + 's' } as React.CSSProperties}
+                data-reveal
+                style={{ '--d': (i * 0.1) + 's' } as React.CSSProperties}
               >
                 <div className="vk-off-n">{s.n}</div>
                 <h3>{s.h}</h3>
-                <p style={{ fontSize: '.8rem', color: 'var(--muted)', lineHeight: 1.6, marginTop: 8 }}>{s.desc}</p>
+                <p>{s.desc}</p>
                 <div className={`vk-off-tag ${s.cls}`}>{s.badge}</div>
               </div>
               {i < CONTINUITY_STAGES.length - 1 && <div className="vk-off-arrow"><Icon name="arrowRight" size={20} /></div>}
@@ -135,13 +163,13 @@ export function CommercialCases() {
           style={{ objectFit: 'cover', objectPosition: '68% 52%' }}
         />
       </div>
-      <div className="vk-container" style={{ position: 'relative', zIndex: 2 }}>
+      <div className="vk-container vk-apps-inner">
         <div data-reveal>
           <Tag>Aplicaciones</Tag>
-          <h2 style={{ marginTop: 16 }}>Una plataforma.<br />Distintos equipos de respuesta.</h2>
-          <p style={{ color: 'var(--muted)', marginTop: 16, maxWidth: 560, lineHeight: 1.85 }}>
-            VIGÍA está diseñado para organizaciones que necesitan mantener visibilidad sobre
-            su personal cuando la operación exige más.
+          <h2>Una plataforma.<br />Distintos equipos de respuesta.</h2>
+          <p className="vk-lead">
+            Para organizaciones que necesitan visibilidad sobre su personal cuando la operación
+            exige más.
           </p>
         </div>
         <div className="vk-pq-grid">
@@ -149,12 +177,12 @@ export function CommercialCases() {
             <div
               className="vk-pq-card"
               key={a.title}
-              data-reveal="scale"
+              data-reveal
               style={{ '--d': (i * 0.1) + 's' } as React.CSSProperties}
             >
               <div className="vk-pq-ico"><Icon name={a.icon} /></div>
               <h3>{a.title}</h3>
-              <p style={{ fontSize: '.85rem', color: 'var(--muted)', lineHeight: 1.6, marginTop: 6 }}>{a.desc}</p>
+              <p>{a.desc}</p>
             </div>
           ))}
         </div>
@@ -245,21 +273,24 @@ export function CommercialContact() {
     <section className="vk-section" id="contacto">
       <div className="vk-container vk-contact-grid">
 
-        <div className="vk-contact-lead" data-reveal="left">
+        <div className="vk-contact-lead" data-reveal>
           <Tag>Contacto</Tag>
-          <h2 style={{ marginTop: 16 }}>Conversemos sobre tu operación.</h2>
-          <p>Cuéntanos qué tipo de equipo gestionas y qué necesitas resolver. Revisaremos tu solicitud y nos pondremos en contacto contigo.</p>
-          <div className="vk-checks">
-            <div className="vk-check"><span className="d">●</span> Contacto enfocado en tu operación</div>
-            <div className="vk-check"><span className="d">●</span> Revisión inicial de tu contexto operacional</div>
-          </div>
+          <h2>Conversemos sobre tu operación.</h2>
+          <p>Cuéntanos qué equipo gestionas y qué necesitas: conocer VIGÍA, ver una demostración o evaluar un piloto. Te responderemos directamente.</p>
+          <a className="vk-contact-direct" href="mailto:contacto@vigiacommand.cl">
+            <span className="vk-contact-direct-ico"><Icon name="mail" size={18} /></span>
+            <span>
+              <span className="vk-contact-direct-k">¿Prefieres escribirnos directamente?</span>
+              <span className="vk-contact-direct-v">contacto@vigiacommand.cl</span>
+            </span>
+          </a>
         </div>
 
-        <div className="vk-form" data-reveal="right">
+        <div className="vk-form" data-reveal style={{ '--d': '0.1s' } as React.CSSProperties}>
           <Corners />
           {sent ? (
             <div className="vk-success" role="status">
-              <div className="ico">✓</div>
+              <div className="ico"><Icon name="check" size={28} /></div>
               <h3>Solicitud recibida</h3>
               <p>Revisaremos la información y nos pondremos en contacto contigo.</p>
               <button
@@ -272,7 +303,7 @@ export function CommercialContact() {
             </div>
           ) : (
             <>
-              <div style={{ marginBottom: 24 }}><Tag>Solicitar información</Tag></div>
+              <div className="vk-form-head"><Tag>Tu solicitud</Tag></div>
               <form onSubmit={submit} onFocus={markStarted} noValidate>
                 <label className="vg-field vk-hp" aria-hidden="true">
                   <span>No completar</span>
@@ -348,9 +379,8 @@ export function CommercialContact() {
                     <span>Autorizo el tratamiento de mis datos personales para responder esta solicitud y ser contactado en relación con ella.</span>
                   </label>
                   <p className="vk-consent-micro">
-                    Los datos serán utilizados únicamente para gestionar esta solicitud y responderla.
-                    Para solicitar su actualización o eliminación, escríbenos a{' '}
-                    <a href="mailto:contacto@vigiacommand.cl">contacto@vigiacommand.cl</a>.
+                    Usaremos tus datos solo para responder esta solicitud. Detalles en la{' '}
+                    <a href="/privacidad">política de privacidad</a>.
                   </p>
                 </div>
                 {error && (
@@ -358,9 +388,9 @@ export function CommercialContact() {
                 )}
                 <button
                   type="submit"
-                  className="vg-btn vg-btn-red vg-btn-lg"
-                  style={{ width: '100%', justifyContent: 'center', marginTop: 8 }}
+                  className="vg-btn vg-btn-red vg-btn-lg vk-form-submit"
                   disabled={loading}
+                  aria-busy={loading}
                 >
                   {loading ? 'Enviando…' : <><span>Enviar solicitud</span> <Icon name="arrow" /></>}
                 </button>
@@ -392,14 +422,11 @@ export function CommercialFooter({ onContact }: { onContact: () => void }) {
       <div className="vk-container">
         <div className="vk-footer-inner">
           <div className="vk-footer-brand">
-            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-              <Image src="/images/logo-vigia.png" alt="VIGÍA" width={30} height={30} style={{ objectFit: 'contain' }} />
-              <span style={{ fontFamily: 'var(--font-h)', fontSize: '1.15rem', fontWeight: 900, letterSpacing: '0.06em', textTransform: 'uppercase' }}>
-                VIGÍA
-              </span>
+            <div className="vk-logo">
+              <Image src="/images/logo-vigia.png" alt="" width={30} height={30} style={{ objectFit: 'contain' }} />
+              <span className="vk-wordmark is-sm">VIGÍA</span>
             </div>
-            <p>Tecnología operativa para emergencias. Del pulso al mando.</p>
-            <div className="vk-footer-domain">vigiacommand.cl</div>
+            <p>Del pulso al mando. Tecnología operacional para equipos de emergencia.</p>
             <div className="vk-footer-social">
               <a
                 className="vk-social-link"
@@ -439,7 +466,7 @@ export function CommercialFooter({ onContact }: { onContact: () => void }) {
         </div>
         <div className="vk-footer-bottom">
           <span>© 2026 VIGÍA. Todos los derechos reservados.</span>
-          <span style={{ fontFamily: 'var(--font-m)' }}>Tecnología operativa para emergencias.</span>
+          <a className="vk-footer-legal" href="/privacidad">Política de privacidad</a>
         </div>
       </div>
     </footer>

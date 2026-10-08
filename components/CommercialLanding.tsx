@@ -12,12 +12,12 @@ import {
 } from './CommercialSections2'
 
 export default function CommercialLanding() {
-  const [bpm, setBpm] = useState(142)
+  const [bpm, setBpm] = useState(124)
   const wrapRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const id = setInterval(() => {
-      setBpm(p => Math.max(128, Math.min(168, Math.round(p + (Math.random() - 0.45) * 4))))
+      setBpm(p => Math.max(112, Math.min(134, Math.round(p + (Math.random() - 0.45) * 4))))
     }, 1800)
     return () => clearInterval(id)
   }, [])

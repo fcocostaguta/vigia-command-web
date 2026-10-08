@@ -50,9 +50,11 @@ export const metadata: Metadata = {
     description: DESCRIPTION,
   },
   icons: {
-    icon: '/favicon.svg',
-    shortcut: '/favicon.svg',
-    apple: '/favicon.svg',
+    icon: [
+      { url: '/favicon.ico', sizes: '48x48' },
+      { url: '/favicon.svg', type: 'image/svg+xml' },
+    ],
+    apple: '/apple-touch-icon.png',
   },
   robots: {
     index: true,
@@ -68,6 +70,7 @@ const organizationJsonLd = {
   url: 'https://www.vigiacommand.cl',
   logo: 'https://www.vigiacommand.cl/images/logo-vigia.png',
   description: DESCRIPTION,
+  email: 'contacto@vigiacommand.cl',
   sameAs: [
     'https://www.linkedin.com/company/vig%C3%ADa-command/',
     'https://www.instagram.com/vigiacommand/',

@@ -1,6 +1,13 @@
 import type { Metadata } from 'next'
 import Image from 'next/image'
 
+// Company identifiers shown in section 1. Fill with the confirmed values before publishing;
+// empty fields are not rendered, so the page never shows placeholders.
+const LEGAL = {
+  rut: '',
+  domicilio: '',
+}
+
 export const metadata: Metadata = {
   title: 'Política de Privacidad — VIGÍA',
   description: 'Cómo VIGÍA recopila, usa y protege la información entregada a través de este sitio.',
@@ -14,7 +21,7 @@ export default function PrivacidadPage() {
       <header style={{ borderBottom: '1px solid var(--border)', padding: '20px 0' }}>
         <div className="vk-container" style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
           <a href="/" style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <Image src="/images/logo-vigia.png" alt="VIGÍA" width={30} height={30} style={{ objectFit: 'contain' }} />
+            <Image src="/images/logo-vigia.png" alt="" width={30} height={30} style={{ objectFit: 'contain' }} />
             <span style={{ fontFamily: 'var(--font-h)', fontSize: '1.1rem', fontWeight: 900, letterSpacing: '0.06em', textTransform: 'uppercase' }}>
               VIGÍA
             </span>
@@ -26,7 +33,7 @@ export default function PrivacidadPage() {
         <p className="vg-tag">Legal</p>
         <h1 style={{ fontSize: 'clamp(2rem, 4vw, 2.6rem)', marginTop: 12, marginBottom: 8 }}>Política de Privacidad</h1>
         <p style={{ color: 'var(--muted)', fontSize: '.85rem', fontFamily: 'var(--font-m)', marginBottom: 40 }}>
-          Última actualización: agosto de 2026
+          Última actualización: octubre de 2026
         </p>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: 32, fontSize: '.95rem', lineHeight: 1.8, color: 'var(--muted)' }}>
@@ -36,12 +43,16 @@ export default function PrivacidadPage() {
               Este sitio (vigiacommand.cl) es operado por <strong style={{ color: 'var(--text)' }}>MCF SpA</strong>, bajo
               la marca VIGÍA.
             </p>
+            {(LEGAL.rut || LEGAL.domicilio) && (
+              <p style={{ marginTop: 8 }}>
+                {[LEGAL.rut && `RUT: ${LEGAL.rut}`, LEGAL.domicilio && `Domicilio: ${LEGAL.domicilio}`].filter(Boolean).join(' · ')}
+              </p>
+            )}
             <p style={{ marginTop: 8 }}>
-              RUT: <span style={{ color: 'var(--amber)' }}>[PENDIENTE]</span> · Domicilio: <span style={{ color: 'var(--amber)' }}>[PENDIENTE]</span>
-            </p>
-            <p style={{ marginTop: 8, fontSize: '.82rem' }}>
-              Estos datos societarios están pendientes de confirmación interna y se completarán antes de considerar esta
-              política como definitiva.
+              Contacto para materias de privacidad:{' '}
+              <a href="mailto:contacto@vigiacommand.cl" style={{ color: 'var(--text)', textDecoration: 'underline' }}>
+                contacto@vigiacommand.cl
+              </a>
             </p>
           </section>
 
@@ -77,18 +88,24 @@ export default function PrivacidadPage() {
 
           <section>
             <h2 style={{ fontSize: '1.2rem', color: 'var(--text)', marginBottom: 10 }}>4. Con quién se comparte</h2>
-            <p>
-              El envío del formulario se procesa a través de <strong style={{ color: 'var(--text)' }}>Resend</strong>,
-              un proveedor externo de entrega de correo electrónico, con el único fin de hacernos llegar tu solicitud.
-              No compartimos esta información con ningún otro tercero salvo obligación legal.
+            <p>Para operar este sitio y hacernos llegar tu solicitud usamos los siguientes proveedores:</p>
+            <ul style={{ marginTop: 8, paddingLeft: 20, display: 'flex', flexDirection: 'column', gap: 4 }}>
+              <li><strong style={{ color: 'var(--text)' }}>Vercel</strong>: alojamiento del sitio y procesamiento del formulario.</li>
+              <li><strong style={{ color: 'var(--text)' }}>Resend</strong>: entrega por correo electrónico de tu solicitud.</li>
+              <li><strong style={{ color: 'var(--text)' }}>Upstash</strong>: base de datos donde se guarda una copia de tu solicitud para darle seguimiento.</li>
+            </ul>
+            <p style={{ marginTop: 8 }}>
+              Estos proveedores pueden tratar los datos en servidores ubicados fuera de Chile, solo para prestar el
+              servicio indicado. No compartimos tu información con otros terceros salvo obligación legal.
             </p>
           </section>
 
           <section>
             <h2 style={{ fontSize: '1.2rem', color: 'var(--text)', marginBottom: 10 }}>5. Cuánto tiempo la conservamos</h2>
             <p>
-              Conservamos la información entregada mientras sea necesaria para evaluar y responder tu solicitud, y
-              mientras exista una relación comercial o de evaluación activa. Puedes solicitar su eliminación en
+              Cada solicitud se guarda junto con la versión del texto de consentimiento aceptado. Conservamos esta
+              información mientras sea necesaria para evaluar y responder tu solicitud, y mientras exista una relación
+              comercial o de evaluación activa. Puedes solicitar su eliminación en
               cualquier momento según se describe en la sección 7.
             </p>
           </section>
@@ -104,9 +121,17 @@ export default function PrivacidadPage() {
           <section>
             <h2 style={{ fontSize: '1.2rem', color: 'var(--text)', marginBottom: 10 }}>7. Tus derechos</h2>
             <p>
-              De acuerdo con la Ley N.º 19.628 sobre Protección de la Vida Privada y las disposiciones aplicables de la
-              Ley N.º 21.719 sobre Protección de Datos Personales, puedes solicitar acceso, rectificación, cancelación
-              u oposición respecto de tus datos personales escribiendo a{' '}
+              Actualmente rige la Ley N.º 19.628 sobre Protección de la Vida Privada. Conforme a ella puedes solicitar
+              información sobre los datos que tenemos sobre ti, su modificación cuando sean erróneos, inexactos o
+              incompletos, y su eliminación o bloqueo en los casos que la ley establece.
+            </p>
+            <p style={{ marginTop: 8 }}>
+              El 1 de diciembre de 2026 entran en vigencia las modificaciones que introduce la Ley N.º 21.719, que
+              regula la protección y el tratamiento de los datos personales. Desde esa fecha podrás ejercer los
+              derechos de acceso, rectificación, supresión, oposición, portabilidad y bloqueo.
+            </p>
+            <p style={{ marginTop: 8 }}>
+              Para ejercer cualquiera de estos derechos, escríbenos a{' '}
               <a href="mailto:contacto@vigiacommand.cl" style={{ color: 'var(--text)', textDecoration: 'underline' }}>
                 contacto@vigiacommand.cl
               </a>.
@@ -125,7 +150,7 @@ export default function PrivacidadPage() {
 
       <footer style={{ borderTop: '1px solid var(--border)', padding: '24px 0' }}>
         <div className="vk-container" style={{ fontSize: '.8rem', color: 'var(--faint)' }}>
-          <a href="/" style={{ color: 'var(--faint)' }}>← Volver a vigiacommand.cl</a>
+          <a href="/" style={{ color: 'var(--faint)' }}>Volver a vigiacommand.cl</a>
         </div>
       </footer>
     </div>
