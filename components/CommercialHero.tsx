@@ -7,7 +7,7 @@ import { Icon } from './CommercialIcons'
 import { track } from '@/lib/analytics'
 
 // Illustrative recreation of the VIGÍA field dashboard: same structure and labels as the
-// product (incident strip, KPI strip, personnel table, "Lecturas del reloj" panel).
+// product (incident strip, KPI strip, personnel cards, "Lecturas del reloj" panel).
 // Values follow the product thresholds: Pulso ≥ 140 bpm sets the "Alerta" status.
 const FC_ALERT = 140
 
@@ -89,21 +89,32 @@ function TabletDash() {
         </div>
 
         <div className="td-body">
-          <div className="td-table">
-            <div className="td-tr td-th">
-              <span>Bombero</span><span>Estado</span><span>Pulso</span><span>SpO₂</span><span>Temp.</span><span>Últ. señal</span>
-            </div>
+          <ul className="td-personnel-grid" aria-label="Bomberos en terreno">
             {rows.map((r, i) => (
-              <div key={r.id} className={`td-tr${isAlert(r) ? ' is-alert' : ''}${i === 0 ? ' is-selected' : ''}`}>
-                <span className="td-who"><b>{r.rank} {r.name}</b><i>{r.id}</i></span>
-                <span><span className={`td-pill ${isAlert(r) ? 'warn' : 'ok'}`}>{isAlert(r) ? 'Alerta' : 'Normal'}</span></span>
-                <span className={`td-num${isAlert(r) ? ' is-crit' : ''}`}>{r.bpm}</span>
-                <span className="td-num">{r.spo2}%</span>
-                <span className="td-num">{fmtTemp(r.temp)}°</span>
-                <span className="td-age">hace {r.age} s</span>
-              </div>
+              <li key={r.id} className={`td-personnel-card${isAlert(r) ? ' is-alert' : ''}${i === 0 ? ' is-selected' : ''}`}>
+                <span className="td-card-name">{r.rank} {r.name}</span>
+                <div className="td-card-meta">
+                  <span className="td-card-id">{r.id}</span>
+                  <span className={`td-pill ${isAlert(r) ? 'warn' : 'ok'}`}>{isAlert(r) ? 'Alerta' : 'Normal'}</span>
+                </div>
+                <dl className="td-card-vitals">
+                  <div className="td-card-pulse">
+                    <dt>Pulso</dt>
+                    <dd className={isAlert(r) ? 'is-crit' : undefined}>{r.bpm}<small>bpm</small></dd>
+                  </div>
+                  <div>
+                    <dt>SpO₂</dt>
+                    <dd>{r.spo2}<small>%</small></dd>
+                  </div>
+                  <div>
+                    <dt>Temp.</dt>
+                    <dd>{fmtTemp(r.temp)}<small>°C</small></dd>
+                  </div>
+                </dl>
+                <span className="td-card-signal"><i aria-hidden="true" />hace {r.age} s</span>
+              </li>
             ))}
-          </div>
+          </ul>
 
           <div className="td-drawer">
             <div className="td-drawer-hd">
