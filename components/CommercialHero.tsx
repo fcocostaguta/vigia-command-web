@@ -93,25 +93,12 @@ function TabletDash() {
             {rows.map((r, i) => (
               <li key={r.id} className={`td-personnel-card${isAlert(r) ? ' is-alert' : ''}${i === 0 ? ' is-selected' : ''}`}>
                 <span className="td-card-name">{r.rank} {r.name}</span>
-                <div className="td-card-meta">
-                  <span className="td-card-id">{r.id}</span>
+                <div className="td-card-summary">
+                  <span className={`td-card-pulse${isAlert(r) ? ' is-crit' : ''}`}>
+                    {r.bpm}<small>bpm</small>
+                  </span>
                   <span className={`td-pill ${isAlert(r) ? 'warn' : 'ok'}`}>{isAlert(r) ? 'Alerta' : 'Normal'}</span>
                 </div>
-                <dl className="td-card-vitals">
-                  <div className="td-card-pulse">
-                    <dt>Pulso</dt>
-                    <dd className={isAlert(r) ? 'is-crit' : undefined}>{r.bpm}<small>bpm</small></dd>
-                  </div>
-                  <div>
-                    <dt>SpO₂</dt>
-                    <dd>{r.spo2}<small>%</small></dd>
-                  </div>
-                  <div>
-                    <dt>Temp.</dt>
-                    <dd>{fmtTemp(r.temp)}<small>°C</small></dd>
-                  </div>
-                </dl>
-                <span className="td-card-signal"><i aria-hidden="true" />hace {r.age} s</span>
               </li>
             ))}
           </ul>
@@ -239,7 +226,6 @@ export default function CommercialHero({ onContact, bpm }: { onContact: () => vo
             </div>
           </div>
         </div>
-        <p className="vk-illus-note">Vista ilustrativa de la plataforma</p>
       </div>
     </section>
   )
