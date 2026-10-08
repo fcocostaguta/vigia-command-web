@@ -3,26 +3,28 @@
 import { Fragment, useState, useRef, useEffect } from 'react'
 import Image from 'next/image'
 import { Corners } from './CommercialAtmosphere'
-import { Icon, Tag, Badge } from './CommercialIcons'
+import { Icon, Tag } from './CommercialIcons'
 import { track } from '@/lib/analytics'
 
-// Example record, mirroring what VIGÍA stores when an incident closes:
-// per-person vital summaries plus the event timeline.
+// Illustrative record with the same sections as the product's emergency record:
+// metadata, registered alerts and a per-firefighter vitals summary.
 const CBN_META = [
-  { k: 'Duración', v: '42 min' },
-  { k: 'Personal', v: '5' },
-  { k: 'Alertas',  v: '1' },
+  { k: 'Inicio',             v: '13:41' },
+  { k: 'Cierre',             v: '14:23' },
+  { k: 'Duración',           v: '42m 10s' },
+  { k: 'Oficial a cargo',    v: 'Cap. Rojas' },
+  { k: 'Unidad',             v: 'B-12' },
+  { k: 'Bomberos asignados', v: '5' },
 ]
 
-const CBN_OPS = [
-  { name: 'Cap. Rojas', id: 'B-01', fc: '136', fcCls: 'vg-bpm-ok',   spo2: '97', temp: '37,4', alerts: 0 },
-  { name: 'Tte. Muñoz', id: 'B-02', fc: '181', fcCls: 'vg-bpm-crit', spo2: '96', temp: '38,1', alerts: 1 },
+const CBN_ALERTS = [
+  { t: '14:11:08', label: 'Umbral fisiológico superado',   tone: 'warn', who: 'Tte. Muñoz', detail: 'Pulso 181 bpm' },
+  { t: '14:16:40', label: 'Umbral fisiológico normalizado', tone: 'ok',   who: 'Tte. Muñoz', detail: 'Pulso 136 bpm' },
 ]
 
-const CBN_EVTS = [
-  { t: '13:41', x: 'Inicio del incidente',                        tone: 'info' },
-  { t: '14:11', x: 'Alerta biométrica · Tte. Muñoz, FC 181 bpm',   tone: 'warn' },
-  { t: '14:23', x: 'Incidente cerrado · registro generado',       tone: 'ok'   },
+const CBN_VITALS = [
+  { name: 'Tte. Muñoz', id: 'B-02', avg: '158', max: '181', maxAlert: true,  spo2: '96', temp: '38,1' },
+  { name: 'Cap. Rojas', id: 'B-01', avg: '121', max: '136', maxAlert: false, spo2: '97', temp: '37,4' },
 ]
 
 export function CommercialCajaNegra() {
@@ -47,56 +49,51 @@ export function CommercialCajaNegra() {
           </ul>
         </div>
 
-        <div className="vk-mock" data-reveal style={{ '--d': '0.12s' } as React.CSSProperties}>
-          <Corners />
-          <div className="vk-mock-top">
-            <div className="vk-mock-id">
-              <span className="vk-mock-title">Registro de la emergencia</span>
-              <span className="vk-mock-ref">Incidente #0042 · datos de ejemplo</span>
-            </div>
-            <Badge tone="ok">Cerrado</Badge>
-          </div>
-          <dl className="vk-mock-meta">
-            {CBN_META.map(m => (
-              <div key={m.k}><dt>{m.k}</dt><dd>{m.v}</dd></div>
-            ))}
-          </dl>
-          <div className="vk-mock-sec">
-            <div className="vk-mock-label">Resumen por persona</div>
-            <div className="vk-mock-thead" aria-hidden="true">
-              <span />
-              <span>FC máx.</span>
-              <span>SpO₂ mín.</span>
-              <span>Temp. máx.</span>
-              <span />
-            </div>
-            {CBN_OPS.map(o => (
-              <div className="vk-mock-op" key={o.id}>
-                <span className="vk-mock-who">
-                  <span className="vk-mock-name">{o.name}</span>
-                  <span className="vk-mock-opid">{o.id}</span>
-                </span>
-                <span className={`vk-mock-v ${o.fcCls}`}><b>{o.fc}</b> bpm</span>
-                <span className="vk-mock-v"><b>{o.spo2}</b> %</span>
-                <span className="vk-mock-v"><b>{o.temp}</b> °C</span>
-                <span className={`vk-mock-alerts${o.alerts ? ' has' : ''}`}>
-                  {o.alerts ? `${o.alerts} alerta` : 'Sin alertas'}
-                </span>
+        <div className="vk-mock-wrap" data-reveal style={{ '--d': '0.12s' } as React.CSSProperties}>
+          <div className="vk-mock">
+            <div className="vk-mock-top">
+              <div className="vk-mock-id">
+                <span className="vk-mock-sync"><i />Sincronizado</span>
+                <span className="vk-mock-title">Registro de la emergencia</span>
+                <span className="vk-mock-ref">Estructural · Unidad B-12</span>
               </div>
-            ))}
-          </div>
-          <div className="vk-mock-sec">
-            <div className="vk-mock-label">Línea de tiempo</div>
-            <ol className="vk-evts">
-              {CBN_EVTS.map(e => (
-                <li className="vk-evt" key={e.t}>
-                  <span className="vk-evt-t">{e.t}</span>
-                  <span className={`vk-evt-dot ${e.tone}`} aria-hidden="true" />
-                  <span className="vk-evt-x">{e.x}</span>
-                </li>
+              <span className="vk-mock-pill">Cerrada</span>
+            </div>
+            <dl className="vk-mock-meta">
+              {CBN_META.map(m => (
+                <div key={m.k}><dt>{m.k}</dt><dd>{m.v}</dd></div>
               ))}
-            </ol>
+            </dl>
+            <div className="vk-mock-sec">
+              <div className="vk-mock-label">Alertas registradas <span>({CBN_ALERTS.length})</span></div>
+              <ul className="vk-mock-alerts">
+                {CBN_ALERTS.map(a => (
+                  <li key={a.t}>
+                    <span className={`vk-mock-badge ${a.tone}`}>{a.label}</span>
+                    <span className="vk-mock-time">{a.t}</span>
+                    <span className="vk-mock-what"><b>{a.who}</b> · {a.detail}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="vk-mock-sec">
+              <div className="vk-mock-label">Resumen de vitales por bombero</div>
+              <div className="vk-mock-thead" aria-hidden="true">
+                <span>Bombero</span><span>Pulso prom.</span><span>Pulso máx.</span><span>SpO₂ mín.</span><span>Temp. máx.</span>
+              </div>
+              {CBN_VITALS.map(o => (
+                <div className="vk-mock-op" key={o.id}>
+                  <span className="vk-mock-who"><span className="vk-mock-name">{o.name}</span><span className="vk-mock-opid">{o.id}</span></span>
+                  <span className="vk-mock-v"><b>{o.avg}</b> bpm</span>
+                  <span className={`vk-mock-v${o.maxAlert ? ' is-alert' : ''}`}><b>{o.max}</b> bpm</span>
+                  <span className="vk-mock-v"><b>{o.spo2}</b> %</span>
+                  <span className="vk-mock-v"><b>{o.temp}</b> °C</span>
+                </div>
+              ))}
+              <div className="vk-mock-more">3 bomberos más sin alertas</div>
+            </div>
           </div>
+          <p className="vk-illus-note is-static">Vista ilustrativa del registro</p>
         </div>
 
       </div>
