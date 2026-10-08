@@ -15,8 +15,8 @@ const CBN_META = [
 ]
 
 const CBN_OPS = [
-  { name: 'Cap. Rojas', id: 'B-01', fc: '152', fcCls: 'vg-bpm-ok',   spo2: '97', temp: '37,4', alerts: 0 },
-  { name: 'Tte. Muñoz', id: 'B-02', fc: '181', fcCls: 'vg-bpm-crit', spo2: '95', temp: '38,1', alerts: 1 },
+  { name: 'Cap. Rojas', id: 'B-01', fc: '136', fcCls: 'vg-bpm-ok',   spo2: '97', temp: '37,4', alerts: 0 },
+  { name: 'Tte. Muñoz', id: 'B-02', fc: '181', fcCls: 'vg-bpm-crit', spo2: '96', temp: '38,1', alerts: 1 },
 ]
 
 const CBN_EVTS = [

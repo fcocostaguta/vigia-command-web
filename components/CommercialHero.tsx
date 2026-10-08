@@ -6,31 +6,28 @@ import { HeroAtmosphere, Signal } from './CommercialAtmosphere'
 import { Icon } from './CommercialIcons'
 import { track } from '@/lib/analytics'
 
-function ekgTiled(W: number, beats: number): string {
-  const seg = W / beats, mid = 17
-  const tile = (off: number) => {
-    let d = ''
-    for (let i = 0; i < beats; i++) {
-      const x = off + i * seg
-      d += ` H${(x + seg * 0.40).toFixed(1)}`
-      d += ` l${(seg * 0.05).toFixed(1)} -4 l${(seg * 0.05).toFixed(1)} 7 l${(seg * 0.05).toFixed(1)} -15 l${(seg * 0.05).toFixed(1)} 20 l${(seg * 0.05).toFixed(1)} -8`
-      d += ` H${(off + (i + 1) * seg).toFixed(1)}`
-    }
-    return d
-  }
-  return `M0 ${mid}${tile(0)}${tile(W)}`
-}
-
 type Tone = 'ok' | 'warn' | 'crit'
-type RowState = { id: string; rank: string; name: string; bpm: number; temp: number; tone: Tone }
+type RowState = { id: string; rank: string; name: string; bpm: number; lo: number; hi: number; temp: number }
+
+// Example values follow the product's alert thresholds: FC ≥ 140 warns, FC ≥ 160 is critical.
+const FC_WARN = 140
+const FC_CRIT = 160
+const toneOf = (bpm: number): Tone => (bpm >= FC_CRIT ? 'crit' : bpm >= FC_WARN ? 'warn' : 'ok')
 
 const TD_INIT: RowState[] = [
-  { id: 'B-01', rank: 'Cap.',  name: 'Rojas',    bpm: 142, temp: 37.1, tone: 'ok'   },
-  { id: 'B-02', rank: 'Tte.',  name: 'Muñoz',    bpm: 181, temp: 37.9, tone: 'crit' },
-  { id: 'B-03', rank: 'Vol.',  name: 'Pérez',    bpm: 128, temp: 36.9, tone: 'ok'   },
-  { id: 'B-04', rank: 'Bbro.', name: 'Soto',     bpm: 168, temp: 37.6, tone: 'warn' },
-  { id: 'B-05', rank: 'Vol.',  name: 'Cárdenas', bpm: 116, temp: 37.0, tone: 'ok'   },
+  { id: 'B-01', rank: 'Cap.',  name: 'Rojas',    bpm: 126, lo: 116, hi: 136, temp: 37.1 },
+  { id: 'B-02', rank: 'Tte.',  name: 'Muñoz',    bpm: 172, lo: 165, hi: 179, temp: 37.9 },
+  { id: 'B-03', rank: 'Vol.',  name: 'Pérez',    bpm: 118, lo: 104, hi: 130, temp: 36.9 },
+  { id: 'B-04', rank: 'Bbro.', name: 'Soto',     bpm: 148, lo: 142, hi: 156, temp: 37.6 },
+  { id: 'B-05', rank: 'Vol.',  name: 'Cárdenas', bpm: 110, lo: 98,  hi: 124, temp: 37.0 },
 ]
+
+// FC trend: discrete readings as the watch reports them, plotted against the critical threshold.
+const TREND_LEN = 14
+const TREND_MIN = 132
+const TREND_MAX = 184
+const trendY = (v: number) => 26 - ((v - TREND_MIN) / (TREND_MAX - TREND_MIN)) * 26
+const TREND_INIT = [146, 151, 155, 158, 161, 164, 163, 167, 169, 168, 171, 170, 173, 172]
 
 // Example incident started 2:18 before the page loaded; the timer keeps counting from there.
 const INCIDENT_OFFSET_S = 2 * 60 + 18
@@ -41,7 +38,7 @@ function TabletDash() {
   const [rows, setRows] = useState<RowState[]>(TD_INIT)
   const [clock, setClock] = useState('')
   const [elapsed, setElapsed] = useState(INCIDENT_OFFSET_S)
-  const ekg = ekgTiled(360, 5)
+  const [trend, setTrend] = useState<number[]>(TREND_INIT)
 
   useEffect(() => {
     const t0 = Date.now()
@@ -55,18 +52,19 @@ function TabletDash() {
   }, [])
 
   useEffect(() => {
-    const id = setInterval(() => setRows(p => p.map(r => {
-      if (r.tone === 'crit') {
-        return { ...r, bpm: Math.max(176, Math.min(188, Math.round(r.bpm + (Math.random() - 0.5) * 4))) }
-      }
-      const nb = Math.max(96, Math.min(174, Math.round(r.bpm + (Math.random() - 0.48) * 6)))
-      return { ...r, bpm: nb, tone: (nb >= 160 ? 'warn' : 'ok') as Tone }
-    })), 1500)
+    const id = setInterval(() => setRows(p => p.map(r => ({
+      ...r,
+      bpm: Math.max(r.lo, Math.min(r.hi, Math.round(r.bpm + (Math.random() - 0.5) * 6))),
+    }))), 1500)
     return () => clearInterval(id)
   }, [])
 
+  const focusBpm = rows[1].bpm
+  useEffect(() => { setTrend(t => [...t.slice(1), focusBpm]) }, [focusBpm])
+
   const focus = rows[1]
-  const alerts = rows.filter(r => r.tone !== 'ok').length
+  const alerts = rows.filter(r => toneOf(r.bpm) !== 'ok').length
+  const pts = trend.map((v, i) => `${(i * 160 / (TREND_LEN - 1)).toFixed(1)},${trendY(v).toFixed(1)}`)
 
   return (
     <div className="eco-tablet">
@@ -98,16 +96,16 @@ function TabletDash() {
               <span />
             </div>
             {rows.map(r => (
-              <div key={r.id} className={`td-row${r.tone === 'crit' ? ' alert' : ''}`}>
+              <div key={r.id} className={`td-row${toneOf(r.bpm) === 'crit' ? ' alert' : ''}`}>
                 <span className="td-nm">
                   <b>{r.rank} {r.name}</b>
                   <i>{r.id}</i>
                 </span>
-                <span className={`td-num ${r.tone === 'crit' ? 'vg-bpm-crit' : r.tone === 'warn' ? 'vg-bpm-warn' : 'vg-bpm-ok'}`}>
+                <span className={`td-num vg-bpm-${toneOf(r.bpm)}`}>
                   {r.bpm}
                 </span>
                 <span className="td-num td-temp">{fmtTemp(r.temp)}</span>
-                <span className={`td-sdot ${r.tone}`} />
+                <span className={`td-sdot ${toneOf(r.bpm)}`} />
               </div>
             ))}
           </div>
@@ -123,13 +121,15 @@ function TabletDash() {
                 <span className="td-big crit">{focus.bpm}</span>
                 <span className="td-unit">bpm</span>
               </div>
-              <div className="td-vitals" aria-hidden="true">
-                <svg viewBox="0 0 720 34" preserveAspectRatio="none">
-                  <path d={ekg} />
+              <div className="td-trend" aria-hidden="true">
+                <svg viewBox="0 0 160 26" preserveAspectRatio="none">
+                  <line className="td-trend-th" x1="0" x2="160" y1={trendY(FC_CRIT)} y2={trendY(FC_CRIT)} />
+                  <polyline points={pts.join(' ')} />
                 </svg>
+                <span className="td-trend-l">Umbral {FC_CRIT}</span>
               </div>
               <div className="td-subvitals">
-                <div><span className="k">SpO₂</span><span className="v">95<small>%</small></span></div>
+                <div><span className="k">SpO₂</span><span className="v">97<small>%</small></span></div>
                 <div><span className="k">Temp.</span><span className="v">{fmtTemp(focus.temp)}<small>°C</small></span></div>
               </div>
             </div>
@@ -177,7 +177,7 @@ export default function CommercialHero({ onContact, bpm }: { onContact: () => vo
     return () => { el.removeEventListener('pointermove', onMove); cancelAnimationFrame(raf.current) }
   }, [])
 
-  const chipBpmCls = bpm >= 152 ? 'vg-bpm-warn' : 'vg-bpm-ok'
+  const chipBpmCls = bpm >= 140 ? 'vg-bpm-warn' : 'vg-bpm-ok'
 
   return (
     <section className="vk-hero" id="inicio" ref={ref}>

@@ -121,9 +121,17 @@ export default function PrivacidadPage() {
           <section>
             <h2 style={{ fontSize: '1.2rem', color: 'var(--text)', marginBottom: 10 }}>7. Tus derechos</h2>
             <p>
-              De acuerdo con la Ley N.º 19.628 sobre Protección de la Vida Privada y las disposiciones aplicables de la
-              Ley N.º 21.719 sobre Protección de Datos Personales, puedes solicitar acceso, rectificación, cancelación
-              u oposición respecto de tus datos personales escribiendo a{' '}
+              Actualmente rige la Ley N.º 19.628 sobre Protección de la Vida Privada. Conforme a ella puedes solicitar
+              información sobre los datos que tenemos sobre ti, su modificación cuando sean erróneos, inexactos o
+              incompletos, y su eliminación o bloqueo en los casos que la ley establece.
+            </p>
+            <p style={{ marginTop: 8 }}>
+              El 1 de diciembre de 2026 entran en vigencia las modificaciones que introduce la Ley N.º 21.719, que
+              regula la protección y el tratamiento de los datos personales. Desde esa fecha podrás ejercer los
+              derechos de acceso, rectificación, supresión, oposición, portabilidad y bloqueo.
+            </p>
+            <p style={{ marginTop: 8 }}>
+              Para ejercer cualquiera de estos derechos, escríbenos a{' '}
               <a href="mailto:contacto@vigiacommand.cl" style={{ color: 'var(--text)', textDecoration: 'underline' }}>
                 contacto@vigiacommand.cl
               </a>.
